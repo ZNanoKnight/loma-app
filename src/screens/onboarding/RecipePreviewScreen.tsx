@@ -93,7 +93,7 @@ export default function RecipePreviewScreen() {
   };
 
   const handleContinue = () => {
-    navigation.navigate('NotificationSetup');
+    navigation.navigate('Payment');
   };
 
   return (

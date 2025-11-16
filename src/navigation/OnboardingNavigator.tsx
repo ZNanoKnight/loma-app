@@ -13,10 +13,10 @@ import PaymentScreen from '../screens/onboarding/PaymentScreen';
 
 const Stack = createStackNavigator();
 
-export default function OnboardingNavigator() {  // REMOVED Props interface and parameter
+export default function OnboardingNavigator() {
   return (
     <Stack.Navigator 
-      screenOptions={{ 
+      screenOptions={{
         headerShown: false,
         cardStyle: { backgroundColor: '#4F46E5' }
       }}
@@ -30,7 +30,7 @@ export default function OnboardingNavigator() {  // REMOVED Props interface and 
       <Stack.Screen name="DietaryRestrictions" component={DietaryRestrictionsScreen} />
       <Stack.Screen name="CookingFrequency" component={CookingFrequencyScreen} />
       <Stack.Screen name="RecipePreview" component={RecipePreviewScreen} />
-      <Stack.Screen name="Payment" component={PaymentScreen} />  {/* SIMPLIFIED */}
+      <Stack.Screen name="Payment" component={PaymentScreen} />
     </Stack.Navigator>
   );
 }

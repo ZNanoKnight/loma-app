@@ -78,7 +78,7 @@ export default function CookingFrequencyScreen() {
         cookingFrequency: selectedFrequency,
         mealPrepInterest: mealPrepInterest
       });
-      navigation.navigate('NotificationSetup');
+      navigation.navigate('RecipePreview');
     }
   };
 
