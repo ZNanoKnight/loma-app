@@ -23,6 +23,20 @@ export default function ProgressScreen() {
   const [selectedRange, setSelectedRange] = useState<TimeRange>('week');
 
   // Use real data from global state where available
+  const currentWeight = parseFloat(userData.weight) || 175;
+  const monthlyWeightData = [
+    { week: 'Week 1', value: currentWeight },
+    { week: 'Week 2', value: currentWeight - 0.5 },
+    { week: 'Week 3', value: currentWeight - 1.2 },
+    { week: 'Week 4', value: currentWeight - 1.8 },
+  ];
+
+  // Calculate min/max for proper scaling
+  const weightValues = monthlyWeightData.map(point => point.value);
+  const maxWeight = Math.max(...weightValues);
+  const minWeight = Math.min(...weightValues);
+  const weightRange = maxWeight - minWeight || 5; // Use a minimum range of 5 to avoid division issues
+
   const stats = {
     currentStreak: userData.currentStreak,  // MODIFIED - real data
     longestStreak: 14,  // Keep as mock for now (would need separate tracking)
@@ -33,12 +47,7 @@ export default function ProgressScreen() {
     fatsAvg: 18,  // Keep as mock
     weeklyGoal: 5,
     weeklyComplete: userData.weeklyProgress.filter(day => day).length,  // MODIFIED - count true days
-    monthlyWeight: [
-      { week: 'Week 1', value: parseFloat(userData.weight) || 175 },  // MODIFIED - use real weight
-      { week: 'Week 2', value: (parseFloat(userData.weight) || 175) - 0.5 },
-      { week: 'Week 3', value: (parseFloat(userData.weight) || 175) - 1.2 },
-      { week: 'Week 4', value: (parseFloat(userData.weight) || 175) - 1.8 },
-    ]
+    monthlyWeight: monthlyWeightData
   };
 
   const weekDays = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
@@ -224,23 +233,33 @@ export default function ProgressScreen() {
             <View style={styles.trendCard}>
               <Text style={styles.cardTitle}>Weight Trend</Text>
               <View style={styles.trendChart}>
-                {stats.monthlyWeight.map((point, index) => (
-                  <View key={index} style={styles.trendPoint}>
-                    <View style={styles.trendBar}>
-                      <View 
-                        style={[
-                          styles.trendBarFill,
-                          { height: `${((176 - point.value) / 6) * 100}%` }
-                        ]} 
-                      />
+                {stats.monthlyWeight.map((point, index) => {
+                  // Calculate bar height: higher weight = taller bar (relative to the range)
+                  // Use a more subtle scaling: 60% to 100% (40% range instead of 80%)
+                  // This makes visual differences noticeable but not overly dramatic
+                  const normalizedValue = (point.value - minWeight) / weightRange;
+                  const barHeightPercentage = 60 + (normalizedValue * 40); // Scale from 60% to 100%
+
+                  return (
+                    <View key={index} style={styles.trendPoint}>
+                      <View style={styles.trendBar}>
+                        <View
+                          style={[
+                            styles.trendBarFill,
+                            { height: `${barHeightPercentage}%` }
+                          ]}
+                        />
+                      </View>
+                      <Text style={styles.trendValue}>{point.value.toFixed(1)}</Text>
+                      <Text style={styles.trendLabel}>{point.week}</Text>
                     </View>
-                    <Text style={styles.trendValue}>{point.value}</Text>
-                    <Text style={styles.trendLabel}>{point.week}</Text>
-                  </View>
-                ))}
+                  );
+                })}
               </View>
               <View style={styles.trendSummary}>
-                <Text style={styles.trendChange}>↓ 1.8 lbs</Text>
+                <Text style={styles.trendChange}>
+                  {currentWeight - monthlyWeightData[3].value >= 0 ? '↓' : '↑'} {Math.abs(currentWeight - monthlyWeightData[3].value).toFixed(1)} lbs
+                </Text>
                 <Text style={styles.trendPeriod}>this month</Text>
               </View>
             </View>

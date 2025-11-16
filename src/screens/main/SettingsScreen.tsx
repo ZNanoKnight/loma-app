@@ -47,9 +47,10 @@ export default function SettingsScreen() {
     }
   };
 
-  const handleSignOut = () => {
-    clearUserData();  // Clear all user data
-    navigation.navigate('Welcome');  // Go back to welcome screen
+  const handleSignOut = async () => {
+    // Clear all user data and reset onboarding status
+    // The RootNavigator will automatically re-render and show Onboarding flow
+    await clearUserData();
   };
 
   return (

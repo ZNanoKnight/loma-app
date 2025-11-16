@@ -11,11 +11,13 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
+import { useUser } from '../../context/UserContext';
 
 type PlanType = 'weekly' | 'monthly' | 'yearly';
 
 export default function PaywallScreen() {
   const navigation = useNavigation<any>();
+  const { updateUserData } = useUser();
   const [selectedPlan, setSelectedPlan] = useState<PlanType>('yearly');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -86,26 +88,12 @@ export default function PaywallScreen() {
     }
   ];
 
-  const handleSubscribe = () => {
+  const handleComplete = () => {
     if (isFormValid) {
-      console.log('Subscribe to:', selectedPlan);
-      navigation.navigate('MainApp');
+      // Mark onboarding as complete
+      // The RootNavigator will automatically re-render and show MainApp
+      updateUserData({ hasCompletedOnboarding: true });
     }
-  };
-
-  const handleComplete = () => {  // ADD THIS FUNCTION
-    if (isFormValid) {
-      console.log('Complete subscription:', selectedPlan);
-      navigation.navigate('MainApp');
-    }
-  };
-
-  const handleRestore = () => {
-    console.log('Restore purchases');
-  };
-
-  const handleSkip = () => {
-    navigation.navigate('MainApp');
   };
 
   return (

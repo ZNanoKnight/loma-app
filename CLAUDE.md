@@ -2,10 +2,10 @@
 Loma is an AI-powered recipe and meal planning mobile application built with React Native and Expo. The app features a comprehensive 10-screen onboarding flow, personalized recipe generation, meal tracking, progress monitoring, and a complete cooking experience with step-by-step instructions. The app uses global state management for user data persistence across 20 total screens.
 
 ## Tech Stack
-Language: TypeScript 4.x
-Framework: React Native 0.72.x with Expo SDK 49
-Navigation: React Navigation 6 (@react-navigation/native, @react-navigation/stack, @react-navigation/bottom-tabs)
-State Management: React Context API (custom UserContext)
+Language: TypeScript 5.x
+Framework: React Native 0.81.x with Expo SDK 54
+Navigation: React Navigation 7 (@react-navigation/native, @react-navigation/stack, @react-navigation/bottom-tabs)
+State Management: React Context API (custom UserContext) with AsyncStorage persistence
 UI Components:
 
 expo-linear-gradient (gradient backgrounds)
@@ -14,11 +14,13 @@ Custom components (no external UI library)
 Fonts: Custom VendSans font family (10 weights)
 Key Dependencies:
 
+@react-native-async-storage/async-storage (state persistence)
 expo-font (custom font loading)
 expo-splash-screen (loading screen management)
 react-native-safe-area-context
 react-native-screens
 react-native-gesture-handler
+react-native-reanimated
 
 ## Project Structure
 loma-app/

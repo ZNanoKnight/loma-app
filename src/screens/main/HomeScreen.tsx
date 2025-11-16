@@ -191,22 +191,6 @@ export default function HomeScreen() {
                 <Text style={styles.generateButtonText}>✨ Generate Recipe</Text>
               </TouchableOpacity>
             </View>
-
-            {/* Quick Actions */}
-            <View style={styles.quickActions}>
-              <TouchableOpacity style={styles.quickActionButton}>
-                <Text style={styles.quickActionEmoji}>🥗</Text>
-                <Text style={styles.quickActionText}>Last Recipe</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.quickActionButton}>
-                <Text style={styles.quickActionEmoji}>🎲</Text>
-                <Text style={styles.quickActionText}>Surprise Me</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.quickActionButton}>
-                <Text style={styles.quickActionEmoji}>⭐</Text>
-                <Text style={styles.quickActionText}>Favorites</Text>
-              </TouchableOpacity>
-            </View>
           </ScrollView>
         </SafeAreaView>
       </LinearGradient>
@@ -369,10 +353,6 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 18,
     fontWeight: '600',
-  },
-  quickActions: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
   },
   quickActionButton: {
     flex: 1,
