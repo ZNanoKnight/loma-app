@@ -10,25 +10,54 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
+import { SvgXml } from 'react-native-svg';
+import { LogoSvg } from '../../assets/Logo';
+import { useVideoPlayer, VideoView } from 'expo-video';
 
 const { width, height } = Dimensions.get('window');
 
 export default function WelcomeScreen() {
   const navigation = useNavigation<any>();
 
+  // Setup video player
+  const videoSource = require('../../assets/videos/welcome-background.mp4');
+  const player = useVideoPlayer(videoSource, player => {
+    player.loop = true;
+    player.muted = true;
+    player.play();
+  });
+
   return (
-    <LinearGradient
-      colors={['#4F46E5', '#2D1B69', '#1A0F3D']}
-      style={styles.container}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}
-    >
+    <View style={styles.container}>
+      {/* Layer 1: Background Video */}
+      <VideoView
+        player={player}
+        style={StyleSheet.absoluteFill}
+        contentFit="cover"
+        nativeControls={false}
+      />
+
+      {/* Layer 2: Dark Purple Gradient Overlay */}
+      <LinearGradient
+        colors={[
+          'rgba(79, 70, 229, 0.75)',
+          'rgba(45, 27, 105, 0.80)',
+          'rgba(26, 15, 61, 0.85)'
+        ]}
+        style={StyleSheet.absoluteFill}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+      />
+
+      {/* Layer 3: UI Content */}
       <StatusBar barStyle="light-content" />
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.logoContainer}>
-          <View style={styles.logo}>
-            <Text style={styles.logoText}>L</Text>
-          </View>
+          <SvgXml
+            xml={LogoSvg}
+            width={160}
+            height={160}
+          />
         </View>
         
         <View style={styles.content}>
@@ -61,43 +90,31 @@ export default function WelcomeScreen() {
           </View>
         </View>
       </SafeAreaView>
-    </LinearGradient>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#1A0F3D', // Fallback color while video loads
   },
   safeArea: {
     flex: 1,
   },
   logoContainer: {
     position: 'absolute',
-    top: 60,
-    left: 30,
+    top: 20,
+    left: 20,
     zIndex: 10,
-  },
-  logo: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    backgroundColor: 'rgba(255, 255, 255, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 4,
     },
-    shadowOpacity: 0.2,
+    shadowOpacity: 0.3,
     shadowRadius: 8,
     elevation: 5,
-  },
-  logoText: {
-    fontSize: 56,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
   },
   content: {
     flex: 1,
