@@ -20,7 +20,7 @@ export default function WelcomeScreen() {
   const navigation = useNavigation<any>();
 
   // Setup video player
-  const videoSource = require('../../assets/videos/welcome-background.mp4');
+  const videoSource = require('../../../assets/videos/welcome-background.mp4');
   const player = useVideoPlayer(videoSource, player => {
     player.loop = true;
     player.muted = true;
