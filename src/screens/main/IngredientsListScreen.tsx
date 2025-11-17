@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
   Text,
@@ -11,137 +11,33 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
+import { useRecipe, Ingredient as RecipeIngredient } from '../../context/RecipeContext';
 
-interface Ingredient {
-  id: string;
-  category: string;
-  amount: string;
-  unit: string;
-  item: string;
-  notes?: string;
+interface Ingredient extends RecipeIngredient {
   checked: boolean;
-  inPantry?: boolean;
 }
 
 export default function IngredientsListScreen() {
   const navigation = useNavigation<any>();
+  const { currentRecipe } = useRecipe();
   const [servings, setServings] = useState(2);
-  const baseServings = 2;
+  const [baseServings, setBaseServings] = useState(2);
   const servingMultiplier = servings / baseServings;
 
-  const [ingredients, setIngredients] = useState<Ingredient[]>([
-    // Proteins
-    {
-      id: '1',
-      category: 'Proteins',
-      amount: '2',
-      unit: 'pieces',
-      item: 'Chicken breasts (6 oz each)',
-      notes: 'Can substitute with thighs',
-      checked: false
-    },
-    // Grains
-    {
-      id: '2',
-      category: 'Grains',
-      amount: '1',
-      unit: 'cup',
-      item: 'Quinoa, uncooked',
-      checked: false
-    },
-    // Vegetables
-    {
-      id: '3',
-      category: 'Vegetables',
-      amount: '2',
-      unit: 'cups',
-      item: 'Mixed greens',
-      checked: false
-    },
-    {
-      id: '4',
-      category: 'Vegetables',
-      amount: '1',
-      unit: 'medium',
-      item: 'Cucumber',
-      notes: 'Diced',
-      checked: false
-    },
-    {
-      id: '5',
-      category: 'Vegetables',
-      amount: '1',
-      unit: 'cup',
-      item: 'Cherry tomatoes',
-      notes: 'Halved',
-      checked: false
-    },
-    {
-      id: '6',
-      category: 'Vegetables',
-      amount: '1/2',
-      unit: 'cup',
-      item: 'Red onion',
-      notes: 'Thinly sliced',
-      checked: false
-    },
-    // Dairy
-    {
-      id: '7',
-      category: 'Dairy',
-      amount: '1/4',
-      unit: 'cup',
-      item: 'Feta cheese',
-      notes: 'Crumbled',
-      checked: false
-    },
-    // Pantry
-    {
-      id: '8',
-      category: 'Pantry',
-      amount: '2',
-      unit: 'tbsp',
-      item: 'Olive oil',
-      checked: false,
-      inPantry: true
-    },
-    {
-      id: '9',
-      category: 'Pantry',
-      amount: '1',
-      unit: 'tsp',
-      item: 'Dried oregano',
-      checked: false,
-      inPantry: true
-    },
-    {
-      id: '10',
-      category: 'Pantry',
-      amount: '2',
-      unit: 'cloves',
-      item: 'Garlic',
-      notes: 'Minced',
-      checked: false
-    },
-    {
-      id: '11',
-      category: 'Pantry',
-      amount: '1',
-      unit: 'whole',
-      item: 'Lemon',
-      notes: 'For juice and zest',
-      checked: false
-    },
-    {
-      id: '12',
-      category: 'Pantry',
-      amount: 'To taste',
-      unit: '',
-      item: 'Salt and pepper',
-      checked: false,
-      inPantry: true
+  const [ingredients, setIngredients] = useState<Ingredient[]>([]);
+
+  useEffect(() => {
+    if (currentRecipe && currentRecipe.ingredients) {
+      // Convert recipe ingredients to checklist items
+      const ingredientsWithChecked = currentRecipe.ingredients.map(item => ({
+        ...item,
+        checked: false
+      }));
+      setIngredients(ingredientsWithChecked);
+      setBaseServings(currentRecipe.servings);
+      setServings(currentRecipe.servings);
     }
-  ]);
+  }, [currentRecipe]);
 
   const [showPantryItems, setShowPantryItems] = useState(true);
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
   Text,
@@ -10,80 +10,71 @@ import {
   Modal
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useNavigation } from '@react-navigation/native';
-import { useUser } from '../../context/UserContext';  // ADD THIS
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { useUser } from '../../context/UserContext';
+import { useRecipe } from '../../context/RecipeContext';
 
 export default function RecipeDetailScreen() {
   const navigation = useNavigation<any>();
-  const { userData, updateUserData } = useUser();  // ADD THIS
-  const [activeTab, setActiveTab] = useState<'overview' | 'ingredients' | 'nutrition'>('overview');
-  const [isFavorite, setIsFavorite] = useState(true);
-  const [showRatingModal, setShowRatingModal] = useState(false);
-  const [rating, setRating] = useState(4);
+  const route = useRoute<any>();
+  const { userData, updateUserData } = useUser();
+  const { currentRecipe, setCurrentRecipe, getRecipeById, updateRecipe } = useRecipe();
 
-  // Mock recipe data - in production, this would come from database/props
-  const recipe = {
-    title: "Mediterranean Grilled Chicken Bowl",
-    description: "A protein-packed, flavorful bowl with perfectly seasoned chicken, quinoa, and fresh vegetables",
-    emoji: "🥗",
-    prepTime: 15,
-    cookTime: 20,
-    totalTime: 35,
-    servings: 2,
-    difficulty: "Easy",
-    calories: 485,
-    protein: 42,
-    carbs: 38,
-    fats: 18,
-    fiber: 8,
-    sugar: 6,
-    sodium: 580,
-    cholesterol: 95,
-    ingredients: [
-      { amount: "2", unit: "pieces", item: "Chicken breasts (6 oz each)", calories: 280 },
-      { amount: "1", unit: "cup", item: "Quinoa, uncooked", calories: 110 },
-      { amount: "2", unit: "cups", item: "Mixed greens", calories: 10 },
-      { amount: "1", unit: "medium", item: "Cucumber, diced", calories: 8 },
-      { amount: "1", unit: "cup", item: "Cherry tomatoes, halved", calories: 15 },
-      { amount: "1/2", unit: "cup", item: "Red onion, sliced", calories: 12 },
-      { amount: "1/4", unit: "cup", item: "Feta cheese, crumbled", calories: 40 },
-      { amount: "2", unit: "tbsp", item: "Olive oil", calories: 60 },
-      { amount: "1", unit: "tsp", item: "Oregano", calories: 0 },
-      { amount: "2", unit: "cloves", item: "Garlic, minced", calories: 5 },
-      { amount: "1", unit: "whole", item: "Lemon, juiced", calories: 10 },
-      { amount: "To taste", unit: "", item: "Salt and pepper", calories: 0 },
-    ],
-    instructions: [
-      "Season chicken breasts with oregano, garlic, salt, and pepper",
-      "Heat 1 tablespoon olive oil in a grill pan over medium-high heat",
-      "Grill chicken for 6-7 minutes per side until internal temp reaches 165°F",
-      "Meanwhile, cook quinoa according to package directions",
-      "Dice cucumber, halve tomatoes, and slice red onion",
-      "Mix vegetables with remaining olive oil and lemon juice",
-      "Let chicken rest for 5 minutes, then slice",
-      "Assemble bowls with quinoa base, mixed greens, vegetables",
-      "Top with sliced chicken and crumbled feta",
-      "Drizzle with any remaining lemon dressing"
-    ],
-    tags: ["High Protein", "Gluten-Free", "Mediterranean", "Meal Prep"],
-    cookedCount: 3,
-    lastCooked: "3 days ago",
-    createdDate: "Jan 15, 2024",
-    notes: "Great for meal prep. Can substitute chicken with tofu for vegetarian option."
-  };
+  const [activeTab, setActiveTab] = useState<'overview' | 'ingredients' | 'nutrition'>('overview');
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [showRatingModal, setShowRatingModal] = useState(false);
+  const [rating, setRating] = useState(0);
+
+  // Get recipe from navigation params or current recipe
+  const recipeId = route.params?.recipeId;
+  const recipe = recipeId ? getRecipeById(recipeId) : currentRecipe;
+
+  useEffect(() => {
+    if (recipe) {
+      setCurrentRecipe(recipe);
+      setIsFavorite(recipe.isFavorite);
+      setRating(recipe.rating || 0);
+    }
+  }, [recipe]);
+
+  if (!recipe) {
+    return (
+      <View style={styles.container}>
+        <LinearGradient colors={['#4F46E5', '#2D1B69', '#1A0F3D']} style={styles.gradient}>
+          <SafeAreaView style={styles.safeArea}>
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+              <Text style={{ color: 'white', fontSize: 18 }}>Recipe not found</Text>
+              <TouchableOpacity onPress={() => navigation.goBack()} style={{ marginTop: 20 }}>
+                <Text style={{ color: 'white', textDecorationLine: 'underline' }}>Go Back</Text>
+              </TouchableOpacity>
+            </View>
+          </SafeAreaView>
+        </LinearGradient>
+      </View>
+    );
+  }
 
   const handleStartCooking = () => {
+    if (!recipe) return;
     // Track when user starts cooking a recipe
-    updateUserData({  // ADD THIS
+    updateUserData({
       totalRecipes: userData.totalRecipes + 1
     });
     navigation.navigate('EquipmentChecklist');
   };
 
   const handleRateRecipe = (newRating: number) => {
+    if (!recipe) return;
     setRating(newRating);
-    // In production, save to database
+    updateRecipe(recipe.id, { rating: newRating });
     setTimeout(() => setShowRatingModal(false), 500);
+  };
+
+  const handleToggleFavorite = () => {
+    if (!recipe) return;
+    const newFavoriteStatus = !isFavorite;
+    setIsFavorite(newFavoriteStatus);
+    updateRecipe(recipe.id, { isFavorite: newFavoriteStatus });
   };
 
   return (
@@ -108,9 +99,9 @@ export default function RecipeDetailScreen() {
               </TouchableOpacity>
               <Text style={styles.headerTitle}>Recipe Details</Text>
               <View style={styles.headerActions}>
-                <TouchableOpacity 
+                <TouchableOpacity
                   style={styles.actionButton}
-                  onPress={() => setIsFavorite(!isFavorite)}
+                  onPress={handleToggleFavorite}
                 >
                   <Text style={styles.actionIcon}>{isFavorite ? '❤️' : '🤍'}</Text>
                 </TouchableOpacity>
@@ -205,12 +196,12 @@ export default function RecipeDetailScreen() {
                 {activeTab === 'overview' && (
                   <View style={styles.overviewContent}>
                     <Text style={styles.sectionTitle}>Instructions</Text>
-                    {recipe.instructions.map((instruction, index) => (
-                      <View key={index} style={styles.instructionItem}>
+                    {recipe.instructions.map((step, index) => (
+                      <View key={step.id} style={styles.instructionItem}>
                         <View style={styles.instructionNumber}>
                           <Text style={styles.instructionNumberText}>{index + 1}</Text>
                         </View>
-                        <Text style={styles.instructionText}>{instruction}</Text>
+                        <Text style={styles.instructionText}>{step.instruction}</Text>
                       </View>
                     ))}
                     

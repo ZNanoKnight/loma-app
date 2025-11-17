@@ -8,116 +8,28 @@ import {
   StatusBar,
   ScrollView,
   TextInput,
-  FlatList
+  FlatList,
+  ActivityIndicator
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
-import { useUser } from '../../context/UserContext';  // ADD THIS
+import { useUser } from '../../context/UserContext';
+import { useRecipe } from '../../context/RecipeContext';
 
 type FilterType = 'all' | 'breakfast' | 'lunch' | 'dinner' | 'snack';
 type SortType = 'recent' | 'favorite' | 'quickest' | 'protein';
 
-interface Recipe {
-  id: string;
-  title: string;
-  emoji: string;
-  time: number;
-  calories: number;
-  protein: number;
-  isFavorite: boolean;
-  mealType: FilterType;
-  createdAt: string;
-  rating?: number;
-  cookedCount: number;
-}
-
 export default function RecipeBookScreen() {
   const navigation = useNavigation<any>();
-  const { userData } = useUser();  // ADD THIS
+  const { userData } = useUser();
+  const { recipes: contextRecipes, updateRecipe, setCurrentRecipe, isLoading } = useRecipe();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilter, setSelectedFilter] = useState<FilterType>('all');
   const [selectedSort, setSelectedSort] = useState<SortType>('recent');
   const [showSortOptions, setShowSortOptions] = useState(false);
 
-  // Use saved recipes from global state, or fall back to mock data
-  const [recipes, setRecipes] = useState<Recipe[]>(userData.savedRecipes.length > 0 ? userData.savedRecipes : [  // MODIFIED
-    {
-      id: '1',
-      title: 'Mediterranean Chicken Bowl',
-      emoji: '🥗',
-      time: 35,
-      calories: 485,
-      protein: 42,
-      isFavorite: true,
-      mealType: 'lunch',
-      createdAt: '2024-01-15',
-      rating: 5,
-      cookedCount: 3
-    },
-    {
-      id: '2',
-      title: 'Protein Pancakes',
-      emoji: '🥞',
-      time: 20,
-      calories: 320,
-      protein: 28,
-      isFavorite: true,
-      mealType: 'breakfast',
-      createdAt: '2024-01-14',
-      rating: 4,
-      cookedCount: 5
-    },
-    {
-      id: '3',
-      title: 'Teriyaki Salmon',
-      emoji: '🍣',
-      time: 25,
-      calories: 410,
-      protein: 38,
-      isFavorite: false,
-      mealType: 'dinner',
-      createdAt: '2024-01-13',
-      rating: 5,
-      cookedCount: 2
-    },
-    {
-      id: '4',
-      title: 'Greek Yogurt Parfait',
-      emoji: '🍓',
-      time: 10,
-      calories: 250,
-      protein: 18,
-      isFavorite: false,
-      mealType: 'snack',
-      createdAt: '2024-01-12',
-      cookedCount: 8
-    },
-    {
-      id: '5',
-      title: 'Beef Stir Fry',
-      emoji: '🥘',
-      time: 30,
-      calories: 520,
-      protein: 45,
-      isFavorite: true,
-      mealType: 'dinner',
-      createdAt: '2024-01-11',
-      rating: 4,
-      cookedCount: 4
-    },
-    {
-      id: '6',
-      title: 'Overnight Oats',
-      emoji: '🥣',
-      time: 5,
-      calories: 280,
-      protein: 12,
-      isFavorite: false,
-      mealType: 'breakfast',
-      createdAt: '2024-01-10',
-      cookedCount: 10
-    }
-  ]);
+  // Use recipes from context (RecipeContext already provides mock data if empty)
+  const recipes = contextRecipes;
 
   const filters = [
     { id: 'all', label: 'All', emoji: '📚' },
@@ -136,13 +48,10 @@ export default function RecipeBookScreen() {
 
   // Toggle favorite status
   const toggleFavorite = (recipeId: string) => {
-    setRecipes(prevRecipes =>
-      prevRecipes.map(recipe =>
-        recipe.id === recipeId
-          ? { ...recipe, isFavorite: !recipe.isFavorite }
-          : recipe
-      )
-    );
+    const recipe = recipes.find(r => r.id === recipeId);
+    if (recipe) {
+      updateRecipe(recipeId, { isFavorite: !recipe.isFavorite });
+    }
   };
 
   // Filter and sort recipes
@@ -157,18 +66,21 @@ export default function RecipeBookScreen() {
         case 'favorite':
           return (b.isFavorite ? 1 : 0) - (a.isFavorite ? 1 : 0);
         case 'quickest':
-          return a.time - b.time;
+          return a.totalTime - b.totalTime;
         case 'protein':
           return b.protein - a.protein;
         default: // recent
-          return b.createdAt.localeCompare(a.createdAt);
+          return b.createdDate.localeCompare(a.createdDate);
       }
     });
 
-  const renderRecipeCard = ({ item }: { item: Recipe }) => (
+  const renderRecipeCard = ({ item }: { item: typeof recipes[0] }) => (
     <TouchableOpacity
       style={styles.recipeCard}
-      onPress={() => navigation.navigate('RecipeDetail')}
+      onPress={() => {
+        setCurrentRecipe(item);
+        navigation.navigate('RecipeDetail', { recipeId: item.id });
+      }}
       activeOpacity={0.8}
     >
       <View style={styles.recipeImageContainer}>
@@ -195,7 +107,7 @@ export default function RecipeBookScreen() {
         <View style={styles.recipeStats}>
           <View style={styles.stat}>
             <Text style={styles.statIcon}>⏱️</Text>
-            <Text style={styles.statText}>{item.time}m</Text>
+            <Text style={styles.statText}>{item.totalTime}m</Text>
           </View>
           <View style={styles.stat}>
             <Text style={styles.statIcon}>🔥</Text>
@@ -215,6 +127,23 @@ export default function RecipeBookScreen() {
       </View>
     </TouchableOpacity>
   );
+
+  if (isLoading) {
+    return (
+      <View style={styles.container}>
+        <LinearGradient
+          colors={['#4F46E5', '#2D1B69', '#1A0F3D']}
+          style={styles.gradient}
+        >
+          <StatusBar barStyle="light-content" />
+          <SafeAreaView style={[styles.safeArea, { justifyContent: 'center', alignItems: 'center' }]}>
+            <ActivityIndicator size="large" color="white" />
+            <Text style={{ color: 'white', marginTop: 16, fontSize: 16 }}>Loading recipes...</Text>
+          </SafeAreaView>
+        </LinearGradient>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>

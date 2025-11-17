@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import RootNavigator from './src/navigation/RootNavigator';
 import { UserProvider } from './src/context/UserContext';
+import { RecipeProvider } from './src/context/RecipeContext';
 import * as Font from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { View, ActivityIndicator } from 'react-native';
@@ -61,9 +62,11 @@ const originalTextRender = (Text as any).prototype.render;
 
   return (
     <UserProvider>
-      <NavigationContainer>
-        <RootNavigator />
-      </NavigationContainer>
+      <RecipeProvider>
+        <NavigationContainer>
+          <RootNavigator />
+        </NavigationContainer>
+      </RecipeProvider>
     </UserProvider>
   );
 }

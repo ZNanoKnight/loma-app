@@ -11,29 +11,22 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
-import { useUser } from '../../context/UserContext';  // ADD THIS
+import { useUser } from '../../context/UserContext';
+import { useRecipe, CookingStep } from '../../context/RecipeContext';
 
 const { width } = Dimensions.get('window');
 
-interface Step {
-  id: string;
-  title: string;
-  instruction: string;
-  time?: number;
-  tip?: string;
-  warning?: string;
-}
-
 export default function CookingInstructionsScreen() {
   const navigation = useNavigation<any>();
-  const { userData, updateUserData } = useUser();  // ADD THIS
+  const { userData, updateUserData } = useUser();
+  const { currentRecipe } = useRecipe();
   const [currentStep, setCurrentStep] = useState(0);
   const [completedSteps, setCompletedSteps] = useState<number[]>([]);
   const [activeTimer, setActiveTimer] = useState<number | null>(null);
   const [timerSeconds, setTimerSeconds] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 
-  const steps: Step[] = [
+  const steps: CookingStep[] = currentRecipe?.instructions || [
     {
       id: '1',
       title: 'Prep Ingredients',

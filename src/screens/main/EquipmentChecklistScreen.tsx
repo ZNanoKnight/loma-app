@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
   Text,
@@ -10,92 +10,27 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
+import { useRecipe, EquipmentItem as RecipeEquipmentItem } from '../../context/RecipeContext';
 
-interface EquipmentItem {
-  id: string;
-  name: string;
-  emoji: string;
-  essential: boolean;
-  alternative?: string;
+interface EquipmentItem extends RecipeEquipmentItem {
   checked: boolean;
 }
 
 export default function EquipmentChecklistScreen() {
   const navigation = useNavigation<any>();
-  const [equipment, setEquipment] = useState<EquipmentItem[]>([
-    {
-      id: '1',
-      name: 'Large Skillet or Grill Pan',
-      emoji: '🍳',
-      essential: true,
-      checked: false
-    },
-    {
-      id: '2',
-      name: 'Medium Saucepan',
-      emoji: '🍲',
-      essential: true,
-      checked: false
-    },
-    {
-      id: '3',
-      name: 'Cutting Board',
-      emoji: '🔪',
-      essential: true,
-      checked: false
-    },
-    {
-      id: '4',
-      name: 'Sharp Knife',
-      emoji: '🔪',
-      essential: true,
-      checked: false
-    },
-    {
-      id: '5',
-      name: 'Mixing Bowl',
-      emoji: '🥣',
-      essential: true,
-      checked: false
-    },
-    {
-      id: '6',
-      name: 'Measuring Cups',
-      emoji: '📏',
-      essential: true,
-      checked: false
-    },
-    {
-      id: '7',
-      name: 'Measuring Spoons',
-      emoji: '🥄',
-      essential: true,
-      checked: false
-    },
-    {
-      id: '8',
-      name: 'Meat Thermometer',
-      emoji: '🌡️',
-      essential: false,
-      alternative: 'Check by cutting into thickest part',
-      checked: false
-    },
-    {
-      id: '9',
-      name: 'Tongs',
-      emoji: '🥢',
-      essential: false,
-      alternative: 'Use a spatula',
-      checked: false
-    },
-    {
-      id: '10',
-      name: 'Serving Bowls',
-      emoji: '🍽️',
-      essential: false,
-      checked: false
+  const { currentRecipe } = useRecipe();
+  const [equipment, setEquipment] = useState<EquipmentItem[]>([]);
+
+  useEffect(() => {
+    if (currentRecipe && currentRecipe.equipment) {
+      // Convert recipe equipment to checklist items
+      const equipmentWithChecked = currentRecipe.equipment.map(item => ({
+        ...item,
+        checked: false
+      }));
+      setEquipment(equipmentWithChecked);
     }
-  ]);
+  }, [currentRecipe]);
 
   const [showTips, setShowTips] = useState(true);
 
@@ -156,13 +91,15 @@ export default function EquipmentChecklistScreen() {
             </View>
 
             {/* Recipe Info Card */}
-            <View style={styles.recipeCard}>
-              <Text style={styles.recipeEmoji}>🥗</Text>
-              <View style={styles.recipeInfo}>
-                <Text style={styles.recipeName}>Mediterranean Chicken Bowl</Text>
-                <Text style={styles.recipeTime}>⏱️ 35 minutes total</Text>
+            {currentRecipe && (
+              <View style={styles.recipeCard}>
+                <Text style={styles.recipeEmoji}>{currentRecipe.emoji}</Text>
+                <View style={styles.recipeInfo}>
+                  <Text style={styles.recipeName}>{currentRecipe.title}</Text>
+                  <Text style={styles.recipeTime}>⏱️ {currentRecipe.totalTime} minutes total</Text>
+                </View>
               </View>
-            </View>
+            )}
 
             {/* Tips Section */}
             {showTips && (
