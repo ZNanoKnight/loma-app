@@ -4,7 +4,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeStackNavigator from './HomeStackNavigator';
 import RecipeStackNavigator from './RecipeStackNavigator';
 import ProgressStackNavigator from './ProgressStackNavigator';
-import SettingsScreen from '../screens/main/SettingsScreen';
+import SettingsStackNavigator from './SettingsStackNavigator';
 
 const Tab = createBottomTabNavigator();
 
@@ -53,9 +53,9 @@ export default function MainTabNavigator() {
           ),
         }}
       />
-      <Tab.Screen 
-        name="SettingsTab" 
-        component={SettingsScreen}
+      <Tab.Screen
+        name="SettingsTab"
+        component={SettingsStackNavigator}
         options={{
           tabBarLabel: 'Settings',
           tabBarIcon: ({ color }) => (
