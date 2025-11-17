@@ -40,7 +40,7 @@ export default function RecipeBookScreen() {
   const [showSortOptions, setShowSortOptions] = useState(false);
 
   // Use saved recipes from global state, or fall back to mock data
-  const [recipes] = useState<Recipe[]>(userData.savedRecipes.length > 0 ? userData.savedRecipes : [  // MODIFIED
+  const [recipes, setRecipes] = useState<Recipe[]>(userData.savedRecipes.length > 0 ? userData.savedRecipes : [  // MODIFIED
     {
       id: '1',
       title: 'Mediterranean Chicken Bowl',
@@ -134,6 +134,17 @@ export default function RecipeBookScreen() {
     { id: 'protein', label: 'High Protein', icon: '💪' }
   ];
 
+  // Toggle favorite status
+  const toggleFavorite = (recipeId: string) => {
+    setRecipes(prevRecipes =>
+      prevRecipes.map(recipe =>
+        recipe.id === recipeId
+          ? { ...recipe, isFavorite: !recipe.isFavorite }
+          : recipe
+      )
+    );
+  };
+
   // Filter and sort recipes
   const filteredRecipes = recipes
     .filter(recipe => {
@@ -162,11 +173,18 @@ export default function RecipeBookScreen() {
     >
       <View style={styles.recipeImageContainer}>
         <Text style={styles.recipeEmoji}>{item.emoji}</Text>
-        {item.isFavorite && (
-          <View style={styles.favoriteIndicator}>
-            <Text style={styles.favoriteIcon}>❤️</Text>
-          </View>
-        )}
+        <TouchableOpacity
+          style={styles.favoriteIndicator}
+          onPress={(e) => {
+            e.stopPropagation();
+            toggleFavorite(item.id);
+          }}
+          activeOpacity={0.7}
+        >
+          <Text style={styles.favoriteIcon}>
+            {item.isFavorite ? '❤️' : '🤍'}
+          </Text>
+        </TouchableOpacity>
       </View>
       
       <View style={styles.recipeInfo}>
@@ -383,10 +401,14 @@ const styles = StyleSheet.create({
   },
   filterContainer: {
     marginBottom: 10,
+    flexGrow: 0,
+    height: 67,
   },
   filterContent: {
-    paddingHorizontal: 20,
-    gap: 10,
+    paddingLeft: 20,
+    paddingRight: 10,
+    paddingVertical: 4,
+    alignItems: 'center',
   },
   filterTab: {
     flexDirection: 'row',
