@@ -20,7 +20,9 @@ export default function DietaryRestrictionsScreen() {
   const navigation = useNavigation<any>();
   const { userData, updateUserData } = useUser();  // ADD THIS
   
-  const [selectedRestrictions, setSelectedRestrictions] = useState<string[]>(userData.allergens || ['none']);  // MODIFIED
+  const [selectedRestrictions, setSelectedRestrictions] = useState<string[]>(
+    userData.allergens && userData.allergens.length > 0 ? userData.allergens : ['none']
+  );
   const [selectedEquipment, setSelectedEquipment] = useState<Equipment>((userData.equipment as Equipment) || 'basic');  // MODIFIED
   const [customRestriction, setCustomRestriction] = useState('');
 

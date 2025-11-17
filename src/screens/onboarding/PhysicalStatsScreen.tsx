@@ -21,8 +21,8 @@ export default function PhysicalStatsScreen() {
   
   const [age, setAge] = useState(userData.age || '');  // MODIFIED
   const [weight, setWeight] = useState(userData.weight || '');  // MODIFIED
-  const [heightFeet, setHeightFeet] = useState(userData.heightFeet || '5');  // MODIFIED
-  const [heightInches, setHeightInches] = useState(userData.heightInches || '6');  // MODIFIED
+  const [heightFeet, setHeightFeet] = useState(userData.heightFeet || '');  // MODIFIED
+  const [heightInches, setHeightInches] = useState(userData.heightInches || '');  // MODIFIED
   const [selectedGender, setSelectedGender] = useState(userData.gender || '');  // MODIFIED
   const [unit, setUnit] = useState<'imperial' | 'metric'>('imperial');
 
@@ -332,20 +332,30 @@ const styles = StyleSheet.create({
   },
   heightContainer: {
     flexDirection: 'row',
-    gap: 10,
+    gap: 12,
   },
   heightInputWrapper: {
     flex: 1,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.2)',
+    borderRadius: 12,
+    paddingHorizontal: 12,
     flexDirection: 'row',
     alignItems: 'center',
   },
   heightInput: {
     flex: 1,
+    fontSize: 16,
+    color: 'white',
+    padding: 0,
+    backgroundColor: 'transparent',
+    borderWidth: 0,
   },
   heightUnit: {
     color: 'rgba(255, 255, 255, 0.6)',
     fontSize: 14,
-    marginLeft: -30,
+    marginLeft: 8,
   },
   continueButton: {
     backgroundColor: 'white',
