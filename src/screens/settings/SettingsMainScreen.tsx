@@ -7,6 +7,7 @@ import {
   SafeAreaView,
   StatusBar,
   ScrollView,
+  Switch,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
@@ -16,6 +17,15 @@ export default function SettingsMainScreen() {
   const navigation = useNavigation<any>();
   const { userData: globalUserData, clearUserData } = useUser();
   const [expandedSections, setExpandedSections] = React.useState<string[]>([]);
+
+  // Notification settings state
+  const [notifications, setNotifications] = React.useState(true);
+  const [mealReminders, setMealReminders] = React.useState(true);
+  const [weeklyReport, setWeeklyReport] = React.useState(true);
+
+  // App preferences state
+  const [darkMode, setDarkMode] = React.useState(false);
+  const [metricUnits, setMetricUnits] = React.useState(false);
 
   const userData = {
     name: globalUserData.firstName || 'User',
@@ -60,48 +70,16 @@ export default function SettingsMainScreen() {
       ],
     },
     {
-      id: 'notifications',
-      icon: '🔔',
-      title: 'Notifications',
-      items: [
-        { label: 'Push Notifications', screen: 'NotificationSettings' },
-        { label: 'Meal Reminders', screen: 'NotificationSettings' },
-        { label: 'Weekly Report', screen: 'NotificationSettings' },
-        { label: 'Notification Schedule', screen: 'NotificationSettings' },
-      ],
-    },
-    {
       id: 'dietary',
       icon: '🥗',
-      title: 'Dietary Preferences',
-      items: [
-        { label: 'Dietary Preferences', screen: 'DietaryPreferences' },
-        { label: 'Allergens', screen: 'DietaryPreferences' },
-        { label: 'Macro Targets', screen: 'DietaryPreferences' },
-        { label: 'Calorie Goals', screen: 'DietaryPreferences' },
-      ],
-    },
-    {
-      id: 'preferences',
-      icon: '⚙️',
-      title: 'App Preferences',
-      items: [
-        { label: 'Dark Mode', screen: 'AppPreferences' },
-        { label: 'Metric Units', screen: 'AppPreferences' },
-        { label: 'Language', screen: 'AppPreferences' },
-        { label: 'Default Serving Size', screen: 'AppPreferences' },
-      ],
+      title: 'Recipe Preferences',
+      directScreen: 'DietaryPreferences',
     },
     {
       id: 'support',
       icon: '💬',
       title: 'Help & Support',
-      items: [
-        { label: 'Help Center', screen: 'Support' },
-        { label: 'Contact Support', screen: 'Support' },
-        { label: 'Privacy Policy', screen: 'Support' },
-        { label: 'Terms of Service', screen: 'Support' },
-      ],
+      directScreen: 'Support',
     },
   ];
 
@@ -159,16 +137,24 @@ export default function SettingsMainScreen() {
                 <View key={section.id} style={styles.settingSection}>
                   <TouchableOpacity
                     style={styles.sectionHeader}
-                    onPress={() => toggleSection(section.id)}
+                    onPress={() => {
+                      if (section.directScreen) {
+                        navigation.navigate(section.directScreen);
+                      } else {
+                        toggleSection(section.id);
+                      }
+                    }}
                   >
                     <Text style={styles.sectionIcon}>{section.icon}</Text>
                     <Text style={styles.sectionTitle}>{section.title}</Text>
                     <Text style={styles.chevron}>
-                      {expandedSections.includes(section.id) ? '⌄' : '›'}
+                      {section.directScreen
+                        ? '›'
+                        : expandedSections.includes(section.id) ? '⌄' : '›'}
                     </Text>
                   </TouchableOpacity>
 
-                  {expandedSections.includes(section.id) && (
+                  {!section.directScreen && expandedSections.includes(section.id) && section.items && (
                     <View style={styles.expandedContent}>
                       {section.items.map((item, index) => (
                         <TouchableOpacity
@@ -184,6 +170,103 @@ export default function SettingsMainScreen() {
                   )}
                 </View>
               ))}
+
+              {/* Notifications Section */}
+              <View style={styles.settingSection}>
+                <TouchableOpacity
+                  style={styles.sectionHeader}
+                  onPress={() => toggleSection('notifications')}
+                >
+                  <Text style={styles.sectionIcon}>🔔</Text>
+                  <Text style={styles.sectionTitle}>Notifications</Text>
+                  <Text style={styles.chevron}>
+                    {expandedSections.includes('notifications') ? '⌄' : '›'}
+                  </Text>
+                </TouchableOpacity>
+
+                {expandedSections.includes('notifications') && (
+                  <View style={styles.expandedContent}>
+                    <View style={styles.settingRow}>
+                      <Text style={styles.settingLabel}>Push Notifications</Text>
+                      <Switch
+                        value={notifications}
+                        onValueChange={setNotifications}
+                        trackColor={{ false: '#E5E7EB', true: '#4F46E5' }}
+                        thumbColor="white"
+                      />
+                    </View>
+                    <View style={styles.settingRow}>
+                      <Text style={styles.settingLabel}>Meal Reminders</Text>
+                      <Switch
+                        value={mealReminders}
+                        onValueChange={setMealReminders}
+                        trackColor={{ false: '#E5E7EB', true: '#4F46E5' }}
+                        thumbColor="white"
+                      />
+                    </View>
+                    <View style={styles.settingRow}>
+                      <Text style={styles.settingLabel}>Weekly Report</Text>
+                      <Switch
+                        value={weeklyReport}
+                        onValueChange={setWeeklyReport}
+                        trackColor={{ false: '#E5E7EB', true: '#4F46E5' }}
+                        thumbColor="white"
+                      />
+                    </View>
+                    <TouchableOpacity
+                      style={styles.settingRow}
+                      onPress={() => navigation.navigate('NotificationSettings')}
+                    >
+                      <Text style={styles.settingLabel}>Notification Schedule</Text>
+                      <Text style={styles.settingChevron}>›</Text>
+                    </TouchableOpacity>
+                  </View>
+                )}
+              </View>
+
+              {/* App Preferences Section */}
+              <View style={styles.settingSection}>
+                <TouchableOpacity
+                  style={styles.sectionHeader}
+                  onPress={() => toggleSection('preferences')}
+                >
+                  <Text style={styles.sectionIcon}>⚙️</Text>
+                  <Text style={styles.sectionTitle}>App Preferences</Text>
+                  <Text style={styles.chevron}>
+                    {expandedSections.includes('preferences') ? '⌄' : '›'}
+                  </Text>
+                </TouchableOpacity>
+
+                {expandedSections.includes('preferences') && (
+                  <View style={styles.expandedContent}>
+                    <View style={styles.settingRow}>
+                      <Text style={styles.settingLabel}>Dark Mode</Text>
+                      <Switch
+                        value={darkMode}
+                        onValueChange={setDarkMode}
+                        trackColor={{ false: '#E5E7EB', true: '#4F46E5' }}
+                        thumbColor="white"
+                      />
+                    </View>
+                    <View style={styles.settingRow}>
+                      <Text style={styles.settingLabel}>Metric Units</Text>
+                      <Switch
+                        value={metricUnits}
+                        onValueChange={setMetricUnits}
+                        trackColor={{ false: '#E5E7EB', true: '#4F46E5' }}
+                        thumbColor="white"
+                      />
+                    </View>
+                    <TouchableOpacity
+                      style={styles.settingRow}
+                      onPress={() => navigation.navigate('AppPreferences')}
+                    >
+                      <Text style={styles.settingLabel}>Language</Text>
+                      <Text style={styles.settingValue}>English ›</Text>
+                    </TouchableOpacity>
+                  </View>
+                )}
+              </View>
             </View>
 
             {/* Sign Out Button */}
@@ -343,6 +426,10 @@ const styles = StyleSheet.create({
   settingLabel: {
     fontSize: 14,
     color: '#4B5563',
+  },
+  settingValue: {
+    fontSize: 14,
+    color: '#9CA3AF',
   },
   settingChevron: {
     fontSize: 14,

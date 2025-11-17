@@ -69,17 +69,7 @@ export default function SupportScreen() {
               </TouchableOpacity>
 
               <TouchableOpacity style={styles.settingRow}>
-                <Text style={styles.settingLabel}>Video Tutorials</Text>
-                <Text style={styles.chevron}>›</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity style={styles.settingRow}>
                 <Text style={styles.settingLabel}>FAQs</Text>
-                <Text style={styles.chevron}>›</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity style={styles.settingRow}>
-                <Text style={styles.settingLabel}>Community Forum</Text>
                 <Text style={styles.chevron}>›</Text>
               </TouchableOpacity>
             </View>

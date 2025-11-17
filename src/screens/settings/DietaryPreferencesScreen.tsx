@@ -101,6 +101,16 @@ export default function DietaryPreferencesScreen() {
                 </View>
                 <Text style={styles.chevron}>›</Text>
               </TouchableOpacity>
+
+              <TouchableOpacity style={styles.settingRow} >
+                <View style={styles.settingInfo}>
+                  <Text style={styles.settingLabel}>Default Serving Size</Text>
+                  <Text style={styles.settingDescription}>
+                    2
+                  </Text>
+                </View>
+                <Text style={styles.chevron}>›</Text>
+              </TouchableOpacity>
             </View>
           </ScrollView>
         </SafeAreaView>
