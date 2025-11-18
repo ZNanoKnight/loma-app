@@ -41,6 +41,9 @@ interface UserData {
   dislikedIngredients?: string[];
   cuisinePreferences?: string[];
   defaultServingSize?: number;
+  profileImageUri?: string; // Temporary storage for profile photo URI
+  // NOTE: In production, this would be replaced with a URL to the uploaded image from the backend
+  // The URI is just a file path string, so it's lightweight and won't impact performance
 
   // Onboarding status
   hasCompletedOnboarding: boolean;
@@ -96,6 +99,7 @@ const initialUserData: UserData = {
   dislikedIngredients: [],
   cuisinePreferences: [],
   defaultServingSize: 2,
+  profileImageUri: undefined,
 
   // Onboarding status
   hasCompletedOnboarding: false,

@@ -8,6 +8,7 @@ import {
   StatusBar,
   ScrollView,
   Switch,
+  Image,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useUser } from '../../context/UserContext';
@@ -138,7 +139,11 @@ export default function SettingsMainScreen() {
             <View style={styles.profileCard}>
               <View style={styles.profileHeader}>
                 <View style={styles.avatarContainer}>
-                  <Text style={styles.avatar}>👤</Text>
+                  {globalUserData.profileImageUri ? (
+                    <Image source={{ uri: globalUserData.profileImageUri }} style={styles.avatarImage} />
+                  ) : (
+                    <Text style={styles.avatar}>👤</Text>
+                  )}
                   <TouchableOpacity style={styles.editBadge} onPress={() => navigation.navigate('EditProfile')}>
                     <Text style={styles.editIcon}>✏️</Text>
                   </TouchableOpacity>
@@ -339,6 +344,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     lineHeight: 80,
     fontFamily: 'VendSans-Regular',
+  },
+  avatarImage: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: '#F3F4F6',
   },
   editBadge: {
     position: 'absolute',

@@ -8,9 +8,12 @@ import {
   StatusBar,
   ScrollView,
   TextInput,
+  Alert,
+  Image,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useUser } from '../../context/UserContext';
+import * as ImagePicker from 'expo-image-picker';
 
 export default function EditProfileScreen() {
   const navigation = useNavigation<any>();
@@ -18,9 +21,78 @@ export default function EditProfileScreen() {
 
   const [firstName, setFirstName] = useState(userData.firstName);
   const [email, setEmail] = useState(userData.email);
+  // TEMPORARY FEATURE: Store profile photo URI in context/AsyncStorage
+  // In production: This would be uploaded to the backend and replaced with a permanent URL
+  // Current implementation: Lightweight (just stores file path), no performance impact
+  const [profileImage, setProfileImage] = useState<string | null>(userData.profileImageUri || null);
+
+  const handleImagePick = async () => {
+    Alert.alert(
+      'Change Photo',
+      'Choose an option',
+      [
+        {
+          text: 'Take Photo',
+          onPress: async () => {
+            const { status } = await ImagePicker.requestCameraPermissionsAsync();
+            if (status !== 'granted') {
+              Alert.alert('Permission Denied', 'Camera permission is required to take photos.');
+              return;
+            }
+
+            const result = await ImagePicker.launchCameraAsync({
+              allowsEditing: true,
+              aspect: [1, 1],
+              quality: 0.8,
+            });
+
+            if (!result.canceled && result.assets[0]) {
+              setProfileImage(result.assets[0].uri);
+              // PRODUCTION TODO: Upload image to API endpoint using FormData/multipart upload
+              // Expected flow: POST /api/user/profile-image -> receive permanent URL -> save URL to userData
+            }
+          },
+        },
+        {
+          text: 'Choose from Library',
+          onPress: async () => {
+            const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+            if (status !== 'granted') {
+              Alert.alert('Permission Denied', 'Media library permission is required to choose photos.');
+              return;
+            }
+
+            const result = await ImagePicker.launchImageLibraryAsync({
+              mediaTypes: ['images'],
+              allowsEditing: true,
+              aspect: [1, 1],
+              quality: 0.8,
+            });
+
+            if (!result.canceled && result.assets[0]) {
+              setProfileImage(result.assets[0].uri);
+              // PRODUCTION TODO: Upload image to API endpoint using FormData/multipart upload
+              // Expected flow: POST /api/user/profile-image -> receive permanent URL -> save URL to userData
+            }
+          },
+        },
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+      ],
+      { cancelable: true }
+    );
+  };
 
   const handleSave = () => {
-    updateUserData({ firstName, email });
+    updateUserData({
+      firstName,
+      email,
+      profileImageUri: profileImage || undefined // Save photo URI to context (persisted via AsyncStorage)
+    });
+    // PRODUCTION TODO: Save profile image to backend when API is ready
+    // The profileImageUri will be replaced with the permanent backend URL after upload
     navigation.goBack();
   };
 
@@ -49,12 +121,18 @@ export default function EditProfileScreen() {
             {/* Profile Avatar */}
             <View style={styles.avatarSection}>
               <View style={styles.avatarContainer}>
-                <Text style={styles.avatar}>👤</Text>
-                <TouchableOpacity style={styles.editBadge}>
+                {profileImage ? (
+                  <Image source={{ uri: profileImage }} style={styles.avatarImage} />
+                ) : (
+                  <Text style={styles.avatar}>👤</Text>
+                )}
+                <TouchableOpacity style={styles.editBadge} onPress={handleImagePick}>
                   <Text style={styles.editIcon}>📷</Text>
                 </TouchableOpacity>
               </View>
-              <Text style={styles.avatarLabel}>Change Photo</Text>
+              <TouchableOpacity onPress={handleImagePick}>
+                <Text style={styles.avatarLabel}>Change Photo</Text>
+              </TouchableOpacity>
             </View>
 
             {/* Form Fields */}
@@ -166,6 +244,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     lineHeight: 100,
     fontFamily: 'VendSans-Regular',
+  },
+  avatarImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    backgroundColor: '#F3F4F6',
   },
   editBadge: {
     position: 'absolute',
