@@ -94,7 +94,7 @@ export default function CookingFrequencyScreen() {
             <View style={styles.progressBar}>
               <View style={[styles.progressFill, { width: '80%' }]} />
             </View>
-            <Text style={styles.progressText}>Step 8 of 10</Text>
+            <Text style={styles.progressText}>Step 8 of 11</Text>
           </View>
 
           {/* Back Button */}

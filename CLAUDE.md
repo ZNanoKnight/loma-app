@@ -1,5 +1,5 @@
 ## Overview
-Loma is an AI-powered recipe and meal planning mobile application built with React Native and Expo. The app features a comprehensive 10-screen onboarding flow, personalized recipe generation, meal tracking, progress monitoring, and a complete cooking experience with step-by-step instructions. The app uses global state management for user data persistence across 20 total screens.
+Loma is an AI-powered recipe and meal planning mobile application built with React Native and Expo. The app features a comprehensive 11-screen onboarding flow, personalized recipe generation, meal tracking, progress monitoring, and a complete cooking experience with step-by-step instructions. The app uses global state management for user data persistence and includes a token-based recipe generation system.
 
 ## Tech Stack
 Language: TypeScript 5.x
@@ -34,13 +34,13 @@ loma-app/
 │   │   └── UserContext.tsx   # Global state management for user data
 │   ├── navigation/
 │   │   ├── RootNavigator.tsx           # Top-level navigator
-│   │   ├── OnboardingNavigator.tsx     # 10-screen onboarding flow
+│   │   ├── OnboardingNavigator.tsx     # 11-screen onboarding flow
 │   │   ├── MainTabNavigator.tsx        # Bottom tab navigation
 │   │   ├── HomeStackNavigator.tsx      # Home tab stack
 │   │   ├── RecipeStackNavigator.tsx    # Recipe book tab stack
 │   │   └── ProgressStackNavigator.tsx  # Progress tab stack
 │   └── screens/
-│       ├── onboarding/        # 10 onboarding screens
+│       ├── onboarding/        # 11 onboarding screens
 │       │   ├── WelcomeScreen.tsx
 │       │   ├── NameEmailScreen.tsx
 │       │   ├── PhysicalStatsScreen.tsx
@@ -50,6 +50,7 @@ loma-app/
 │       │   ├── DietaryRestrictionsScreen.tsx
 │       │   ├── CookingFrequencyScreen.tsx
 │       │   ├── RecipePreviewScreen.tsx
+│       │   ├── AppFeaturesScreen.tsx
 │       │   └── PaymentScreen.tsx (PaywallScreen)
 │       └── main/              # 10 main app screens
 │           ├── HomeScreen.tsx
@@ -173,7 +174,8 @@ typescriptUserData {
 
 Business Logic
 
-Onboarding Flow: Users must complete all 10 onboarding screens before accessing the main app
+Onboarding Flow: Users must complete all 11 onboarding screens before accessing the main app
+Token System: Users receive tokens based on their subscription plan. Each token allows the generation of one personalized recipe. Generated recipes are saved permanently in the user's Recipe Book regardless of token usage.
 Recipe Generation: Mock AI-generated recipes based on user preferences (would connect to actual AI API in production)
 Cooking Flow: Equipment checklist → Ingredients list → Step-by-step instructions
 Progress Tracking: Weekly check-ins, streak counting, and achievement system
@@ -190,7 +192,7 @@ Platform: Designed for mobile (iOS/Android) via Expo
 
 Known Navigation Routes
 
-Onboarding: Welcome → NameEmail → PhysicalStats → ActivityLevel → Goals → DietaryPreferences → DietaryRestrictions → CookingFrequency → RecipePreview → Payment
+Onboarding: Welcome → NameEmail → PhysicalStats → ActivityLevel → Goals → DietaryPreferences → DietaryRestrictions → CookingFrequency → RecipePreview → AppFeatures → Payment
 Main App: Home → RecipeGenerated → EquipmentChecklist → IngredientsList → CookingInstructions
 Recipe Book: RecipeBook → RecipeDetail
 Progress: Progress → WeeklyCheckIn

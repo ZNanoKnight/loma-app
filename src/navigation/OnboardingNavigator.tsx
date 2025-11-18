@@ -9,6 +9,7 @@ import DietaryPreferencesScreen from '../screens/onboarding/DietaryPreferencesSc
 import DietaryRestrictionsScreen from '../screens/onboarding/DietaryRestrictionsScreen';
 import CookingFrequencyScreen from '../screens/onboarding/CookingFrequencyScreen';
 import RecipePreviewScreen from '../screens/onboarding/RecipePreviewScreen';
+import AppFeaturesScreen from '../screens/onboarding/AppFeaturesScreen';
 import PaymentScreen from '../screens/onboarding/PaymentScreen';
 
 const Stack = createStackNavigator();
@@ -30,6 +31,7 @@ export default function OnboardingNavigator() {
       <Stack.Screen name="DietaryRestrictions" component={DietaryRestrictionsScreen} />
       <Stack.Screen name="CookingFrequency" component={CookingFrequencyScreen} />
       <Stack.Screen name="RecipePreview" component={RecipePreviewScreen} />
+      <Stack.Screen name="AppFeatures" component={AppFeaturesScreen} />
       <Stack.Screen name="Payment" component={PaymentScreen} />
     </Stack.Navigator>
   );

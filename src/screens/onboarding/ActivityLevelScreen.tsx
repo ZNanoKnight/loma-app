@@ -82,7 +82,7 @@ export default function ActivityLevelScreen() {
             <View style={styles.progressBar}>
               <View style={[styles.progressFill, { width: '40%' }]} />
             </View>
-            <Text style={styles.progressText}>Step 4 of 10</Text>
+            <Text style={styles.progressText}>Step 4 of 11</Text>
           </View>
 
           {/* Back Button */}

@@ -108,7 +108,7 @@ export default function PaywallScreen() {
             <View style={styles.progressBar}>
               <View style={[styles.progressFill, { width: '100%' }]} />
             </View>
-            <Text style={styles.progressText}>Step 10 of 10</Text>
+            <Text style={styles.progressText}>Step 11 of 11</Text>
           </View>
 
           {/* Back Button */}

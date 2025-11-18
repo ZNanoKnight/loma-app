@@ -61,7 +61,7 @@ export default function PhysicalStatsScreen() {
               <View style={styles.progressBar}>
                 <View style={[styles.progressFill, { width: '30%' }]} />
               </View>
-              <Text style={styles.progressText}>Step 3 of 10</Text>
+              <Text style={styles.progressText}>Step 3 of 11</Text>
             </View>
 
             {/* Back Button */}

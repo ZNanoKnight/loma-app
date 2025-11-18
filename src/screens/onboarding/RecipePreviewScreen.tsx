@@ -92,7 +92,7 @@ export default function RecipePreviewScreen() {
   };
 
   const handleContinue = () => {
-    navigation.navigate('Payment');
+    navigation.navigate('AppFeatures');
   };
 
   return (
@@ -108,7 +108,7 @@ export default function RecipePreviewScreen() {
             <View style={styles.progressBar}>
               <View style={[styles.progressFill, { width: '90%' }]} />
             </View>
-            <Text style={styles.progressText}>Step 9 of 10</Text>
+            <Text style={styles.progressText}>Step 9 of 11</Text>
           </View>
 
           {/* Back Button */}
@@ -231,7 +231,7 @@ export default function RecipePreviewScreen() {
               activeOpacity={0.8}
             >
               <Text style={styles.continueButtonText}>
-                Continue to Payment
+                Continue
               </Text>
             </TouchableOpacity>
           </View>

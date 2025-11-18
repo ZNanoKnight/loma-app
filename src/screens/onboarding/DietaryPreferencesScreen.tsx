@@ -128,7 +128,7 @@ export default function DietaryPreferencesScreen() {
             <View style={styles.progressBar}>
               <View style={[styles.progressFill, { width: '60%' }]} />
             </View>
-            <Text style={styles.progressText}>Step 6 of 10</Text>
+            <Text style={styles.progressText}>Step 6 of 11</Text>
           </View>
 
           {/* Back Button */}

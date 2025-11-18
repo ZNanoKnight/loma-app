@@ -84,7 +84,7 @@ export default function GoalsScreen() {
             <View style={styles.progressBar}>
               <View style={[styles.progressFill, { width: '50%' }]} />
             </View>
-            <Text style={styles.progressText}>Step 5 of 10</Text>
+            <Text style={styles.progressText}>Step 5 of 11</Text>
           </View>
 
           {/* Back Button */}
