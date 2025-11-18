@@ -5,20 +5,16 @@ import HomeStackNavigator from './HomeStackNavigator';
 import RecipeStackNavigator from './RecipeStackNavigator';
 import ProgressStackNavigator from './ProgressStackNavigator';
 import SettingsStackNavigator from './SettingsStackNavigator';
+import FloatingTabBar from '../components/FloatingTabBar';
 
 const Tab = createBottomTabNavigator();
 
 export default function MainTabNavigator() {
   return (
     <Tab.Navigator
+      tabBar={(props) => <FloatingTabBar {...props} />}
       screenOptions={{
         headerShown: false,
-        tabBarStyle: {
-          backgroundColor: '#1F1148',
-          borderTopColor: 'rgba(255, 255, 255, 0.1)',
-          paddingBottom: 5,
-          height: 60,
-        },
         tabBarActiveTintColor: 'white',
         tabBarInactiveTintColor: 'rgba(255, 255, 255, 0.5)',
       }}
