@@ -8,7 +8,6 @@ import {
   StatusBar,
   ScrollView,
 } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 
 export default function SubscriptionScreen() {
@@ -148,7 +147,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 18,
-    color: 'white',
+    color: '#1F2937',
     fontFamily: 'VendSans-SemiBold',
   },
   placeholder: {
@@ -178,19 +177,19 @@ const styles = StyleSheet.create({
   },
   planTitle: {
     fontSize: 24,
-    color: 'white',
+    color: '#1F2937',
     marginBottom: 8,
     fontFamily: 'VendSans-Bold',
   },
   planPrice: {
     fontSize: 18,
-    color: 'rgba(255, 255, 255, 0.9)',
+    color: '#6B7280',
     marginBottom: 12,
     fontFamily: 'VendSans-Regular',
   },
   planDescription: {
     fontSize: 14,
-    color: 'rgba(255, 255, 255, 0.8)',
+    color: '#6B7280',
     textAlign: 'center',
     lineHeight: 20,
     fontFamily: 'VendSans-Regular',
@@ -263,7 +262,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   secondaryButtonText: {
-    color: 'white',
+    color: '#6B46C1',
     fontSize: 16,
     fontFamily: 'VendSans-SemiBold',
   },
@@ -285,7 +284,7 @@ const styles = StyleSheet.create({
   },
   benefitsTitle: {
     fontSize: 16,
-    color: 'rgba(255, 255, 255, 0.9)',
+    color: '#1F2937',
     marginBottom: 16,
     fontFamily: 'VendSans-SemiBold',
   },
@@ -308,7 +307,7 @@ const styles = StyleSheet.create({
   },
   benefitText: {
     fontSize: 14,
-    color: 'rgba(255, 255, 255, 0.8)',
+    color: '#6B7280',
     fontFamily: 'VendSans-Regular',
   },
 });

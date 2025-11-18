@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -8,11 +8,32 @@ import {
   StatusBar,
   ScrollView,
 } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
+import RatingModal from '../../components/RatingModal';
 
 export default function SupportScreen() {
   const navigation = useNavigation<any>();
+  const [showRatingModal, setShowRatingModal] = useState(false);
+
+  const handleFeedbackPress = (type: 'feedback' | 'bug' | 'feature' | 'support') => {
+    navigation.navigate('Feedback', { type });
+  };
+
+  const handleRateLoma = () => {
+    setShowRatingModal(true);
+  };
+
+  const handleRatingSubmit = (rating: number) => {
+    // TODO: Implement App Store rating API integration
+    console.log('User rated:', rating);
+
+    // Close modal
+    setShowRatingModal(false);
+
+    // If rating is 4 or 5 stars, could redirect to App Store
+    // For iOS: Linking.openURL('itms-apps://itunes.apple.com/app/idYOUR_APP_ID?action=write-review')
+    // For Android: Linking.openURL('market://details?id=YOUR_PACKAGE_NAME')
+  };
 
   return (
     <View style={styles.container}>
@@ -44,7 +65,7 @@ export default function SupportScreen() {
                 </Text>
               </TouchableOpacity>
 
-              <TouchableOpacity style={styles.actionCard}>
+              <TouchableOpacity style={styles.actionCard} onPress={() => handleFeedbackPress('support')}>
                 <Text style={styles.actionIcon}>💬</Text>
                 <Text style={styles.actionTitle}>Contact Support</Text>
                 <Text style={styles.actionDescription}>
@@ -53,70 +74,85 @@ export default function SupportScreen() {
               </TouchableOpacity>
             </View>
 
-            {/* Resources */}
+            {/* Settings Sections */}
             <View style={styles.settingsContainer}>
-              <View style={styles.sectionHeader}>
-                <Text style={styles.sectionTitle}>Resources</Text>
+              {/* Resources Bubble */}
+              <View style={styles.categoryBubble}>
+                <View style={styles.bubbleHeader}>
+                  <Text style={styles.bubbleIcon}>📚</Text>
+                  <Text style={styles.bubbleTitle}>Resources</Text>
+                </View>
+                <View style={styles.bubbleItems}>
+                  <TouchableOpacity style={styles.settingRow}>
+                    <Text style={styles.settingLabel}>Getting Started Guide</Text>
+                    <Text style={styles.chevron}>›</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={[styles.settingRow, styles.settingRowLast]}>
+                    <Text style={styles.settingLabel}>FAQs</Text>
+                    <Text style={styles.chevron}>›</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
 
-              <TouchableOpacity style={styles.settingRow}>
-                <Text style={styles.settingLabel}>Getting Started Guide</Text>
-                <Text style={styles.chevron}>›</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity style={styles.settingRow}>
-                <Text style={styles.settingLabel}>FAQs</Text>
-                <Text style={styles.chevron}>›</Text>
-              </TouchableOpacity>
-            </View>
-
-            {/* Legal */}
-            <View style={styles.settingsContainer}>
-              <View style={styles.sectionHeader}>
-                <Text style={styles.sectionTitle}>Legal</Text>
+              {/* Legal Bubble */}
+              <View style={styles.categoryBubble}>
+                <View style={styles.bubbleHeader}>
+                  <Text style={styles.bubbleIcon}>⚖️</Text>
+                  <Text style={styles.bubbleTitle}>Legal</Text>
+                </View>
+                <View style={styles.bubbleItems}>
+                  <TouchableOpacity style={styles.settingRow}>
+                    <Text style={styles.settingLabel}>Privacy Policy</Text>
+                    <Text style={styles.chevron}>›</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.settingRow}>
+                    <Text style={styles.settingLabel}>Terms of Service</Text>
+                    <Text style={styles.chevron}>›</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={[styles.settingRow, styles.settingRowLast]}>
+                    <Text style={styles.settingLabel}>Licenses</Text>
+                    <Text style={styles.chevron}>›</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
 
-              <TouchableOpacity style={styles.settingRow}>
-                <Text style={styles.settingLabel}>Privacy Policy</Text>
-                <Text style={styles.chevron}>›</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity style={styles.settingRow}>
-                <Text style={styles.settingLabel}>Terms of Service</Text>
-                <Text style={styles.chevron}>›</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity style={styles.settingRow}>
-                <Text style={styles.settingLabel}>Licenses</Text>
-                <Text style={styles.chevron}>›</Text>
-              </TouchableOpacity>
-            </View>
-
-            {/* Feedback */}
-            <View style={styles.settingsContainer}>
-              <View style={styles.sectionHeader}>
-                <Text style={styles.sectionTitle}>Feedback</Text>
+              {/* Feedback Bubble */}
+              <View style={styles.categoryBubble}>
+                <View style={styles.bubbleHeader}>
+                  <Text style={styles.bubbleIcon}>💭</Text>
+                  <Text style={styles.bubbleTitle}>Feedback</Text>
+                </View>
+                <View style={styles.bubbleItems}>
+                  <TouchableOpacity
+                    style={styles.settingRow}
+                    onPress={() => handleFeedbackPress('feedback')}
+                  >
+                    <Text style={styles.settingLabel}>Send Feedback</Text>
+                    <Text style={styles.chevron}>›</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.settingRow}
+                    onPress={() => handleFeedbackPress('bug')}
+                  >
+                    <Text style={styles.settingLabel}>Report a Bug</Text>
+                    <Text style={styles.chevron}>›</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.settingRow}
+                    onPress={() => handleFeedbackPress('feature')}
+                  >
+                    <Text style={styles.settingLabel}>Request a Feature</Text>
+                    <Text style={styles.chevron}>›</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[styles.settingRow, styles.settingRowLast]}
+                    onPress={handleRateLoma}
+                  >
+                    <Text style={styles.settingLabel}>Rate Loma</Text>
+                    <Text style={styles.chevron}>›</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
-
-              <TouchableOpacity style={styles.settingRow}>
-                <Text style={styles.settingLabel}>Send Feedback</Text>
-                <Text style={styles.chevron}>›</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity style={styles.settingRow}>
-                <Text style={styles.settingLabel}>Report a Bug</Text>
-                <Text style={styles.chevron}>›</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity style={styles.settingRow}>
-                <Text style={styles.settingLabel}>Request a Feature</Text>
-                <Text style={styles.chevron}>›</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity style={styles.settingRow}>
-                <Text style={styles.settingLabel}>Rate Loma</Text>
-                <Text style={styles.chevron}>›</Text>
-              </TouchableOpacity>
             </View>
 
             {/* App Information */}
@@ -128,9 +164,15 @@ export default function SupportScreen() {
             </View>
           </ScrollView>
         </SafeAreaView>
-      
-    </View>
-  );
+
+        {/* Rating Modal */}
+        <RatingModal
+          visible={showRatingModal}
+          onClose={() => setShowRatingModal(false)}
+          onRate={handleRatingSubmit}
+        />
+      </View>
+    );
 }
 
 const styles = StyleSheet.create({
@@ -168,7 +210,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 18,
-    color: 'white',
+    color: '#1F2937',
     fontFamily: 'VendSans-SemiBold',
   },
   placeholder: {
@@ -187,7 +229,7 @@ const styles = StyleSheet.create({
     padding: 16,
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.2)',
+    borderColor: '#E5E7EB',
   },
   actionIcon: {
     fontSize: 32,
@@ -196,49 +238,74 @@ const styles = StyleSheet.create({
   },
   actionTitle: {
     fontSize: 14,
-    color: 'white',
+    color: '#1F2937',
     marginBottom: 4,
     textAlign: 'center',
     fontFamily: 'VendSans-SemiBold',
   },
   actionDescription: {
     fontSize: 11,
-    color: 'rgba(255, 255, 255, 0.7)',
+    color: '#6B7280',
     textAlign: 'center',
     fontFamily: 'VendSans-Regular',
   },
   settingsContainer: {
-    backgroundColor: 'white',
     marginHorizontal: 20,
-    borderRadius: 20,
+    marginBottom: 24,
+    gap: 16,
+  },
+  categoryBubble: {
+    backgroundColor: 'white',
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
     overflow: 'hidden',
-    marginBottom: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 12,
+    elevation: 5,
   },
-  sectionHeader: {
+  bubbleHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
     padding: 16,
-    backgroundColor: '#F9FAFB',
+    backgroundColor: 'white',
   },
-  sectionTitle: {
-    fontSize: 14,
-    color: '#4B5563',
+  bubbleIcon: {
+    fontSize: 24,
+    marginRight: 12,
+    fontFamily: 'VendSans-Regular',
+  },
+  bubbleTitle: {
+    flex: 1,
+    fontSize: 16,
+    color: '#1F2937',
     fontFamily: 'VendSans-SemiBold',
+  },
+  bubbleItems: {
+    backgroundColor: '#FAFAFA',
+    paddingHorizontal: 16,
   },
   settingRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 16,
+    paddingVertical: 12,
     borderBottomWidth: 1,
     borderBottomColor: '#E5E7EB',
   },
+  settingRowLast: {
+    borderBottomWidth: 0,
+  },
   settingLabel: {
-    fontSize: 16,
-    color: '#1F2937',
+    fontSize: 14,
+    color: '#374151',
     fontFamily: 'VendSans-Medium',
   },
   chevron: {
-    fontSize: 18,
-    color: '#9CA3AF',
+    fontSize: 14,
+    color: '#6B46C1',
     fontFamily: 'VendSans-Regular',
   },
   infoContainer: {
@@ -248,13 +315,13 @@ const styles = StyleSheet.create({
   },
   infoLabel: {
     fontSize: 12,
-    color: 'rgba(255, 255, 255, 0.6)',
+    color: '#9CA3AF',
     marginTop: 8,
     fontFamily: 'VendSans-Regular',
   },
   infoValue: {
     fontSize: 14,
-    color: 'rgba(255, 255, 255, 0.8)',
+    color: '#6B7280',
     marginTop: 2,
     fontFamily: 'VendSans-Medium',
   },

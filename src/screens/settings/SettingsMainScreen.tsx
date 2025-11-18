@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -9,23 +9,36 @@ import {
   ScrollView,
   Switch,
 } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import { useUser } from '../../context/UserContext';
+
+type SettingItem = {
+  label: string;
+  screen?: string;
+  value?: string | boolean;
+  type?: 'switch';
+  onChange?: (value: boolean) => void;
+  isPrimary?: boolean;
+};
+
+type SettingSection = {
+  id: string;
+  icon: string;
+  title: string;
+  directScreen?: string;
+  items?: SettingItem[];
+};
 
 export default function SettingsMainScreen() {
   const navigation = useNavigation<any>();
   const { userData: globalUserData, clearUserData } = useUser();
-  const [expandedSections, setExpandedSections] = React.useState<string[]>([]);
 
-  // Notification settings state
-  const [notifications, setNotifications] = React.useState(true);
-  const [mealReminders, setMealReminders] = React.useState(true);
-  const [weeklyReport, setWeeklyReport] = React.useState(true);
-
-  // App preferences state
-  const [darkMode, setDarkMode] = React.useState(false);
-  const [metricUnits, setMetricUnits] = React.useState(false);
+  const [expandedSections, setExpandedSections] = useState<string[]>([]);
+  const [notifications, setNotifications] = useState(false);
+  const [mealReminders, setMealReminders] = useState(false);
+  const [weeklyReport, setWeeklyReport] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
+  const [metricUnits, setMetricUnits] = useState(false);
 
   const userData = {
     name: globalUserData.firstName || 'User',
@@ -34,21 +47,23 @@ export default function SettingsMainScreen() {
     recipesCooked: globalUserData.totalRecipes,
     currentStreak: globalUserData.currentStreak,
     savedRecipes: globalUserData.savedRecipes.length,
-  };
-
-  const toggleSection = (sectionId: string) => {
-    if (expandedSections.includes(sectionId)) {
-      setExpandedSections(expandedSections.filter(s => s !== sectionId));
-    } else {
-      setExpandedSections([...expandedSections, sectionId]);
-    }
+    plan: 'Free Plan',
+    nextBilling: 'N/A',
   };
 
   const handleSignOut = async () => {
     await clearUserData();
   };
 
-  const settingsSections = [
+  const toggleSection = (section: string) => {
+    if (expandedSections.includes(section)) {
+      setExpandedSections(expandedSections.filter(s => s !== section));
+    } else {
+      setExpandedSections([...expandedSections, section]);
+    }
+  };
+
+  const settingsSections: SettingSection[] = [
     {
       id: 'account',
       icon: '👤',
@@ -64,9 +79,19 @@ export default function SettingsMainScreen() {
       icon: '💳',
       title: 'Subscription',
       items: [
-        { label: 'Manage Subscription', screen: 'Subscription' },
-        { label: 'Billing History', screen: 'Subscription' },
-        { label: 'Payment Method', screen: 'Subscription' },
+        { label: 'Current Plan', value: userData.plan },
+        { label: 'Next Billing', value: userData.nextBilling },
+        { label: 'Manage Subscription', screen: 'Subscription', isPrimary: true },
+      ],
+    },
+    {
+      id: 'notifications',
+      icon: '🔔',
+      title: 'Notifications',
+      items: [
+        { label: 'Push Notifications', type: 'switch', value: notifications, onChange: setNotifications },
+        { label: 'Meal Reminders', type: 'switch', value: mealReminders, onChange: setMealReminders },
+        { label: 'Weekly Report', type: 'switch', value: weeklyReport, onChange: setWeeklyReport },
       ],
     },
     {
@@ -76,6 +101,16 @@ export default function SettingsMainScreen() {
       directScreen: 'DietaryPreferences',
     },
     {
+      id: 'preferences',
+      icon: '⚙️',
+      title: 'App Preferences',
+      items: [
+        { label: 'Dark Mode', type: 'switch', value: darkMode, onChange: setDarkMode },
+        { label: 'Metric Units', type: 'switch', value: metricUnits, onChange: setMetricUnits },
+        { label: 'Language', screen: 'AppPreferences', value: 'English' },
+      ],
+    },
+    {
       id: 'support',
       icon: '💬',
       title: 'Help & Support',
@@ -83,14 +118,11 @@ export default function SettingsMainScreen() {
     },
   ];
 
+
   return (
     <View style={styles.container}>
-      <LinearGradient
-        colors={['#6B46C1', '#2D1B69', '#1A0F3D']}
-        style={styles.gradient}
-      >
-        <StatusBar barStyle="light-content" />
-        <SafeAreaView style={styles.safeArea}>
+      <StatusBar barStyle="dark-content" />
+      <SafeAreaView style={styles.safeArea}>
           <ScrollView
             contentContainerStyle={styles.scrollContent}
             showsVerticalScrollIndicator={false}
@@ -102,39 +134,54 @@ export default function SettingsMainScreen() {
               <View style={styles.placeholder} />
             </View>
 
-            {/* Profile Section */}
-            <View style={styles.profileSection}>
-              <View style={styles.avatarContainer}>
-                <Text style={styles.avatar}>👤</Text>
-                <TouchableOpacity style={styles.editBadge}>
-                  <Text style={styles.editIcon}>✏️</Text>
-                </TouchableOpacity>
+            {/* Profile Card */}
+            <View style={styles.profileCard}>
+              <View style={styles.profileHeader}>
+                <View style={styles.avatarContainer}>
+                  <Text style={styles.avatar}>👤</Text>
+                  <TouchableOpacity style={styles.editBadge} onPress={() => navigation.navigate('EditProfile')}>
+                    <Text style={styles.editIcon}>✏️</Text>
+                  </TouchableOpacity>
+                </View>
+                <View style={styles.profileInfo}>
+                  <Text style={styles.userName}>{userData.name}</Text>
+                  <Text style={styles.userEmail}>{userData.email}</Text>
+                  <Text style={styles.memberSince}>Member since {userData.memberSince}</Text>
+                </View>
               </View>
-              <Text style={styles.userName}>{userData.name}</Text>
-              <Text style={styles.userEmail}>{userData.email}</Text>
-              <Text style={styles.memberSince}>Member since {userData.memberSince}</Text>
-            </View>
 
-            {/* Stats Summary */}
-            <View style={styles.statsContainer}>
-              <View style={styles.statCard}>
-                <Text style={styles.statNumber}>{userData.recipesCooked}</Text>
-                <Text style={styles.statLabel}>Recipes</Text>
-              </View>
-              <View style={styles.statCard}>
-                <Text style={styles.statNumber}>{userData.currentStreak}</Text>
-                <Text style={styles.statLabel}>Streak</Text>
-              </View>
-              <View style={styles.statCard}>
-                <Text style={styles.statNumber}>{userData.savedRecipes}</Text>
-                <Text style={styles.statLabel}>Saved</Text>
+              {/* Stats Summary */}
+              <View style={styles.statsContainer}>
+                <View style={styles.statCard}>
+                  <Text style={styles.statEmoji}>📚</Text>
+                  <Text style={styles.statNumber}>{userData.recipesCooked}</Text>
+                  <Text style={styles.statLabel}>Recipes</Text>
+                </View>
+                <View style={styles.statDivider} />
+                <View style={styles.statCard}>
+                  <Text style={styles.statEmoji}>🔥</Text>
+                  <Text style={styles.statNumber}>{userData.currentStreak}</Text>
+                  <Text style={styles.statLabel}>Day Streak</Text>
+                </View>
+                <View style={styles.statDivider} />
+                <View style={styles.statCard}>
+                  <Text style={styles.statEmoji}>❤️</Text>
+                  <Text style={styles.statNumber}>{userData.savedRecipes}</Text>
+                  <Text style={styles.statLabel}>Saved</Text>
+                </View>
               </View>
             </View>
 
             {/* Settings Menu */}
             <View style={styles.settingsContainer}>
-              {settingsSections.map((section) => (
-                <View key={section.id} style={styles.settingSection}>
+              {settingsSections.map((section, sectionIndex) => (
+                <View
+                  key={section.id}
+                  style={[
+                    styles.settingSection,
+                    sectionIndex === settingsSections.length - 1 && styles.settingSectionLast,
+                  ]}
+                >
                   <TouchableOpacity
                     style={styles.sectionHeader}
                     onPress={() => {
@@ -156,117 +203,63 @@ export default function SettingsMainScreen() {
 
                   {!section.directScreen && expandedSections.includes(section.id) && section.items && (
                     <View style={styles.expandedContent}>
-                      {section.items.map((item, index) => (
-                        <TouchableOpacity
-                          key={index}
-                          style={styles.settingRow}
-                          onPress={() => navigation.navigate(item.screen)}
-                        >
-                          <Text style={styles.settingLabel}>{item.label}</Text>
-                          <Text style={styles.settingChevron}>›</Text>
-                        </TouchableOpacity>
-                      ))}
+                      {section.items.map((item, index) => {
+                        // Primary button (like Manage Subscription)
+                        if (item.isPrimary) {
+                          return (
+                            <TouchableOpacity
+                              key={index}
+                              style={styles.primaryButton}
+                              onPress={() => item.screen && navigation.navigate(item.screen)}
+                            >
+                              <Text style={styles.primaryButtonText}>{item.label}</Text>
+                            </TouchableOpacity>
+                          );
+                        }
+
+                        // Switch toggle
+                        if (item.type === 'switch' && typeof item.value === 'boolean' && item.onChange) {
+                          return (
+                            <View key={index} style={styles.settingRow}>
+                              <Text style={styles.settingLabel}>{item.label}</Text>
+                              <Switch
+                                value={item.value}
+                                onValueChange={item.onChange}
+                                trackColor={{ false: '#E5E7EB', true: '#6B46C1' }}
+                                thumbColor="white"
+                              />
+                            </View>
+                          );
+                        }
+
+                        // Navigation item with screen
+                        if (item.screen) {
+                          return (
+                            <TouchableOpacity
+                              key={index}
+                              style={styles.settingRow}
+                              onPress={() => navigation.navigate(item.screen)}
+                            >
+                              <Text style={styles.settingLabel}>{item.label}</Text>
+                              <Text style={styles.settingChevron}>
+                                {item.value ? `${item.value} ›` : '›'}
+                              </Text>
+                            </TouchableOpacity>
+                          );
+                        }
+
+                        // Static value display
+                        return (
+                          <View key={index} style={styles.settingRow}>
+                            <Text style={styles.settingLabel}>{item.label}</Text>
+                            <Text style={styles.settingValue}>{item.value}</Text>
+                          </View>
+                        );
+                      })}
                     </View>
                   )}
                 </View>
               ))}
-
-              {/* Notifications Section */}
-              <View style={styles.settingSection}>
-                <TouchableOpacity
-                  style={styles.sectionHeader}
-                  onPress={() => toggleSection('notifications')}
-                >
-                  <Text style={styles.sectionIcon}>🔔</Text>
-                  <Text style={styles.sectionTitle}>Notifications</Text>
-                  <Text style={styles.chevron}>
-                    {expandedSections.includes('notifications') ? '⌄' : '›'}
-                  </Text>
-                </TouchableOpacity>
-
-                {expandedSections.includes('notifications') && (
-                  <View style={styles.expandedContent}>
-                    <View style={styles.settingRow}>
-                      <Text style={styles.settingLabel}>Push Notifications</Text>
-                      <Switch
-                        value={notifications}
-                        onValueChange={setNotifications}
-                        trackColor={{ false: '#E5E7EB', true: '#6B46C1' }}
-                        thumbColor="white"
-                      />
-                    </View>
-                    <View style={styles.settingRow}>
-                      <Text style={styles.settingLabel}>Meal Reminders</Text>
-                      <Switch
-                        value={mealReminders}
-                        onValueChange={setMealReminders}
-                        trackColor={{ false: '#E5E7EB', true: '#6B46C1' }}
-                        thumbColor="white"
-                      />
-                    </View>
-                    <View style={styles.settingRow}>
-                      <Text style={styles.settingLabel}>Weekly Report</Text>
-                      <Switch
-                        value={weeklyReport}
-                        onValueChange={setWeeklyReport}
-                        trackColor={{ false: '#E5E7EB', true: '#6B46C1' }}
-                        thumbColor="white"
-                      />
-                    </View>
-                    <TouchableOpacity
-                      style={styles.settingRow}
-                      onPress={() => navigation.navigate('NotificationSettings')}
-                    >
-                      <Text style={styles.settingLabel}>Notification Schedule</Text>
-                      <Text style={styles.settingChevron}>›</Text>
-                    </TouchableOpacity>
-                  </View>
-                )}
-              </View>
-
-              {/* App Preferences Section */}
-              <View style={styles.settingSection}>
-                <TouchableOpacity
-                  style={styles.sectionHeader}
-                  onPress={() => toggleSection('preferences')}
-                >
-                  <Text style={styles.sectionIcon}>⚙️</Text>
-                  <Text style={styles.sectionTitle}>App Preferences</Text>
-                  <Text style={styles.chevron}>
-                    {expandedSections.includes('preferences') ? '⌄' : '›'}
-                  </Text>
-                </TouchableOpacity>
-
-                {expandedSections.includes('preferences') && (
-                  <View style={styles.expandedContent}>
-                    <View style={styles.settingRow}>
-                      <Text style={styles.settingLabel}>Dark Mode</Text>
-                      <Switch
-                        value={darkMode}
-                        onValueChange={setDarkMode}
-                        trackColor={{ false: '#E5E7EB', true: '#6B46C1' }}
-                        thumbColor="white"
-                      />
-                    </View>
-                    <View style={styles.settingRow}>
-                      <Text style={styles.settingLabel}>Metric Units</Text>
-                      <Switch
-                        value={metricUnits}
-                        onValueChange={setMetricUnits}
-                        trackColor={{ false: '#E5E7EB', true: '#6B46C1' }}
-                        thumbColor="white"
-                      />
-                    </View>
-                    <TouchableOpacity
-                      style={styles.settingRow}
-                      onPress={() => navigation.navigate('AppPreferences')}
-                    >
-                      <Text style={styles.settingLabel}>Language</Text>
-                      <Text style={styles.settingValue}>English ›</Text>
-                    </TouchableOpacity>
-                  </View>
-                )}
-              </View>
             </View>
 
             {/* Sign Out Button */}
@@ -274,19 +267,10 @@ export default function SettingsMainScreen() {
               <Text style={styles.signOutText}>Sign Out</Text>
             </TouchableOpacity>
 
-            {/* DEV: Reset Onboarding Button */}
-            <TouchableOpacity
-              style={styles.resetOnboardingButton}
-              onPress={handleSignOut}
-            >
-              <Text style={styles.resetOnboardingText}>🔄 Reset Onboarding (Dev)</Text>
-            </TouchableOpacity>
-
             {/* App Version */}
             <Text style={styles.versionText}>Loma v1.0.0</Text>
           </ScrollView>
         </SafeAreaView>
-      </LinearGradient>
     </View>
   );
 }
@@ -294,9 +278,7 @@ export default function SettingsMainScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  gradient: {
-    flex: 1,
+    backgroundColor: '#FEFEFE',
   },
   safeArea: {
     flex: 1,
@@ -314,105 +296,141 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   headerTitle: {
-    fontSize: 18,
-    color: 'white',
-    fontFamily: 'VendSans-SemiBold',
+    fontSize: 32,
+    color: '#000000',
+    fontFamily: 'VendSans-Bold',
   },
   placeholder: {
     width: 40,
   },
-  profileSection: {
+  profileCard: {
+    backgroundColor: 'white',
+    marginHorizontal: 20,
+    borderRadius: 20,
+    padding: 20,
+    marginBottom: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+  profileHeader: {
+    flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 20,
+    marginBottom: 20,
+    paddingBottom: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F3F4F6',
+  },
+  profileInfo: {
+    flex: 1,
+    marginLeft: 16,
   },
   avatarContainer: {
     position: 'relative',
-    marginBottom: 16,
   },
   avatar: {
-    fontSize: 60,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    width: 100,
-    height: 100,
-    borderRadius: 50,
+    fontSize: 50,
+    backgroundColor: '#F3F4F6',
+    width: 80,
+    height: 80,
+    borderRadius: 40,
     textAlign: 'center',
-    lineHeight: 100,
+    lineHeight: 80,
     fontFamily: 'VendSans-Regular',
   },
   editBadge: {
     position: 'absolute',
     bottom: 0,
     right: 0,
-    backgroundColor: 'white',
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    backgroundColor: '#6B46C1',
+    width: 28,
+    height: 28,
+    borderRadius: 14,
     justifyContent: 'center',
     alignItems: 'center',
   },
   editIcon: {
-    fontSize: 16,
+    fontSize: 14,
     fontFamily: 'VendSans-Regular',
   },
   userName: {
-    fontSize: 24,
-    color: 'white',
+    fontSize: 20,
+    color: '#000000',
     marginBottom: 4,
     fontFamily: 'VendSans-Bold',
   },
   userEmail: {
     fontSize: 14,
-    color: 'rgba(255, 255, 255, 0.8)',
-    marginBottom: 8,
+    color: '#6B7280',
+    marginBottom: 4,
     fontFamily: 'VendSans-Regular',
   },
   memberSince: {
     fontSize: 12,
-    color: 'rgba(255, 255, 255, 0.6)',
+    color: '#9CA3AF',
     fontFamily: 'VendSans-Regular',
   },
   statsContainer: {
     flexDirection: 'row',
-    paddingHorizontal: 20,
-    gap: 12,
-    marginBottom: 24,
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   statCard: {
     flex: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    borderRadius: 12,
-    padding: 12,
     alignItems: 'center',
   },
-  statNumber: {
-    fontSize: 20,
-    color: 'white',
+  statDivider: {
+    width: 1,
+    height: 40,
+    backgroundColor: '#E5E7EB',
+  },
+  statEmoji: {
+    fontSize: 24,
     marginBottom: 4,
+    fontFamily: 'VendSans-Regular',
+  },
+  statNumber: {
+    fontSize: 24,
+    color: '#6B46C1',
+    marginBottom: 2,
     fontFamily: 'VendSans-Bold',
   },
   statLabel: {
     fontSize: 11,
-    color: 'rgba(255, 255, 255, 0.7)',
+    color: '#6B7280',
     fontFamily: 'VendSans-Regular',
   },
   settingsContainer: {
-    backgroundColor: 'white',
     marginHorizontal: 20,
-    borderRadius: 20,
-    overflow: 'hidden',
     marginBottom: 24,
+    backgroundColor: 'white',
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 12,
+    elevation: 5,
   },
   settingSection: {
     borderBottomWidth: 1,
     borderBottomColor: '#E5E7EB',
   },
+  settingSectionLast: {
+    borderBottomWidth: 0,
+  },
   sectionHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     padding: 16,
+    backgroundColor: 'white',
   },
   sectionIcon: {
-    fontSize: 20,
+    fontSize: 24,
     marginRight: 12,
     fontFamily: 'VendSans-Regular',
   },
@@ -423,67 +441,69 @@ const styles = StyleSheet.create({
     fontFamily: 'VendSans-SemiBold',
   },
   chevron: {
-    fontSize: 18,
-    color: '#9CA3AF',
+    fontSize: 20,
+    color: '#6B46C1',
     fontFamily: 'VendSans-Regular',
   },
   expandedContent: {
-    backgroundColor: '#F9FAFB',
+    backgroundColor: '#FAFAFA',
     paddingHorizontal: 16,
-    paddingBottom: 12,
+    paddingBottom: 8,
   },
   settingRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
+    justifyContent: 'space-between',
     paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E5E7EB',
   },
   settingLabel: {
     fontSize: 14,
-    color: '#4B5563',
+    color: '#374151',
     fontFamily: 'VendSans-Regular',
   },
   settingValue: {
     fontSize: 14,
-    color: '#9CA3AF',
+    color: '#6B46C1',
     fontFamily: 'VendSans-Regular',
   },
   settingChevron: {
     fontSize: 14,
-    color: '#9CA3AF',
+    color: '#6B46C1',
     fontFamily: 'VendSans-Regular',
   },
+  primaryButton: {
+    backgroundColor: '#6B46C1',
+    paddingVertical: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginTop: 12,
+    marginBottom: 8,
+  },
+  primaryButtonText: {
+    color: 'white',
+    fontSize: 14,
+    fontFamily: 'VendSans-SemiBold',
+  },
   signOutButton: {
-    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+    backgroundColor: 'white',
     marginHorizontal: 20,
     paddingVertical: 14,
     borderRadius: 12,
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: 20,
+    borderWidth: 2,
+    borderColor: '#EF4444',
   },
   signOutText: {
     color: '#EF4444',
     fontSize: 16,
     fontFamily: 'VendSans-SemiBold',
   },
-  resetOnboardingButton: {
-    backgroundColor: 'rgba(251, 191, 36, 0.15)',
-    marginHorizontal: 20,
-    paddingVertical: 14,
-    borderRadius: 12,
-    alignItems: 'center',
-    marginBottom: 20,
-    borderWidth: 1,
-    borderColor: 'rgba(251, 191, 36, 0.3)',
-  },
-  resetOnboardingText: {
-    color: '#F59E0B',
-    fontSize: 14,
-    fontFamily: 'VendSans-SemiBold',
-  },
   versionText: {
     textAlign: 'center',
-    color: 'rgba(255, 255, 255, 0.5)',
+    color: '#9CA3AF',
     fontSize: 12,
     marginBottom: 40,
     fontFamily: 'VendSans-Regular',

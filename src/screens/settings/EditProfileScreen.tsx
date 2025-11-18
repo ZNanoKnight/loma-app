@@ -9,7 +9,6 @@ import {
   ScrollView,
   TextInput,
 } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import { useUser } from '../../context/UserContext';
 
@@ -135,17 +134,19 @@ const styles = StyleSheet.create({
     fontFamily: 'VendSans-Regular',
   },
   headerTitle: {
-    fontSize: 18,
-    color: 'white',
-    fontFamily: 'VendSans-SemiBold',
+    fontSize: 20,
+    color: '#000000',
+    fontFamily: 'VendSans-Bold',
   },
   saveButton: {
-    width: 60,
+    backgroundColor: '#6B46C1',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 12,
   },
   saveButtonText: {
     color: 'white',
-    fontSize: 16,
-    textAlign: 'right',
+    fontSize: 14,
     fontFamily: 'VendSans-SemiBold',
   },
   avatarSection: {
@@ -183,14 +184,19 @@ const styles = StyleSheet.create({
   },
   avatarLabel: {
     fontSize: 14,
-    color: 'rgba(255, 255, 255, 0.8)',
-    fontFamily: 'VendSans-Medium',
+    color: '#6B46C1',
+    fontFamily: 'VendSans-SemiBold',
   },
   formContainer: {
     backgroundColor: 'white',
     marginHorizontal: 20,
     borderRadius: 20,
     padding: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    elevation: 4,
   },
   fieldGroup: {
     marginBottom: 20,
@@ -204,7 +210,7 @@ const styles = StyleSheet.create({
   input: {
     backgroundColor: '#F9FAFB',
     borderRadius: 12,
-    padding: 14,
+    padding: 16,
     fontSize: 16,
     color: '#1F2937',
     borderWidth: 1,

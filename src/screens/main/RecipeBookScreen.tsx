@@ -129,137 +129,133 @@ export default function RecipeBookScreen() {
 
   if (isLoading) {
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
         <StatusBar barStyle="dark-content" />
-          <SafeAreaView style={[styles.safeArea, { justifyContent: 'center', alignItems: 'center' }]}>
-            <ActivityIndicator size="large" color="#6B46C1" />
-            <Text style={{ color: 'white', marginTop: 16, fontSize: 16 }}>Loading recipes...</Text>
-          </SafeAreaView>
-        
-      </View>
+        <ActivityIndicator size="large" color="#6B46C1" />
+        <Text style={{ color: 'white', marginTop: 16, fontSize: 16 }}>Loading recipes...</Text>
+      </SafeAreaView>
     );
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
-        <SafeAreaView style={styles.safeArea}>
-          {/* Header */}
-          <View style={styles.header}>
-            <Text style={styles.headerTitle}>Recipe Book</Text>
-            <View style={styles.headerStats}>
-              <Text style={styles.headerStatText}>{recipes.length} recipes</Text>
-              <Text style={styles.headerStatDivider}>•</Text>
-              <Text style={styles.headerStatText}>
-                {recipes.filter(r => r.isFavorite).length} favorites
-              </Text>
-            </View>
-          </View>
+      {/* Header */}
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>Recipe Book</Text>
+        <View style={styles.headerStats}>
+          <Text style={styles.headerStatText}>{recipes.length} recipes</Text>
+          <Text style={styles.headerStatDivider}>•</Text>
+          <Text style={styles.headerStatText}>
+            {recipes.filter(r => r.isFavorite).length} favorites
+          </Text>
+        </View>
+      </View>
 
-          {/* Search Bar */}
-          <View style={styles.searchContainer}>
-            <Text style={styles.searchIcon}>🔍</Text>
-            <TextInput
-              style={styles.searchInput}
-              value={searchQuery}
-              onChangeText={setSearchQuery}
-              placeholder="Search recipes..."
-              placeholderTextColor="#9CA3AF"
-            />
-            {searchQuery.length > 0 && (
-              <TouchableOpacity onPress={() => setSearchQuery('')}>
-                <Text style={styles.clearIcon}>✕</Text>
-              </TouchableOpacity>
-            )}
-          </View>
+      {/* Search Bar */}
+      <View style={styles.searchContainer}>
+        <Text style={styles.searchIcon}>🔍</Text>
+        <TextInput
+          style={styles.searchInput}
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+          placeholder="Search recipes..."
+          placeholderTextColor="#9CA3AF"
+        />
+        {searchQuery.length > 0 && (
+          <TouchableOpacity onPress={() => setSearchQuery('')}>
+            <Text style={styles.clearIcon}>✕</Text>
+          </TouchableOpacity>
+        )}
+      </View>
 
-          {/* Filter Tabs */}
-          <ScrollView 
-            horizontal 
-            showsHorizontalScrollIndicator={false}
-            style={styles.filterContainer}
-            contentContainerStyle={styles.filterContent}
+      {/* Filter Tabs */}
+      <View style={styles.filterWrapper}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={styles.filterContainer}
+          contentContainerStyle={styles.filterContent}
+        >
+        {filters.map((filter) => (
+          <TouchableOpacity
+            key={filter.id}
+            style={[
+              styles.filterTab,
+              selectedFilter === filter.id && styles.filterTabActive
+            ]}
+            onPress={() => setSelectedFilter(filter.id as FilterType)}
           >
-            {filters.map((filter) => (
+            <Text style={styles.filterEmoji}>{filter.emoji}</Text>
+            <Text style={[
+              styles.filterText,
+              selectedFilter === filter.id && styles.filterTextActive
+            ]}>
+              {filter.label}
+            </Text>
+          </TouchableOpacity>
+        ))}
+        </ScrollView>
+      </View>
+
+      {/* Sort Options */}
+      <View style={styles.sortContainer}>
+        <TouchableOpacity
+          style={styles.sortButton}
+          onPress={() => setShowSortOptions(!showSortOptions)}
+        >
+          <Text style={styles.sortIcon}>↕️</Text>
+          <Text style={styles.sortText}>
+            {sortOptions.find(s => s.id === selectedSort)?.label}
+          </Text>
+        </TouchableOpacity>
+
+        {showSortOptions && (
+          <View style={styles.sortDropdown}>
+            {sortOptions.map((option) => (
               <TouchableOpacity
-                key={filter.id}
-                style={[
-                  styles.filterTab,
-                  selectedFilter === filter.id && styles.filterTabActive
-                ]}
-                onPress={() => setSelectedFilter(filter.id as FilterType)}
+                key={option.id}
+                style={styles.sortOption}
+                onPress={() => {
+                  setSelectedSort(option.id as SortType);
+                  setShowSortOptions(false);
+                }}
               >
-                <Text style={styles.filterEmoji}>{filter.emoji}</Text>
+                <Text style={styles.sortOptionIcon}>{option.icon}</Text>
                 <Text style={[
-                  styles.filterText,
-                  selectedFilter === filter.id && styles.filterTextActive
+                  styles.sortOptionText,
+                  selectedSort === option.id && styles.sortOptionTextActive
                 ]}>
-                  {filter.label}
+                  {option.label}
                 </Text>
               </TouchableOpacity>
             ))}
-          </ScrollView>
-
-          {/* Sort Options */}
-          <View style={styles.sortContainer}>
-            <TouchableOpacity
-              style={styles.sortButton}
-              onPress={() => setShowSortOptions(!showSortOptions)}
-            >
-              <Text style={styles.sortIcon}>↕️</Text>
-              <Text style={styles.sortText}>
-                {sortOptions.find(s => s.id === selectedSort)?.label}
-              </Text>
-            </TouchableOpacity>
-
-            {showSortOptions && (
-              <View style={styles.sortDropdown}>
-                {sortOptions.map((option) => (
-                  <TouchableOpacity
-                    key={option.id}
-                    style={styles.sortOption}
-                    onPress={() => {
-                      setSelectedSort(option.id as SortType);
-                      setShowSortOptions(false);
-                    }}
-                  >
-                    <Text style={styles.sortOptionIcon}>{option.icon}</Text>
-                    <Text style={[
-                      styles.sortOptionText,
-                      selectedSort === option.id && styles.sortOptionTextActive
-                    ]}>
-                      {option.label}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-            )}
           </View>
+        )}
+      </View>
 
-          {/* Recipe List */}
-          <FlatList
-            data={filteredRecipes}
-            renderItem={renderRecipeCard}
-            keyExtractor={(item) => item.id}
-            numColumns={2}
-            columnWrapperStyle={styles.recipeRow}
-            contentContainerStyle={styles.recipeList}
-            showsVerticalScrollIndicator={false}
-            ListEmptyComponent={
-              <View style={styles.emptyState}>
-                <Text style={styles.emptyEmoji}>📭</Text>
-                <Text style={styles.emptyTitle}>No recipes found</Text>
-                <Text style={styles.emptySubtitle}>
-                  {searchQuery 
-                    ? 'Try adjusting your search' 
-                    : 'Generate your first recipe to get started'}
-                </Text>
-              </View>
-            }
-          />
-        </SafeAreaView>
-      
-    </View>
+      {/* Recipe List */}
+      <FlatList
+        data={filteredRecipes}
+        renderItem={renderRecipeCard}
+        keyExtractor={(item) => item.id}
+        numColumns={2}
+        columnWrapperStyle={styles.recipeRow}
+        contentContainerStyle={styles.recipeList}
+        showsVerticalScrollIndicator={false}
+        ListEmptyComponent={
+          <View style={styles.emptyState}>
+            <Text style={styles.emptyEmoji}>📭</Text>
+            <Text style={styles.emptyTitle}>No recipes found</Text>
+            <Text style={styles.emptySubtitle}>
+              {searchQuery
+                ? 'Try adjusting your search'
+                : 'Generate your first recipe to get started'}
+            </Text>
+          </View>
+        }
+      />
+    </SafeAreaView>
   );
 }
 
@@ -268,17 +264,14 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FEFEFE',
   },
-  safeArea: {
-    flex: 1,
-  },
   header: {
     paddingHorizontal: 20,
     paddingTop: 20,
-    paddingBottom: 10,
+    paddingBottom: 0,
   },
   headerTitle: {
     fontSize: 32,
-    color: 'white',
+    color: '#000000',
     marginBottom: 4,
     fontFamily: 'VendSans-Bold',
   },
@@ -288,12 +281,12 @@ const styles = StyleSheet.create({
   },
   headerStatText: {
     fontSize: 14,
-    color: 'rgba(255, 255, 255, 0.7)',
+    color: '#6B7280',
     fontFamily: 'VendSans-Regular',
   },
   headerStatDivider: {
     marginHorizontal: 8,
-    color: 'rgba(255, 255, 255, 0.5)',
+    color: '#9CA3AF',
   },
   searchContainer: {
     flexDirection: 'row',
@@ -304,6 +297,11 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     marginHorizontal: 20,
     marginVertical: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
   },
   searchIcon: {
     fontSize: 16,
@@ -321,28 +319,33 @@ const styles = StyleSheet.create({
     color: '#9CA3AF',
     fontFamily: 'VendSans-Regular',
   },
-  filterContainer: {
+  filterWrapper: {
+    height: 50,
     marginBottom: 10,
+  },
+  filterContainer: {
     flexGrow: 0,
-    height: 67,
   },
   filterContent: {
     paddingLeft: 20,
     paddingRight: 10,
-    paddingVertical: 4,
     alignItems: 'center',
+    height: 50,
   },
   filterTab: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F9FAFB',
+    backgroundColor: 'white',
     paddingHorizontal: 16,
-    paddingVertical: 8,
+    paddingVertical: 3,
     borderRadius: 20,
     marginRight: 10,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
   },
   filterTabActive: {
-    backgroundColor: 'white',
+    backgroundColor: '#6B46C1',
+    borderColor: '#6B46C1',
   },
   filterEmoji: {
     fontSize: 16,
@@ -351,11 +354,11 @@ const styles = StyleSheet.create({
   },
   filterText: {
     fontSize: 14,
-    color: 'rgba(255, 255, 255, 0.9)',
+    color: '#1F2937',
     fontFamily: 'VendSans-Medium',
   },
   filterTextActive: {
-    color: '#6B46C1',
+    color: 'white',
   },
   sortContainer: {
     paddingHorizontal: 20,
@@ -365,11 +368,13 @@ const styles = StyleSheet.create({
   sortButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F9FAFB',
+    backgroundColor: 'white',
     paddingHorizontal: 12,
-    paddingVertical: 6,
+    paddingVertical: 8,
     borderRadius: 12,
     alignSelf: 'flex-start',
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
   },
   sortIcon: {
     fontSize: 14,
@@ -378,7 +383,7 @@ const styles = StyleSheet.create({
   },
   sortText: {
     fontSize: 13,
-    color: 'white',
+    color: '#1F2937',
     fontFamily: 'VendSans-Regular',
   },
   sortDropdown: {
@@ -417,7 +422,7 @@ const styles = StyleSheet.create({
   },
   recipeList: {
     paddingHorizontal: 20,
-    paddingBottom: 100,
+    paddingBottom: 20,
   },
   recipeRow: {
     justifyContent: 'space-between',
@@ -428,6 +433,11 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     width: '48%',
     overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    elevation: 3,
   },
   recipeImageContainer: {
     height: 120,
@@ -494,13 +504,13 @@ const styles = StyleSheet.create({
   },
   emptyTitle: {
     fontSize: 18,
-    color: 'white',
+    color: '#1F2937',
     marginBottom: 8,
     fontFamily: 'VendSans-SemiBold',
   },
   emptySubtitle: {
     fontSize: 14,
-    color: 'rgba(255, 255, 255, 0.7)',
+    color: '#6B7280',
     textAlign: 'center',
     fontFamily: 'VendSans-Regular',
   },

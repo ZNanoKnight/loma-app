@@ -8,7 +8,6 @@ import {
   StatusBar,
   ScrollView,
 } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import { useUser } from '../../context/UserContext';
 
@@ -121,7 +120,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 18,
-    color: 'white',
+    color: '#1F2937',
     fontFamily: 'VendSans-SemiBold',
   },
   placeholder: {
@@ -163,7 +162,7 @@ const styles = StyleSheet.create({
   },
   dangerTitle: {
     fontSize: 14,
-    color: 'rgba(255, 255, 255, 0.8)',
+    color: '#6B7280',
     marginBottom: 12,
     fontFamily: 'VendSans-SemiBold',
   },

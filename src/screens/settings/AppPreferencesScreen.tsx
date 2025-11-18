@@ -9,7 +9,6 @@ import {
   ScrollView,
   Switch,
 } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import { useUser } from '../../context/UserContext';
 
@@ -161,7 +160,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 18,
-    color: 'white',
+    color: '#1F2937',
     fontFamily: 'VendSans-SemiBold',
   },
   placeholder: {

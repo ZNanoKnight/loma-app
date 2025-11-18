@@ -10,7 +10,6 @@ import {
   TextInput,
   Alert,
 } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 
 export default function ChangePasswordScreen() {
@@ -165,7 +164,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 18,
-    color: 'white',
+    color: '#1F2937',
     fontFamily: 'VendSans-SemiBold',
   },
   placeholder: {
@@ -190,7 +189,7 @@ const styles = StyleSheet.create({
   infoText: {
     flex: 1,
     fontSize: 14,
-    color: 'rgba(255, 255, 255, 0.9)',
+    color: '#1F2937',
     lineHeight: 20,
     fontFamily: 'VendSans-Regular',
   },

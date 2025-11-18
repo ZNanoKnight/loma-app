@@ -79,6 +79,24 @@ Commit: git commit -m "message"
 Push to GitHub: git push
 Check status: git status
 
+## Design System
+
+### Color Palette
+- **Primary**: White (#FFFFFF, #FEFEFE)
+- **Secondary**: Purple (#6B46C1)
+- **Tertiary**: Orange (#F59E0B)
+
+### Color Usage Rules
+- **Backgrounds**: White (#FEFEFE)
+- **Main Text**: Black (#000000, #1F2937)
+- **Secondary Text**: Gray (#6B7280, #9CA3AF)
+- **Additional Info**: Orange (#F59E0B) - Use sparingly for highlights
+- **Buttons**:
+  - Purple background (#6B46C1) with white text
+  - White background with purple text (#6B46C1)
+  - Always maintain high contrast for accessibility
+- **Cards & Elements**: White with subtle shadows for depth
+
 ## Coding Standards
 Style Conventions
 
