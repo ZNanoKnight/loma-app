@@ -9,7 +9,6 @@ import {
   ScrollView,
   ActivityIndicator
 } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import { useUser } from '../../context/UserContext';  // ADD THIS
 
@@ -82,11 +81,7 @@ export default function RecipeGeneratorScreen() {
 
   return (
     <View style={styles.container}>
-      <LinearGradient
-        colors={['#4F46E5', '#2D1B69', '#1A0F3D']}
-        style={styles.gradient}
-      >
-        <StatusBar barStyle="light-content" />
+      <StatusBar barStyle="dark-content" />
         <SafeAreaView style={styles.safeArea}>
           <ScrollView 
             contentContainerStyle={styles.scrollContent}
@@ -111,7 +106,7 @@ export default function RecipeGeneratorScreen() {
 
             {isLoading ? (
               <View style={styles.loadingContainer}>
-                <ActivityIndicator size="large" color="white" />
+                <ActivityIndicator size="large" color="#6B46C1" />
                 <Text style={styles.loadingText}>Generating new recipe...</Text>
               </View>
             ) : (
@@ -263,7 +258,6 @@ export default function RecipeGeneratorScreen() {
             )}
           </ScrollView>
         </SafeAreaView>
-      </LinearGradient>
     </View>
   );
 }
@@ -271,9 +265,7 @@ export default function RecipeGeneratorScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  gradient: {
-    flex: 1,
+    backgroundColor: '#FEFEFE',
   },
   safeArea: {
     flex: 1,
@@ -293,24 +285,25 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: '#F3F4F6',
     justifyContent: 'center',
     alignItems: 'center',
   },
   backIcon: {
-    color: 'white',
+    fontFamily: 'VendSans-Regular',
+    color: '#1F2937',
     fontSize: 24,
   },
   headerTitle: {
+    fontFamily: 'VendSans-SemiBold',
     fontSize: 18,
-    fontWeight: '600',
-    color: 'white',
+    color: '#1F2937',
   },
   saveButton: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: '#F3F4F6',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -324,7 +317,8 @@ const styles = StyleSheet.create({
     paddingVertical: 100,
   },
   loadingText: {
-    color: 'white',
+    fontFamily: 'VendSans-Regular',
+    color: '#6B7280',
     marginTop: 16,
     fontSize: 16,
   },
@@ -362,20 +356,21 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   difficultyText: {
+    fontFamily: 'VendSans-SemiBold',
     color: 'white',
     fontSize: 12,
-    fontWeight: '600',
   },
   recipeInfo: {
     padding: 20,
   },
   recipeTitle: {
+    fontFamily: 'VendSans-Bold',
     fontSize: 24,
-    fontWeight: 'bold',
     color: '#1F2937',
     marginBottom: 8,
   },
   recipeDescription: {
+    fontFamily: 'VendSans-Regular',
     fontSize: 14,
     color: '#6B7280',
     marginBottom: 20,
@@ -395,11 +390,12 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   timeValue: {
+    fontFamily: 'VendSans-SemiBold',
     fontSize: 14,
-    fontWeight: '600',
     color: '#1F2937',
   },
   timeLabel: {
+    fontFamily: 'VendSans-Regular',
     fontSize: 12,
     color: '#9CA3AF',
   },
@@ -410,10 +406,10 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   macrosTitle: {
+    fontFamily: 'VendSans-SemiBold',
     fontSize: 12,
     color: '#6B7280',
     marginBottom: 12,
-    fontWeight: '600',
   },
   macrosGrid: {
     flexDirection: 'row',
@@ -423,12 +419,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   macroValue: {
+    fontFamily: 'VendSans-Bold',
     fontSize: 18,
-    fontWeight: 'bold',
-    color: '#4F46E5',
+    color: '#6B46C1',
     marginBottom: 4,
   },
   macroLabel: {
+    fontFamily: 'VendSans-Regular',
     fontSize: 12,
     color: '#9CA3AF',
   },
@@ -439,15 +436,15 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   tag: {
-    backgroundColor: '#EEF2FF',
+    backgroundColor: '#F3E8FF',
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 12,
   },
   tagText: {
+    fontFamily: 'VendSans-Medium',
     fontSize: 12,
-    color: '#4F46E5',
-    fontWeight: '500',
+    color: '#6B46C1',
   },
   ingredientsPreview: {
     borderTopWidth: 1,
@@ -455,8 +452,8 @@ const styles = StyleSheet.create({
     paddingTop: 16,
   },
   ingredientsTitle: {
+    fontFamily: 'VendSans-SemiBold',
     fontSize: 16,
-    fontWeight: '600',
     color: '#1F2937',
     marginBottom: 12,
   },
@@ -464,10 +461,12 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   ingredientItem: {
+    fontFamily: 'VendSans-Regular',
     fontSize: 14,
     color: '#6B7280',
   },
   moreIngredients: {
+    fontFamily: 'VendSans-Regular',
     fontSize: 14,
     color: '#9CA3AF',
     fontStyle: 'italic',
@@ -477,16 +476,16 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   primaryButton: {
-    backgroundColor: 'white',
+    backgroundColor: '#6B46C1',
     paddingVertical: 16,
     borderRadius: 16,
     alignItems: 'center',
     marginBottom: 12,
   },
   primaryButtonText: {
-    color: '#4F46E5',
+    fontFamily: 'VendSans-SemiBold',
+    color: 'white',
     fontSize: 18,
-    fontWeight: '600',
   },
   secondaryButtons: {
     flexDirection: 'row',
@@ -495,7 +494,7 @@ const styles = StyleSheet.create({
   secondaryButton: {
     flex: 1,
     flexDirection: 'row',
-    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    backgroundColor: '#F3F4F6',
     paddingVertical: 12,
     borderRadius: 12,
     alignItems: 'center',
@@ -506,24 +505,30 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   secondaryButtonText: {
-    color: 'white',
+    fontFamily: 'VendSans-Medium',
+    color: '#6B7280',
     fontSize: 14,
-    fontWeight: '500',
   },
   quickActions: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    paddingTop: 20,
   },
   quickAction: {
     flex: 1,
     alignItems: 'center',
+    backgroundColor: '#F9FAFB',
+    paddingVertical: 12,
+    borderRadius: 12,
+    marginHorizontal: 4,
   },
   quickActionIcon: {
     fontSize: 24,
     marginBottom: 4,
   },
   quickActionText: {
+    fontFamily: 'VendSans-Regular',
     fontSize: 11,
-    color: 'rgba(255, 255, 255, 0.8)',
+    color: '#6B7280',
   },
 });

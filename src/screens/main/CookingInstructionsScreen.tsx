@@ -168,11 +168,7 @@ export default function CookingInstructionsScreen() {
 
   return (
     <View style={styles.container}>
-      <LinearGradient
-        colors={['#4F46E5', '#2D1B69', '#1A0F3D']}
-        style={styles.gradient}
-      >
-        <StatusBar barStyle="light-content" />
+      <StatusBar barStyle="dark-content" />
         <SafeAreaView style={styles.safeArea}>
           {/* Header */}
           <View style={styles.header}>
@@ -334,7 +330,7 @@ export default function CookingInstructionsScreen() {
             )}
           </View>
         </SafeAreaView>
-      </LinearGradient>
+      
     </View>
   );
 }
@@ -342,9 +338,7 @@ export default function CookingInstructionsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  gradient: {
-    flex: 1,
+    backgroundColor: '#FEFEFE',
   },
   safeArea: {
     flex: 1,
@@ -361,37 +355,40 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: '#F3F4F6',
     justifyContent: 'center',
     alignItems: 'center',
   },
   closeIcon: {
     color: 'white',
     fontSize: 20,
+    fontFamily: 'VendSans-Regular',
   },
   headerCenter: {
     alignItems: 'center',
   },
   headerTitle: {
     fontSize: 18,
-    fontWeight: '600',
     color: 'white',
+    fontFamily: 'VendSans-SemiBold',
   },
   headerSubtitle: {
     fontSize: 12,
     color: 'rgba(255, 255, 255, 0.7)',
     marginTop: 2,
+    fontFamily: 'VendSans-Regular',
   },
   voiceButton: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: '#F3F4F6',
     justifyContent: 'center',
     alignItems: 'center',
   },
   voiceIcon: {
     fontSize: 20,
+    fontFamily: 'VendSans-Regular',
   },
   progressContainer: {
     paddingHorizontal: 20,
@@ -399,7 +396,7 @@ const styles = StyleSheet.create({
   },
   progressBar: {
     height: 8,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: '#F3F4F6',
     borderRadius: 4,
     overflow: 'hidden',
   },
@@ -413,6 +410,7 @@ const styles = StyleSheet.create({
     color: 'rgba(255, 255, 255, 0.7)',
     marginTop: 8,
     textAlign: 'center',
+    fontFamily: 'VendSans-Regular',
   },
   timerSection: {
     paddingHorizontal: 20,
@@ -429,23 +427,24 @@ const styles = StyleSheet.create({
   },
   timerIcon: {
     fontSize: 20,
+    fontFamily: 'VendSans-Regular',
   },
   startTimerText: {
     color: 'white',
     fontSize: 16,
-    fontWeight: '600',
+    fontFamily: 'VendSans-SemiBold',
   },
   activeTimerContainer: {
-    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    backgroundColor: '#F9FAFB',
     borderRadius: 12,
     padding: 16,
     alignItems: 'center',
   },
   timerDisplay: {
     fontSize: 48,
-    fontWeight: 'bold',
     color: 'white',
     marginBottom: 12,
+    fontFamily: 'VendSans-Bold',
   },
   timerControls: {
     flexDirection: 'row',
@@ -455,12 +454,13 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: '#F3F4F6',
     justifyContent: 'center',
     alignItems: 'center',
   },
   timerControlText: {
     fontSize: 20,
+    fontFamily: 'VendSans-Regular',
   },
   scrollContent: {
     paddingHorizontal: 20,
@@ -481,31 +481,32 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#4F46E5',
+    backgroundColor: '#6B46C1',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
   },
   stepNumberText: {
-    color: 'white',
+    color: '#1F2937',
     fontSize: 18,
-    fontWeight: 'bold',
+    fontFamily: 'VendSans-Bold',
   },
   stepTitle: {
     fontSize: 22,
-    fontWeight: 'bold',
     color: '#1F2937',
     flex: 1,
+    fontFamily: 'VendSans-Bold',
   },
   instruction: {
     fontSize: 16,
     color: '#4B5563',
     lineHeight: 24,
     marginBottom: 16,
+    fontFamily: 'VendSans-Regular',
   },
   tipContainer: {
     flexDirection: 'row',
-    backgroundColor: '#EEF2FF',
+    backgroundColor: '#F3E8FF',
     borderRadius: 12,
     padding: 12,
     marginTop: 8,
@@ -513,12 +514,14 @@ const styles = StyleSheet.create({
   tipIcon: {
     fontSize: 16,
     marginRight: 8,
+    fontFamily: 'VendSans-Regular',
   },
   tipText: {
     flex: 1,
     fontSize: 14,
-    color: '#4F46E5',
+    color: '#6B46C1',
     lineHeight: 20,
+    fontFamily: 'VendSans-Regular',
   },
   warningContainer: {
     flexDirection: 'row',
@@ -530,21 +533,23 @@ const styles = StyleSheet.create({
   warningIcon: {
     fontSize: 16,
     marginRight: 8,
+    fontFamily: 'VendSans-Regular',
   },
   warningText: {
     flex: 1,
     fontSize: 14,
     color: '#92400E',
     lineHeight: 20,
+    fontFamily: 'VendSans-Regular',
   },
   stepOverview: {
     marginBottom: 20,
   },
   overviewTitle: {
     fontSize: 16,
-    fontWeight: '600',
     color: 'white',
     marginBottom: 12,
+    fontFamily: 'VendSans-SemiBold',
   },
   stepDots: {
     flexDirection: 'row',
@@ -554,7 +559,7 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: '#F3F4F6',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -567,15 +572,15 @@ const styles = StyleSheet.create({
   stepDotNumber: {
     fontSize: 14,
     color: 'white',
-    fontWeight: '600',
+    fontFamily: 'VendSans-SemiBold',
   },
   stepDotNumberActive: {
-    color: '#4F46E5',
+    color: '#6B46C1',
   },
   stepDotCheck: {
     color: 'white',
     fontSize: 14,
-    fontWeight: 'bold',
+    fontFamily: 'VendSans-Bold',
   },
   navigationControls: {
     flexDirection: 'row',
@@ -585,7 +590,7 @@ const styles = StyleSheet.create({
   },
   navButton: {
     flexDirection: 'row',
-    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    backgroundColor: '#F9FAFB',
     paddingVertical: 14,
     paddingHorizontal: 24,
     borderRadius: 16,
@@ -598,11 +603,12 @@ const styles = StyleSheet.create({
   navIcon: {
     fontSize: 18,
     color: 'white',
+    fontFamily: 'VendSans-Regular',
   },
   navText: {
     fontSize: 16,
-    fontWeight: '600',
     color: 'white',
+    fontFamily: 'VendSans-SemiBold',
   },
   completeButton: {
     flexDirection: 'row',
@@ -616,10 +622,11 @@ const styles = StyleSheet.create({
   completeIcon: {
     fontSize: 18,
     color: 'white',
+    fontFamily: 'VendSans-Regular',
   },
   completeText: {
     fontSize: 16,
-    fontWeight: '600',
     color: 'white',
+    fontFamily: 'VendSans-SemiBold',
   },
 });

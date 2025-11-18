@@ -9,11 +9,10 @@ import {
   StatusBar,
   KeyboardAvoidingView,
   Platform,
-  ScrollView  // THIS WAS MISSING - Screen 2 uses ScrollView
+  ScrollView
 } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
-import { useUser } from '../../context/UserContext';  // ADD THIS
+import { useUser } from '../../context/UserContext';
 
 export default function NameEmailScreen() {
   const navigation = useNavigation<any>();
@@ -37,13 +36,8 @@ export default function NameEmailScreen() {
   };
 
   return (
-    <LinearGradient
-      colors={['#4F46E5', '#2D1B69', '#1A0F3D']}
-      style={styles.container}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}
-    >
-      <StatusBar barStyle="light-content" />
+    <View style={styles.container}>
+      <StatusBar barStyle="dark-content" />
       <SafeAreaView style={styles.safeArea}>
         <KeyboardAvoidingView 
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -86,7 +80,7 @@ export default function NameEmailScreen() {
                     value={firstName}
                     onChangeText={setFirstName}
                     placeholder="Enter your first name"
-                    placeholderTextColor="rgba(255, 255, 255, 0.4)"
+                    placeholderTextColor="#9CA3AF"
                     autoCapitalize="words"
                     autoCorrect={false}
                   />
@@ -99,7 +93,7 @@ export default function NameEmailScreen() {
                     value={email}
                     onChangeText={setEmail}
                     placeholder="your@email.com"
-                    placeholderTextColor="rgba(255, 255, 255, 0.4)"
+                    placeholderTextColor="#9CA3AF"
                     keyboardType="email-address"
                     autoCapitalize="none"
                     autoCorrect={false}
@@ -128,13 +122,14 @@ export default function NameEmailScreen() {
           </ScrollView>
         </KeyboardAvoidingView>
       </SafeAreaView>
-    </LinearGradient>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#FEFEFE',
   },
   safeArea: {
     flex: 1,
@@ -152,17 +147,18 @@ const styles = StyleSheet.create({
   },
   progressBar: {
     height: 4,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: '#E5E7EB',
     borderRadius: 2,
     overflow: 'hidden',
   },
   progressFill: {
     height: '100%',
-    backgroundColor: 'white',
+    backgroundColor: '#FF8C00',
     borderRadius: 2,
   },
   progressText: {
-    color: 'rgba(255, 255, 255, 0.7)',
+    fontFamily: 'VendSans-Regular',
+    color: '#6B7280',
     fontSize: 12,
     marginTop: 8,
     textAlign: 'center',
@@ -172,22 +168,23 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   backButtonText: {
-    color: 'white',
+    fontFamily: 'VendSans-Medium',
+    color: '#6B46C1',
     fontSize: 16,
-    fontWeight: '500',
   },
   content: {
     flex: 1,
   },
   title: {
+    fontFamily: 'VendSans-Bold',
     fontSize: 32,
-    fontWeight: 'bold',
-    color: 'white',
+    color: '#6B46C1',
     marginBottom: 10,
   },
   subtitle: {
+    fontFamily: 'VendSans-Regular',
     fontSize: 16,
-    color: 'rgba(255, 255, 255, 0.8)',
+    color: '#6B7280',
     marginBottom: 40,
     lineHeight: 22,
   },
@@ -198,23 +195,24 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   label: {
-    color: 'white',
+    fontFamily: 'VendSans-Medium',
+    color: '#1F2937',
     fontSize: 14,
-    fontWeight: '500',
     marginBottom: 8,
   },
   input: {
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    fontFamily: 'VendSans-Regular',
+    backgroundColor: '#F9FAFB',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.2)',
+    borderColor: '#E5E7EB',
     borderRadius: 12,
     paddingHorizontal: 16,
     paddingVertical: 14,
     fontSize: 16,
-    color: 'white',
+    color: '#1F2937',
   },
   continueButton: {
-    backgroundColor: 'white',
+    backgroundColor: '#6B46C1',
     paddingVertical: 16,
     borderRadius: 12,
     shadowColor: '#000',
@@ -227,15 +225,15 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   continueButtonDisabled: {
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    backgroundColor: '#D1D5DB',
   },
   continueButtonText: {
-    color: '#4F46E5',
+    fontFamily: 'VendSans-SemiBold',
+    color: 'white',
     fontSize: 18,
-    fontWeight: '600',
     textAlign: 'center',
   },
   continueButtonTextDisabled: {
-    color: 'rgba(79, 70, 229, 0.5)',
+    color: '#9CA3AF',
   },
 });

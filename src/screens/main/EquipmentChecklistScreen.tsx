@@ -55,11 +55,7 @@ export default function EquipmentChecklistScreen() {
 
   return (
     <View style={styles.container}>
-      <LinearGradient
-        colors={['#4F46E5', '#2D1B69', '#1A0F3D']}
-        style={styles.gradient}
-      >
-        <StatusBar barStyle="light-content" />
+      <StatusBar barStyle="dark-content" />
         <SafeAreaView style={styles.safeArea}>
           <ScrollView 
             contentContainerStyle={styles.scrollContent}
@@ -228,7 +224,7 @@ export default function EquipmentChecklistScreen() {
             </View>
           </ScrollView>
         </SafeAreaView>
-      </LinearGradient>
+      
     </View>
   );
 }
@@ -236,9 +232,7 @@ export default function EquipmentChecklistScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  gradient: {
-    flex: 1,
+    backgroundColor: '#FEFEFE',
   },
   safeArea: {
     flex: 1,
@@ -258,26 +252,28 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: '#F3F4F6',
     justifyContent: 'center',
     alignItems: 'center',
   },
   backIcon: {
-    color: 'white',
+    color: '#1F2937',
     fontSize: 24,
+    fontFamily: 'VendSans-Regular',
   },
   headerCenter: {
     alignItems: 'center',
   },
   headerTitle: {
     fontSize: 18,
-    fontWeight: '600',
     color: 'white',
+    fontFamily: 'VendSans-SemiBold',
   },
   headerSubtitle: {
     fontSize: 12,
     color: 'rgba(255, 255, 255, 0.7)',
     marginTop: 2,
+    fontFamily: 'VendSans-Regular',
   },
   placeholder: {
     width: 40,
@@ -288,7 +284,7 @@ const styles = StyleSheet.create({
   },
   progressBar: {
     height: 8,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: '#F3F4F6',
     borderRadius: 4,
     overflow: 'hidden',
   },
@@ -302,10 +298,11 @@ const styles = StyleSheet.create({
     color: 'rgba(255, 255, 255, 0.7)',
     marginTop: 8,
     textAlign: 'center',
+    fontFamily: 'VendSans-Regular',
   },
   recipeCard: {
     flexDirection: 'row',
-    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    backgroundColor: '#F9FAFB',
     marginHorizontal: 20,
     borderRadius: 16,
     padding: 16,
@@ -315,19 +312,21 @@ const styles = StyleSheet.create({
   recipeEmoji: {
     fontSize: 32,
     marginRight: 12,
+    fontFamily: 'VendSans-Regular',
   },
   recipeInfo: {
     flex: 1,
   },
   recipeName: {
     fontSize: 16,
-    fontWeight: '600',
     color: 'white',
     marginBottom: 4,
+    fontFamily: 'VendSans-SemiBold',
   },
   recipeTime: {
     fontSize: 14,
     color: 'rgba(255, 255, 255, 0.8)',
+    fontFamily: 'VendSans-Regular',
   },
   tipsCard: {
     backgroundColor: '#10B981',
@@ -344,21 +343,24 @@ const styles = StyleSheet.create({
   tipsIcon: {
     fontSize: 20,
     marginRight: 8,
+    fontFamily: 'VendSans-Regular',
   },
   tipsTitle: {
     flex: 1,
     fontSize: 16,
-    fontWeight: '600',
     color: 'white',
+    fontFamily: 'VendSans-SemiBold',
   },
   dismissText: {
     fontSize: 16,
     color: 'rgba(255, 255, 255, 0.8)',
+    fontFamily: 'VendSans-Regular',
   },
   tipsText: {
     fontSize: 14,
     color: 'white',
     lineHeight: 20,
+    fontFamily: 'VendSans-Regular',
   },
   section: {
     marginBottom: 24,
@@ -372,12 +374,13 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: '600',
     color: 'white',
+    fontFamily: 'VendSans-SemiBold',
   },
   sectionCount: {
     fontSize: 14,
     color: 'rgba(255, 255, 255, 0.7)',
+    fontFamily: 'VendSans-Regular',
   },
   equipmentItem: {
     flexDirection: 'row',
@@ -411,11 +414,12 @@ const styles = StyleSheet.create({
   checkmark: {
     color: 'white',
     fontSize: 14,
-    fontWeight: 'bold',
+    fontFamily: 'VendSans-Bold',
   },
   itemEmoji: {
     fontSize: 24,
     marginRight: 12,
+    fontFamily: 'VendSans-Regular',
   },
   itemTextContainer: {
     flex: 1,
@@ -423,6 +427,7 @@ const styles = StyleSheet.create({
   itemName: {
     fontSize: 16,
     color: '#1F2937',
+    fontFamily: 'VendSans-Regular',
   },
   itemNameChecked: {
     color: '#9CA3AF',
@@ -433,6 +438,7 @@ const styles = StyleSheet.create({
     color: '#6B7280',
     marginTop: 2,
     fontStyle: 'italic',
+    fontFamily: 'VendSans-Regular',
   },
   checkedBadge: {
     backgroundColor: '#ECFDF5',
@@ -443,14 +449,14 @@ const styles = StyleSheet.create({
   checkedText: {
     fontSize: 12,
     color: '#10B981',
-    fontWeight: '600',
+    fontFamily: 'VendSans-SemiBold',
   },
   quickActions: {
     paddingHorizontal: 20,
     marginBottom: 20,
   },
   checkAllButton: {
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: '#F3F4F6',
     paddingVertical: 12,
     borderRadius: 12,
     alignItems: 'center',
@@ -458,7 +464,7 @@ const styles = StyleSheet.create({
   checkAllText: {
     color: 'white',
     fontSize: 14,
-    fontWeight: '600',
+    fontFamily: 'VendSans-SemiBold',
   },
   bottomContainer: {
     paddingHorizontal: 20,
@@ -474,9 +480,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   continueButtonText: {
-    color: '#4F46E5',
+    color: '#6B46C1',
     fontSize: 16,
-    fontWeight: '600',
+    fontFamily: 'VendSans-SemiBold',
   },
   skipButton: {
     alignItems: 'center',
@@ -486,5 +492,6 @@ const styles = StyleSheet.create({
     color: 'rgba(255, 255, 255, 0.7)',
     fontSize: 14,
     textDecorationLine: 'underline',
+    fontFamily: 'VendSans-Regular',
   },
 });

@@ -8,7 +8,6 @@ import {
   StatusBar,
   ScrollView
 } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import { useUser } from '../../context/UserContext';  // ADD THIS
 
@@ -117,13 +116,8 @@ export default function DietaryPreferencesScreen() {
   }, []);
 
   return (
-    <LinearGradient
-      colors={['#4F46E5', '#2D1B69', '#1A0F3D']}
-      style={styles.container}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}
-    >
-      <StatusBar barStyle="light-content" />
+    <View style={styles.container}>
+      <StatusBar barStyle="dark-content" />
       <SafeAreaView style={styles.safeArea}>
         <ScrollView 
           contentContainerStyle={styles.scrollContent}
@@ -203,13 +197,14 @@ export default function DietaryPreferencesScreen() {
           </View>
         </ScrollView>
       </SafeAreaView>
-    </LinearGradient>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#FEFEFE',
   },
   safeArea: {
     flex: 1,
@@ -224,17 +219,18 @@ const styles = StyleSheet.create({
   },
   progressBar: {
     height: 4,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: '#E5E7EB',
     borderRadius: 2,
     overflow: 'hidden',
   },
   progressFill: {
     height: '100%',
-    backgroundColor: 'white',
+    backgroundColor: '#6B46C1',
     borderRadius: 2,
   },
   progressText: {
-    color: 'rgba(255, 255, 255, 0.7)',
+    fontFamily: 'VendSans-Regular',
+    color: '#6B7280',
     fontSize: 12,
     marginTop: 8,
     textAlign: 'center',
@@ -244,22 +240,23 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   backButtonText: {
-    color: 'white',
+    fontFamily: 'VendSans-Medium',
+    color: '#6B46C1',
     fontSize: 16,
-    fontWeight: '500',
   },
   content: {
     flex: 1,
   },
   title: {
+    fontFamily: 'VendSans-Bold',
     fontSize: 32,
-    fontWeight: 'bold',
-    color: 'white',
+    color: '#1F2937',
     marginBottom: 10,
   },
   subtitle: {
+    fontFamily: 'VendSans-Regular',
     fontSize: 16,
-    color: 'rgba(255, 255, 255, 0.8)',
+    color: '#6B7280',
     marginBottom: 30,
     lineHeight: 22,
   },
@@ -267,9 +264,9 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   preferenceCard: {
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    backgroundColor: '#FFFFFF',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.2)',
+    borderColor: '#E5E7EB',
     borderRadius: 16,
     padding: 14,
     marginBottom: 10,
@@ -278,8 +275,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   preferenceCardActive: {
-    backgroundColor: 'white',
-    borderColor: 'white',
+    backgroundColor: '#F3F0FF',
+    borderColor: '#6B46C1',
+    borderWidth: 2,
   },
   preferenceContent: {
     flexDirection: 'row',
@@ -294,36 +292,37 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   preferenceTitle: {
+    fontFamily: 'VendSans-SemiBold',
     fontSize: 17,
-    fontWeight: '600',
-    color: 'white',
+    color: '#1F2937',
     marginBottom: 2,
   },
   preferenceTitleActive: {
-    color: '#4F46E5',
+    color: '#6B46C1',
   },
   preferenceDescription: {
+    fontFamily: 'VendSans-Regular',
     fontSize: 13,
-    color: 'rgba(255, 255, 255, 0.7)',
+    color: '#6B7280',
   },
   preferenceDescriptionActive: {
-    color: 'rgba(79, 70, 229, 0.8)',
+    color: '#6B46C1',
   },
   checkmark: {
     width: 24,
     height: 24,
     borderRadius: 12,
-    backgroundColor: '#4F46E5',
+    backgroundColor: '#6B46C1',
     justifyContent: 'center',
     alignItems: 'center',
   },
   checkmarkText: {
+    fontFamily: 'VendSans-Bold',
     color: 'white',
     fontSize: 14,
-    fontWeight: 'bold',
   },
   continueButton: {
-    backgroundColor: 'white',
+    backgroundColor: '#6B46C1',
     paddingVertical: 16,
     borderRadius: 12,
     shadowColor: '#000',
@@ -337,9 +336,9 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   continueButtonText: {
-    color: '#4F46E5',
+    fontFamily: 'VendSans-SemiBold',
+    color: '#FFFFFF',
     fontSize: 18,
-    fontWeight: '600',
     textAlign: 'center',
   },
 });

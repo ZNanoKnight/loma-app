@@ -8,7 +8,6 @@ import {
   StatusBar,
   ScrollView
 } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 
 export default function RecipePreviewScreen() {
@@ -97,13 +96,8 @@ export default function RecipePreviewScreen() {
   };
 
   return (
-    <LinearGradient
-      colors={['#4F46E5', '#2D1B69', '#1A0F3D']}
-      style={styles.container}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}
-    >
-      <StatusBar barStyle="light-content" />
+    <View style={styles.container}>
+      <StatusBar barStyle="dark-content" />
       <SafeAreaView style={styles.safeArea}>
         <ScrollView 
           contentContainerStyle={styles.scrollContent}
@@ -243,13 +237,14 @@ export default function RecipePreviewScreen() {
           </View>
         </ScrollView>
       </SafeAreaView>
-    </LinearGradient>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#FEFEFE',
   },
   safeArea: {
     flex: 1,
@@ -264,17 +259,18 @@ const styles = StyleSheet.create({
   },
   progressBar: {
     height: 4,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: '#E5E7EB',
     borderRadius: 2,
     overflow: 'hidden',
   },
   progressFill: {
     height: '100%',
-    backgroundColor: 'white',
+    backgroundColor: '#6B46C1',
     borderRadius: 2,
   },
   progressText: {
-    color: 'rgba(255, 255, 255, 0.7)',
+    fontFamily: 'VendSans-Regular',
+    color: '#6B7280',
     fontSize: 12,
     marginTop: 8,
     textAlign: 'center',
@@ -284,22 +280,23 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   backButtonText: {
-    color: 'white',
+    fontFamily: 'VendSans-Medium',
+    color: '#6B46C1',
     fontSize: 16,
-    fontWeight: '500',
   },
   content: {
     flex: 1,
   },
   title: {
+    fontFamily: 'VendSans-Bold',
     fontSize: 28,
-    fontWeight: 'bold',
-    color: 'white',
+    color: '#1F2937',
     marginBottom: 10,
   },
   subtitle: {
+    fontFamily: 'VendSans-Regular',
     fontSize: 16,
-    color: 'rgba(255, 255, 255, 0.8)',
+    color: '#6B7280',
     marginBottom: 25,
     lineHeight: 22,
   },
@@ -332,12 +329,13 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   recipeTitle: {
+    fontFamily: 'VendSans-Bold',
     fontSize: 20,
-    fontWeight: 'bold',
     color: '#1F2937',
     marginBottom: 8,
   },
   recipeDescription: {
+    fontFamily: 'VendSans-Regular',
     fontSize: 14,
     color: '#6B7280',
     marginBottom: 16,
@@ -357,9 +355,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   statValue: {
+    fontFamily: 'VendSans-Medium',
     fontSize: 14,
     color: '#4B5563',
-    fontWeight: '500',
   },
   macrosContainer: {
     flexDirection: 'row',
@@ -372,14 +370,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   macroLabel: {
+    fontFamily: 'VendSans-Regular',
     fontSize: 12,
     color: '#9CA3AF',
     marginBottom: 4,
   },
   macroValue: {
+    fontFamily: 'VendSans-Bold',
     fontSize: 18,
-    fontWeight: 'bold',
-    color: '#4F46E5',
+    color: '#6B46C1',
   },
   navigationContainer: {
     flexDirection: 'row',
@@ -396,6 +395,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   navButtonText: {
+    fontFamily: 'VendSans-Regular',
     fontSize: 20,
     color: '#4B5563',
   },
@@ -410,15 +410,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#E5E7EB',
   },
   dotActive: {
-    backgroundColor: '#4F46E5',
+    backgroundColor: '#6B46C1',
   },
   benefitsContainer: {
     marginBottom: 25,
   },
   benefitsTitle: {
+    fontFamily: 'VendSans-SemiBold',
     fontSize: 18,
-    fontWeight: '600',
-    color: 'white',
+    color: '#1F2937',
     marginBottom: 12,
   },
   benefitItem: {
@@ -432,11 +432,12 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   benefitText: {
+    fontFamily: 'VendSans-Regular',
     fontSize: 15,
-    color: 'rgba(255, 255, 255, 0.9)',
+    color: '#4B5563',
   },
   continueButton: {
-    backgroundColor: 'white',
+    backgroundColor: '#6B46C1',
     paddingVertical: 16,
     borderRadius: 12,
     shadowColor: '#000',
@@ -450,9 +451,9 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   continueButtonText: {
-    color: '#4F46E5',
+    fontFamily: 'VendSans-SemiBold',
+    color: '#FFFFFF',
     fontSize: 18,
-    fontWeight: '600',
     textAlign: 'center',
   },
 });

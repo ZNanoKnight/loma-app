@@ -16,11 +16,7 @@ export default function SupportScreen() {
 
   return (
     <View style={styles.container}>
-      <LinearGradient
-        colors={['#4F46E5', '#2D1B69', '#1A0F3D']}
-        style={styles.gradient}
-      >
-        <StatusBar barStyle="light-content" />
+      <StatusBar barStyle="dark-content" />
         <SafeAreaView style={styles.safeArea}>
           <ScrollView
             contentContainerStyle={styles.scrollContent}
@@ -132,7 +128,7 @@ export default function SupportScreen() {
             </View>
           </ScrollView>
         </SafeAreaView>
-      </LinearGradient>
+      
     </View>
   );
 }
@@ -140,9 +136,7 @@ export default function SupportScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  gradient: {
-    flex: 1,
+    backgroundColor: '#FEFEFE',
   },
   safeArea: {
     flex: 1,
@@ -163,18 +157,19 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: '#F3F4F6',
     justifyContent: 'center',
     alignItems: 'center',
   },
   backIcon: {
-    color: 'white',
+    color: '#1F2937',
     fontSize: 24,
+    fontFamily: 'VendSans-Regular',
   },
   headerTitle: {
     fontSize: 18,
-    fontWeight: '600',
     color: 'white',
+    fontFamily: 'VendSans-SemiBold',
   },
   placeholder: {
     width: 40,
@@ -187,7 +182,7 @@ const styles = StyleSheet.create({
   },
   actionCard: {
     flex: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    backgroundColor: '#F9FAFB',
     borderRadius: 16,
     padding: 16,
     alignItems: 'center',
@@ -197,18 +192,20 @@ const styles = StyleSheet.create({
   actionIcon: {
     fontSize: 32,
     marginBottom: 8,
+    fontFamily: 'VendSans-Regular',
   },
   actionTitle: {
     fontSize: 14,
-    fontWeight: '600',
     color: 'white',
     marginBottom: 4,
     textAlign: 'center',
+    fontFamily: 'VendSans-SemiBold',
   },
   actionDescription: {
     fontSize: 11,
     color: 'rgba(255, 255, 255, 0.7)',
     textAlign: 'center',
+    fontFamily: 'VendSans-Regular',
   },
   settingsContainer: {
     backgroundColor: 'white',
@@ -223,8 +220,8 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 14,
-    fontWeight: '600',
     color: '#4B5563',
+    fontFamily: 'VendSans-SemiBold',
   },
   settingRow: {
     flexDirection: 'row',
@@ -237,11 +234,12 @@ const styles = StyleSheet.create({
   settingLabel: {
     fontSize: 16,
     color: '#1F2937',
-    fontWeight: '500',
+    fontFamily: 'VendSans-Medium',
   },
   chevron: {
     fontSize: 18,
     color: '#9CA3AF',
+    fontFamily: 'VendSans-Regular',
   },
   infoContainer: {
     paddingHorizontal: 20,
@@ -252,11 +250,12 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: 'rgba(255, 255, 255, 0.6)',
     marginTop: 8,
+    fontFamily: 'VendSans-Regular',
   },
   infoValue: {
     fontSize: 14,
     color: 'rgba(255, 255, 255, 0.8)',
-    fontWeight: '500',
     marginTop: 2,
+    fontFamily: 'VendSans-Medium',
   },
 });

@@ -47,19 +47,6 @@ export default function App() {
     );
   }
 
-  // After fonts are loaded, before returning the app
-const originalTextRender = (Text as any).prototype.render;
-(Text as any).prototype.render = function(...args: any) {
-  const props = { ...this.props };
-  if (props.style) {
-    props.style = [{ fontFamily: 'VendSans-Regular' }, props.style];
-  } else {
-    props.style = { fontFamily: 'VendSans-Regular' };
-  }
-  this.props = props;
-  return originalTextRender.call(this, ...args);
-};
-
   return (
     <UserProvider>
       <RecipeProvider>

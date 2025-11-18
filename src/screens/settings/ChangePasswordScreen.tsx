@@ -44,11 +44,7 @@ export default function ChangePasswordScreen() {
 
   return (
     <View style={styles.container}>
-      <LinearGradient
-        colors={['#4F46E5', '#2D1B69', '#1A0F3D']}
-        style={styles.gradient}
-      >
-        <StatusBar barStyle="light-content" />
+      <StatusBar barStyle="dark-content" />
         <SafeAreaView style={styles.safeArea}>
           <ScrollView
             contentContainerStyle={styles.scrollContent}
@@ -129,7 +125,7 @@ export default function ChangePasswordScreen() {
             </View>
           </ScrollView>
         </SafeAreaView>
-      </LinearGradient>
+      
     </View>
   );
 }
@@ -137,9 +133,7 @@ export default function ChangePasswordScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  gradient: {
-    flex: 1,
+    backgroundColor: '#FEFEFE',
   },
   safeArea: {
     flex: 1,
@@ -160,24 +154,25 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: '#F3F4F6',
     justifyContent: 'center',
     alignItems: 'center',
   },
   backIcon: {
-    color: 'white',
+    color: '#1F2937',
     fontSize: 24,
+    fontFamily: 'VendSans-Regular',
   },
   headerTitle: {
     fontSize: 18,
-    fontWeight: '600',
     color: 'white',
+    fontFamily: 'VendSans-SemiBold',
   },
   placeholder: {
     width: 40,
   },
   infoCard: {
-    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    backgroundColor: '#F9FAFB',
     marginHorizontal: 20,
     borderRadius: 16,
     padding: 16,
@@ -190,12 +185,14 @@ const styles = StyleSheet.create({
   infoIcon: {
     fontSize: 24,
     marginRight: 12,
+    fontFamily: 'VendSans-Regular',
   },
   infoText: {
     flex: 1,
     fontSize: 14,
     color: 'rgba(255, 255, 255, 0.9)',
     lineHeight: 20,
+    fontFamily: 'VendSans-Regular',
   },
   formContainer: {
     backgroundColor: 'white',
@@ -208,9 +205,9 @@ const styles = StyleSheet.create({
   },
   fieldLabel: {
     fontSize: 14,
-    fontWeight: '600',
     color: '#1F2937',
     marginBottom: 8,
+    fontFamily: 'VendSans-SemiBold',
   },
   input: {
     backgroundColor: '#F9FAFB',
@@ -220,14 +217,16 @@ const styles = StyleSheet.create({
     color: '#1F2937',
     borderWidth: 1,
     borderColor: '#E5E7EB',
+    fontFamily: 'VendSans-Regular',
   },
   hint: {
     fontSize: 12,
     color: '#9CA3AF',
     marginTop: 6,
+    fontFamily: 'VendSans-Regular',
   },
   changeButton: {
-    backgroundColor: '#4F46E5',
+    backgroundColor: '#6B46C1',
     paddingVertical: 14,
     borderRadius: 12,
     alignItems: 'center',
@@ -236,15 +235,15 @@ const styles = StyleSheet.create({
   changeButtonText: {
     color: 'white',
     fontSize: 16,
-    fontWeight: '600',
+    fontFamily: 'VendSans-SemiBold',
   },
   forgotButton: {
     alignItems: 'center',
     marginTop: 16,
   },
   forgotButtonText: {
-    color: '#4F46E5',
+    color: '#6B46C1',
     fontSize: 14,
-    fontWeight: '500',
+    fontFamily: 'VendSans-Medium',
   },
 });

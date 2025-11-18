@@ -9,7 +9,6 @@ import {
   ScrollView,
   TextInput
 } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import { useUser } from '../../context/UserContext';  // ADD THIS
 
@@ -135,13 +134,8 @@ export default function DietaryRestrictionsScreen() {
   };
 
   return (
-    <LinearGradient
-      colors={['#4F46E5', '#2D1B69', '#1A0F3D']}
-      style={styles.container}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}
-    >
-      <StatusBar barStyle="light-content" />
+    <View style={styles.container}>
+      <StatusBar barStyle="dark-content" />
       <SafeAreaView style={styles.safeArea}>
         <ScrollView 
           contentContainerStyle={styles.scrollContent}
@@ -244,13 +238,14 @@ export default function DietaryRestrictionsScreen() {
           </View>
         </ScrollView>
       </SafeAreaView>
-    </LinearGradient>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#FEFEFE',
   },
   safeArea: {
     flex: 1,
@@ -265,17 +260,18 @@ const styles = StyleSheet.create({
   },
   progressBar: {
     height: 4,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: '#E5E7EB',
     borderRadius: 2,
     overflow: 'hidden',
   },
   progressFill: {
     height: '100%',
-    backgroundColor: 'white',
+    backgroundColor: '#6B46C1',
     borderRadius: 2,
   },
   progressText: {
-    color: 'rgba(255, 255, 255, 0.7)',
+    fontFamily: 'VendSans-Regular',
+    color: '#6B7280',
     fontSize: 12,
     marginTop: 8,
     textAlign: 'center',
@@ -285,9 +281,9 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   backButtonText: {
-    color: 'white',
+    fontFamily: 'VendSans-Medium',
+    color: '#6B46C1',
     fontSize: 16,
-    fontWeight: '500',
   },
   content: {
     flex: 1,
@@ -296,14 +292,15 @@ const styles = StyleSheet.create({
     marginBottom: 35,
   },
   sectionTitle: {
+    fontFamily: 'VendSans-Bold',
     fontSize: 28,
-    fontWeight: 'bold',
-    color: 'white',
+    color: '#1F2937',
     marginBottom: 8,
   },
   sectionSubtitle: {
+    fontFamily: 'VendSans-Regular',
     fontSize: 15,
-    color: 'rgba(255, 255, 255, 0.8)',
+    color: '#6B7280',
     marginBottom: 20,
   },
   allergenGrid: {
@@ -312,9 +309,9 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   allergenCard: {
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    backgroundColor: '#FFFFFF',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.2)',
+    borderColor: '#E5E7EB',
     borderRadius: 12,
     paddingVertical: 12,
     paddingHorizontal: 16,
@@ -324,20 +321,21 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   allergenCardActive: {
-    backgroundColor: 'white',
-    borderColor: 'white',
+    backgroundColor: '#F3F0FF',
+    borderColor: '#6B46C1',
+    borderWidth: 2,
   },
   allergenEmoji: {
     fontSize: 20,
     marginRight: 8,
   },
   allergenTitle: {
+    fontFamily: 'VendSans-Medium',
     fontSize: 15,
-    fontWeight: '500',
-    color: 'white',
+    color: '#1F2937',
   },
   allergenTitleActive: {
-    color: '#4F46E5',
+    color: '#6B46C1',
   },
   equipmentContainer: {
     flexDirection: 'row',
@@ -345,40 +343,42 @@ const styles = StyleSheet.create({
   },
   equipmentCard: {
     flex: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    backgroundColor: '#FFFFFF',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.2)',
+    borderColor: '#E5E7EB',
     borderRadius: 12,
     padding: 14,
     alignItems: 'center',
   },
   equipmentCardActive: {
-    backgroundColor: 'white',
-    borderColor: 'white',
+    backgroundColor: '#F3F0FF',
+    borderColor: '#6B46C1',
+    borderWidth: 2,
   },
   equipmentEmoji: {
     fontSize: 28,
     marginBottom: 8,
   },
   equipmentTitle: {
+    fontFamily: 'VendSans-SemiBold',
     fontSize: 14,
-    fontWeight: '600',
-    color: 'white',
+    color: '#1F2937',
     marginBottom: 4,
   },
   equipmentTitleActive: {
-    color: '#4F46E5',
+    color: '#6B46C1',
   },
   equipmentDescription: {
+    fontFamily: 'VendSans-Regular',
     fontSize: 11,
-    color: 'rgba(255, 255, 255, 0.7)',
+    color: '#6B7280',
     textAlign: 'center',
   },
   equipmentDescriptionActive: {
-    color: 'rgba(79, 70, 229, 0.8)',
+    color: '#6B46C1',
   },
   continueButton: {
-    backgroundColor: 'white',
+    backgroundColor: '#6B46C1',
     paddingVertical: 16,
     borderRadius: 12,
     shadowColor: '#000',
@@ -393,9 +393,9 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   continueButtonText: {
-    color: '#4F46E5',
+    fontFamily: 'VendSans-SemiBold',
+    color: '#FFFFFF',
     fontSize: 18,
-    fontWeight: '600',
     textAlign: 'center',
   },
 });

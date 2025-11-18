@@ -30,11 +30,7 @@ export default function AppPreferencesScreen() {
 
   return (
     <View style={styles.container}>
-      <LinearGradient
-        colors={['#4F46E5', '#2D1B69', '#1A0F3D']}
-        style={styles.gradient}
-      >
-        <StatusBar barStyle="light-content" />
+      <StatusBar barStyle="dark-content" />
         <SafeAreaView style={styles.safeArea}>
           <ScrollView
             contentContainerStyle={styles.scrollContent}
@@ -64,7 +60,7 @@ export default function AppPreferencesScreen() {
                 <Switch
                   value={darkMode}
                   onValueChange={setDarkMode}
-                  trackColor={{ false: '#E5E7EB', true: '#4F46E5' }}
+                  trackColor={{ false: '#E5E7EB', true: '#6B46C1' }}
                   thumbColor="white"
                 />
               </View>
@@ -79,7 +75,7 @@ export default function AppPreferencesScreen() {
                 <Switch
                   value={metricUnits}
                   onValueChange={setMetricUnits}
-                  trackColor={{ false: '#E5E7EB', true: '#4F46E5' }}
+                  trackColor={{ false: '#E5E7EB', true: '#6B46C1' }}
                   thumbColor="white"
                 />
               </View>
@@ -125,7 +121,7 @@ export default function AppPreferencesScreen() {
             </View>
           </ScrollView>
         </SafeAreaView>
-      </LinearGradient>
+      
     </View>
   );
 }
@@ -133,9 +129,7 @@ export default function AppPreferencesScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  gradient: {
-    flex: 1,
+    backgroundColor: '#FEFEFE',
   },
   safeArea: {
     flex: 1,
@@ -156,18 +150,19 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: '#F3F4F6',
     justifyContent: 'center',
     alignItems: 'center',
   },
   backIcon: {
-    color: 'white',
+    color: '#1F2937',
     fontSize: 24,
+    fontFamily: 'VendSans-Regular',
   },
   headerTitle: {
     fontSize: 18,
-    fontWeight: '600',
     color: 'white',
+    fontFamily: 'VendSans-SemiBold',
   },
   placeholder: {
     width: 40,
@@ -193,13 +188,14 @@ const styles = StyleSheet.create({
   settingLabel: {
     fontSize: 16,
     color: '#1F2937',
-    fontWeight: '500',
     marginBottom: 4,
+    fontFamily: 'VendSans-Medium',
   },
   settingDescription: {
     fontSize: 13,
     color: '#9CA3AF',
     lineHeight: 18,
+    fontFamily: 'VendSans-Regular',
   },
   settingRight: {
     flexDirection: 'row',
@@ -209,9 +205,11 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#9CA3AF',
     marginRight: 8,
+    fontFamily: 'VendSans-Regular',
   },
   chevron: {
     fontSize: 18,
     color: '#9CA3AF',
+    fontFamily: 'VendSans-Regular',
   },
 });

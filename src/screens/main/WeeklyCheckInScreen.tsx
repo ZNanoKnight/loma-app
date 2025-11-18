@@ -11,7 +11,6 @@ import {
   KeyboardAvoidingView,
   Platform
 } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import { useUser } from '../../context/UserContext';  // ADD THIS
 
@@ -180,11 +179,7 @@ export default function WeeklyCheckInScreen() {
 
   return (
     <View style={styles.container}>
-      <LinearGradient
-        colors={['#4F46E5', '#2D1B69', '#1A0F3D']}
-        style={styles.gradient}
-      >
-        <StatusBar barStyle="light-content" />
+      <StatusBar barStyle="dark-content" />
         <SafeAreaView style={styles.safeArea}>
           <KeyboardAvoidingView 
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -259,7 +254,7 @@ export default function WeeklyCheckInScreen() {
             </View>
           </KeyboardAvoidingView>
         </SafeAreaView>
-      </LinearGradient>
+      
     </View>
   );
 }
@@ -267,9 +262,7 @@ export default function WeeklyCheckInScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  gradient: {
-    flex: 1,
+    backgroundColor: '#FEFEFE',
   },
   safeArea: {
     flex: 1,
@@ -289,18 +282,19 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: '#F3F4F6',
     justifyContent: 'center',
     alignItems: 'center',
   },
   closeIcon: {
-    color: 'white',
+    color: '#1F2937',
     fontSize: 18,
+    fontFamily: 'VendSans-Regular',
   },
   headerTitle: {
     fontSize: 18,
-    fontWeight: '600',
     color: 'white',
+    fontFamily: 'VendSans-SemiBold',
   },
   placeholder: {
     width: 32,
@@ -331,6 +325,7 @@ const styles = StyleSheet.create({
   progressText: {
     fontSize: 14,
     color: 'rgba(255, 255, 255, 0.8)',
+    fontFamily: 'VendSans-Regular',
   },
   scrollContent: {
     flexGrow: 1,
@@ -342,14 +337,15 @@ const styles = StyleSheet.create({
   },
   stepTitle: {
     fontSize: 28,
-    fontWeight: 'bold',
     color: 'white',
     marginBottom: 8,
+    fontFamily: 'VendSans-Bold',
   },
   stepSubtitle: {
     fontSize: 16,
     color: 'rgba(255, 255, 255, 0.8)',
     marginBottom: 30,
+    fontFamily: 'VendSans-Regular',
   },
   weightCard: {
     backgroundColor: 'white',
@@ -362,6 +358,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#6B7280',
     marginBottom: 20,
+    fontFamily: 'VendSans-Regular',
   },
   weightInputContainer: {
     flexDirection: 'row',
@@ -370,15 +367,16 @@ const styles = StyleSheet.create({
   },
   weightInput: {
     fontSize: 48,
-    fontWeight: 'bold',
     color: '#1F2937',
     minWidth: 120,
     textAlign: 'center',
+    fontFamily: 'VendSans-Bold',
   },
   weightUnit: {
     fontSize: 24,
     color: '#6B7280',
     marginLeft: 8,
+    fontFamily: 'VendSans-Regular',
   },
   weightChange: {
     flexDirection: 'row',
@@ -388,14 +386,17 @@ const styles = StyleSheet.create({
   weightChangeDown: {
     fontSize: 24,
     color: '#10B981',
+    fontFamily: 'VendSans-Regular',
   },
   weightChangeUp: {
     fontSize: 24,
     color: '#EF4444',
+    fontFamily: 'VendSans-Regular',
   },
   weightChangeText: {
     fontSize: 16,
     color: '#4B5563',
+    fontFamily: 'VendSans-Regular',
   },
   skipButton: {
     alignItems: 'center',
@@ -404,15 +405,16 @@ const styles = StyleSheet.create({
     color: 'rgba(255, 255, 255, 0.7)',
     fontSize: 14,
     textDecorationLine: 'underline',
+    fontFamily: 'VendSans-Regular',
   },
   feelingSection: {
     marginBottom: 30,
   },
   sectionLabel: {
     fontSize: 16,
-    fontWeight: '600',
     color: 'white',
     marginBottom: 12,
+    fontFamily: 'VendSans-SemiBold',
   },
   moodContainer: {
     flexDirection: 'row',
@@ -430,12 +432,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   moodButtonActive: {
-    backgroundColor: '#EEF2FF',
+    backgroundColor: '#F3E8FF',
     borderWidth: 2,
-    borderColor: '#4F46E5',
+    borderColor: '#6B46C1',
   },
   moodEmoji: {
     fontSize: 28,
+    fontFamily: 'VendSans-Regular',
   },
   energyContainer: {
     flexDirection: 'row',
@@ -449,21 +452,23 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   energyButtonActive: {
-    backgroundColor: '#EEF2FF',
+    backgroundColor: '#F3E8FF',
     borderWidth: 2,
-    borderColor: '#4F46E5',
+    borderColor: '#6B46C1',
   },
   energyEmoji: {
     fontSize: 32,
     marginBottom: 8,
+    fontFamily: 'VendSans-Regular',
   },
   energyLabel: {
     fontSize: 14,
     color: '#6B7280',
+    fontFamily: 'VendSans-Regular',
   },
   energyLabelActive: {
-    color: '#4F46E5',
-    fontWeight: '600',
+    color: '#6B46C1',
+    fontFamily: 'VendSans-SemiBold',
   },
   textArea: {
     backgroundColor: 'white',
@@ -472,6 +477,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#1F2937',
     minHeight: 80,
+    fontFamily: 'VendSans-Regular',
   },
   statsCard: {
     backgroundColor: 'white',
@@ -489,16 +495,18 @@ const styles = StyleSheet.create({
   statEmoji: {
     fontSize: 24,
     marginBottom: 8,
+    fontFamily: 'VendSans-Regular',
   },
   statValue: {
     fontSize: 20,
-    fontWeight: 'bold',
     color: '#1F2937',
     marginBottom: 4,
+    fontFamily: 'VendSans-Bold',
   },
   statLabel: {
     fontSize: 12,
     color: '#6B7280',
+    fontFamily: 'VendSans-Regular',
   },
   reviewSection: {
     marginBottom: 24,
@@ -510,7 +518,7 @@ const styles = StyleSheet.create({
   },
   optionChip: {
     flexDirection: 'row',
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    backgroundColor: '#F9FAFB',
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.2)',
     paddingHorizontal: 16,
@@ -525,26 +533,28 @@ const styles = StyleSheet.create({
   },
   optionEmoji: {
     fontSize: 16,
+    fontFamily: 'VendSans-Regular',
   },
   optionText: {
     fontSize: 14,
     color: 'white',
+    fontFamily: 'VendSans-Regular',
   },
   optionTextActive: {
-    color: '#4F46E5',
-    fontWeight: '500',
+    color: '#6B46C1',
+    fontFamily: 'VendSans-Medium',
   },
   recommendationsCard: {
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    backgroundColor: '#F9FAFB',
     borderRadius: 16,
     padding: 16,
     marginBottom: 24,
   },
   recommendationsTitle: {
     fontSize: 16,
-    fontWeight: '600',
     color: 'white',
     marginBottom: 12,
+    fontFamily: 'VendSans-SemiBold',
   },
   recommendation: {
     flexDirection: 'row',
@@ -559,6 +569,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: 'rgba(255, 255, 255, 0.9)',
     lineHeight: 20,
+    fontFamily: 'VendSans-Regular',
   },
   goalSection: {
     marginBottom: 20,
@@ -570,9 +581,10 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: 'rgba(255, 255, 255, 0.7)',
     marginBottom: 10,
+    fontFamily: 'VendSans-Regular',
   },
   quickGoalChip: {
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    backgroundColor: '#F9FAFB',
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 16,
@@ -581,6 +593,7 @@ const styles = StyleSheet.create({
   quickGoalText: {
     color: 'white',
     fontSize: 14,
+    fontFamily: 'VendSans-Regular',
   },
   navigation: {
     flexDirection: 'row',
@@ -596,7 +609,7 @@ const styles = StyleSheet.create({
   backText: {
     color: 'rgba(255, 255, 255, 0.8)',
     fontSize: 16,
-    fontWeight: '500',
+    fontFamily: 'VendSans-Medium',
   },
   continueButton: {
     backgroundColor: 'white',
@@ -608,9 +621,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   continueText: {
-    color: '#4F46E5',
+    color: '#6B46C1',
     fontSize: 16,
-    fontWeight: '600',
+    fontFamily: 'VendSans-SemiBold',
   },
   completeButton: {
     backgroundColor: '#10B981',
@@ -624,6 +637,6 @@ const styles = StyleSheet.create({
   completeText: {
     color: 'white',
     fontSize: 16,
-    fontWeight: '600',
+    fontFamily: 'VendSans-SemiBold',
   },
 });

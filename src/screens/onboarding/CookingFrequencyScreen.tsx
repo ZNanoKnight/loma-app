@@ -8,7 +8,6 @@ import {
   StatusBar,
   ScrollView
 } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import { useUser } from '../../context/UserContext';  // ADD THIS
 
@@ -83,13 +82,8 @@ export default function CookingFrequencyScreen() {
   };
 
   return (
-    <LinearGradient
-      colors={['#4F46E5', '#2D1B69', '#1A0F3D']}
-      style={styles.container}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}
-    >
-      <StatusBar barStyle="light-content" />
+    <View style={styles.container}>
+      <StatusBar barStyle="dark-content" />
       <SafeAreaView style={styles.safeArea}>
         <ScrollView 
           contentContainerStyle={styles.scrollContent}
@@ -207,13 +201,14 @@ export default function CookingFrequencyScreen() {
           </View>
         </ScrollView>
       </SafeAreaView>
-    </LinearGradient>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#FEFEFE',
   },
   safeArea: {
     flex: 1,
@@ -228,17 +223,18 @@ const styles = StyleSheet.create({
   },
   progressBar: {
     height: 4,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: '#E5E7EB',
     borderRadius: 2,
     overflow: 'hidden',
   },
   progressFill: {
     height: '100%',
-    backgroundColor: 'white',
+    backgroundColor: '#6B46C1',
     borderRadius: 2,
   },
   progressText: {
-    color: 'rgba(255, 255, 255, 0.7)',
+    fontFamily: 'VendSans-Regular',
+    color: '#6B7280',
     fontSize: 12,
     marginTop: 8,
     textAlign: 'center',
@@ -248,9 +244,9 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   backButtonText: {
-    color: 'white',
+    fontFamily: 'VendSans-Medium',
+    color: '#6B46C1',
     fontSize: 16,
-    fontWeight: '500',
   },
   content: {
     flex: 1,
@@ -259,23 +255,24 @@ const styles = StyleSheet.create({
     marginBottom: 35,
   },
   sectionTitle: {
+    fontFamily: 'VendSans-Bold',
     fontSize: 26,
-    fontWeight: 'bold',
-    color: 'white',
+    color: '#1F2937',
     marginBottom: 8,
   },
   sectionSubtitle: {
+    fontFamily: 'VendSans-Regular',
     fontSize: 15,
-    color: 'rgba(255, 255, 255, 0.8)',
+    color: '#6B7280',
     marginBottom: 20,
   },
   optionsContainer: {
     gap: 10,
   },
   optionCard: {
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    backgroundColor: '#FFFFFF',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.2)',
+    borderColor: '#E5E7EB',
     borderRadius: 14,
     padding: 14,
     marginBottom: 10,
@@ -283,8 +280,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   optionCardActive: {
-    backgroundColor: 'white',
-    borderColor: 'white',
+    backgroundColor: '#F3F0FF',
+    borderColor: '#6B46C1',
+    borderWidth: 2,
   },
   optionEmoji: {
     fontSize: 24,
@@ -294,20 +292,21 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   optionTitle: {
+    fontFamily: 'VendSans-SemiBold',
     fontSize: 16,
-    fontWeight: '600',
-    color: 'white',
+    color: '#1F2937',
     marginBottom: 2,
   },
   optionTitleActive: {
-    color: '#4F46E5',
+    color: '#6B46C1',
   },
   optionDescription: {
+    fontFamily: 'VendSans-Regular',
     fontSize: 13,
-    color: 'rgba(255, 255, 255, 0.7)',
+    color: '#6B7280',
   },
   optionDescriptionActive: {
-    color: 'rgba(79, 70, 229, 0.8)',
+    color: '#6B46C1',
   },
   mealPrepContainer: {
     flexDirection: 'row',
@@ -315,40 +314,42 @@ const styles = StyleSheet.create({
   },
   mealPrepCard: {
     flex: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    backgroundColor: '#FFFFFF',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.2)',
+    borderColor: '#E5E7EB',
     borderRadius: 12,
     padding: 14,
     alignItems: 'center',
   },
   mealPrepCardActive: {
-    backgroundColor: 'white',
-    borderColor: 'white',
+    backgroundColor: '#F3F0FF',
+    borderColor: '#6B46C1',
+    borderWidth: 2,
   },
   mealPrepEmoji: {
     fontSize: 28,
     marginBottom: 8,
   },
   mealPrepTitle: {
+    fontFamily: 'VendSans-SemiBold',
     fontSize: 14,
-    fontWeight: '600',
-    color: 'white',
+    color: '#1F2937',
     marginBottom: 4,
   },
   mealPrepTitleActive: {
-    color: '#4F46E5',
+    color: '#6B46C1',
   },
   mealPrepDescription: {
+    fontFamily: 'VendSans-Regular',
     fontSize: 11,
-    color: 'rgba(255, 255, 255, 0.7)',
+    color: '#6B7280',
     textAlign: 'center',
   },
   mealPrepDescriptionActive: {
-    color: 'rgba(79, 70, 229, 0.8)',
+    color: '#6B46C1',
   },
   continueButton: {
-    backgroundColor: 'white',
+    backgroundColor: '#6B46C1',
     paddingVertical: 16,
     borderRadius: 12,
     shadowColor: '#000',
@@ -363,15 +364,15 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   continueButtonDisabled: {
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    backgroundColor: '#D1D5DB',
   },
   continueButtonText: {
-    color: '#4F46E5',
+    fontFamily: 'VendSans-SemiBold',
+    color: '#FFFFFF',
     fontSize: 18,
-    fontWeight: '600',
     textAlign: 'center',
   },
   continueButtonTextDisabled: {
-    color: 'rgba(79, 70, 229, 0.5)',
+    color: '#9CA3AF',
   },
 });

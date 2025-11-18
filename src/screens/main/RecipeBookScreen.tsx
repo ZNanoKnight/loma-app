@@ -11,7 +11,6 @@ import {
   FlatList,
   ActivityIndicator
 } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import { useUser } from '../../context/UserContext';
 import { useRecipe } from '../../context/RecipeContext';
@@ -131,27 +130,19 @@ export default function RecipeBookScreen() {
   if (isLoading) {
     return (
       <View style={styles.container}>
-        <LinearGradient
-          colors={['#4F46E5', '#2D1B69', '#1A0F3D']}
-          style={styles.gradient}
-        >
-          <StatusBar barStyle="light-content" />
+        <StatusBar barStyle="dark-content" />
           <SafeAreaView style={[styles.safeArea, { justifyContent: 'center', alignItems: 'center' }]}>
-            <ActivityIndicator size="large" color="white" />
+            <ActivityIndicator size="large" color="#6B46C1" />
             <Text style={{ color: 'white', marginTop: 16, fontSize: 16 }}>Loading recipes...</Text>
           </SafeAreaView>
-        </LinearGradient>
+        
       </View>
     );
   }
 
   return (
     <View style={styles.container}>
-      <LinearGradient
-        colors={['#4F46E5', '#2D1B69', '#1A0F3D']}
-        style={styles.gradient}
-      >
-        <StatusBar barStyle="light-content" />
+      <StatusBar barStyle="dark-content" />
         <SafeAreaView style={styles.safeArea}>
           {/* Header */}
           <View style={styles.header}>
@@ -267,7 +258,7 @@ export default function RecipeBookScreen() {
             }
           />
         </SafeAreaView>
-      </LinearGradient>
+      
     </View>
   );
 }
@@ -275,9 +266,7 @@ export default function RecipeBookScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  gradient: {
-    flex: 1,
+    backgroundColor: '#FEFEFE',
   },
   safeArea: {
     flex: 1,
@@ -289,9 +278,9 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 32,
-    fontWeight: 'bold',
     color: 'white',
     marginBottom: 4,
+    fontFamily: 'VendSans-Bold',
   },
   headerStats: {
     flexDirection: 'row',
@@ -300,6 +289,7 @@ const styles = StyleSheet.create({
   headerStatText: {
     fontSize: 14,
     color: 'rgba(255, 255, 255, 0.7)',
+    fontFamily: 'VendSans-Regular',
   },
   headerStatDivider: {
     marginHorizontal: 8,
@@ -318,15 +308,18 @@ const styles = StyleSheet.create({
   searchIcon: {
     fontSize: 16,
     marginRight: 10,
+    fontFamily: 'VendSans-Regular',
   },
   searchInput: {
     flex: 1,
     fontSize: 16,
     color: '#1F2937',
+    fontFamily: 'VendSans-Regular',
   },
   clearIcon: {
     fontSize: 16,
     color: '#9CA3AF',
+    fontFamily: 'VendSans-Regular',
   },
   filterContainer: {
     marginBottom: 10,
@@ -342,7 +335,7 @@ const styles = StyleSheet.create({
   filterTab: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    backgroundColor: '#F9FAFB',
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
@@ -354,14 +347,15 @@ const styles = StyleSheet.create({
   filterEmoji: {
     fontSize: 16,
     marginRight: 6,
+    fontFamily: 'VendSans-Regular',
   },
   filterText: {
     fontSize: 14,
-    fontWeight: '500',
     color: 'rgba(255, 255, 255, 0.9)',
+    fontFamily: 'VendSans-Medium',
   },
   filterTextActive: {
-    color: '#4F46E5',
+    color: '#6B46C1',
   },
   sortContainer: {
     paddingHorizontal: 20,
@@ -371,7 +365,7 @@ const styles = StyleSheet.create({
   sortButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    backgroundColor: '#F9FAFB',
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 12,
@@ -380,10 +374,12 @@ const styles = StyleSheet.create({
   sortIcon: {
     fontSize: 14,
     marginRight: 6,
+    fontFamily: 'VendSans-Regular',
   },
   sortText: {
     fontSize: 13,
     color: 'white',
+    fontFamily: 'VendSans-Regular',
   },
   sortDropdown: {
     position: 'absolute',
@@ -408,14 +404,16 @@ const styles = StyleSheet.create({
   sortOptionIcon: {
     fontSize: 16,
     marginRight: 8,
+    fontFamily: 'VendSans-Regular',
   },
   sortOptionText: {
     fontSize: 14,
     color: '#6B7280',
+    fontFamily: 'VendSans-Regular',
   },
   sortOptionTextActive: {
-    color: '#4F46E5',
-    fontWeight: '600',
+    color: '#6B46C1',
+    fontFamily: 'VendSans-SemiBold',
   },
   recipeList: {
     paddingHorizontal: 20,
@@ -440,6 +438,7 @@ const styles = StyleSheet.create({
   },
   recipeEmoji: {
     fontSize: 48,
+    fontFamily: 'VendSans-Regular',
   },
   favoriteIndicator: {
     position: 'absolute',
@@ -448,15 +447,16 @@ const styles = StyleSheet.create({
   },
   favoriteIcon: {
     fontSize: 16,
+    fontFamily: 'VendSans-Regular',
   },
   recipeInfo: {
     padding: 12,
   },
   recipeTitle: {
     fontSize: 14,
-    fontWeight: '600',
     color: '#1F2937',
     marginBottom: 8,
+    fontFamily: 'VendSans-SemiBold',
   },
   recipeStats: {
     flexDirection: 'row',
@@ -470,15 +470,18 @@ const styles = StyleSheet.create({
   statIcon: {
     fontSize: 12,
     marginRight: 2,
+    fontFamily: 'VendSans-Regular',
   },
   statText: {
     fontSize: 12,
     color: '#6B7280',
+    fontFamily: 'VendSans-Regular',
   },
   cookedCount: {
     fontSize: 11,
     color: '#9CA3AF',
     fontStyle: 'italic',
+    fontFamily: 'VendSans-Regular',
   },
   emptyState: {
     alignItems: 'center',
@@ -487,16 +490,18 @@ const styles = StyleSheet.create({
   emptyEmoji: {
     fontSize: 48,
     marginBottom: 16,
+    fontFamily: 'VendSans-Regular',
   },
   emptyTitle: {
     fontSize: 18,
-    fontWeight: '600',
     color: 'white',
     marginBottom: 8,
+    fontFamily: 'VendSans-SemiBold',
   },
   emptySubtitle: {
     fontSize: 14,
     color: 'rgba(255, 255, 255, 0.7)',
     textAlign: 'center',
+    fontFamily: 'VendSans-Regular',
   },
 });

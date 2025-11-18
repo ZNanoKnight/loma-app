@@ -7,26 +7,25 @@ import {
   SafeAreaView,
   StatusBar,
   ScrollView,
-  TextInput  // ADD THIS
+  TextInput
 } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
-import { useUser } from '../../context/UserContext';  // ADD THIS
+import { useUser } from '../../context/UserContext';
 
 export default function HomeScreen() {
   const navigation = useNavigation<any>();
-  const { userData } = useUser();  // ADD THIS
-  
+  const { userData } = useUser();
+
   // Use real user data
-  const userName = userData.firstName || 'Friend';  // MODIFIED
-  const todayRecipes = userData.totalRecipes;  // MODIFIED
-  const weekStreak = userData.currentStreak;  // MODIFIED
-  
+  const userName = userData.firstName || 'Friend';
+  const todayRecipes = userData.totalRecipes;
+  const weekStreak = userData.currentStreak;
+
   // Add missing state variables that your JSX expects
-  const [mealType, setMealType] = useState('');  // ADD THIS
-  const [cookTime, setCookTime] = useState('');  // ADD THIS
-  const [servings, setServings] = useState('');  // ADD THIS
-  const [customRequest, setCustomRequest] = useState('');  // ADD THIS
+  const [mealType, setMealType] = useState('');
+  const [cookTime, setCookTime] = useState('');
+  const [servings, setServings] = useState('');
+  const [customRequest, setCustomRequest] = useState('');
 
   const recentRecipes = [
     { id: '1', name: 'Grilled Chicken Salad', emoji: '🥗', time: '25 min', calories: 320 },
@@ -52,11 +51,7 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      <LinearGradient
-        colors={['#4F46E5', '#2D1B69', '#1A0F3D']}
-        style={styles.gradient}
-      >
-        <StatusBar barStyle="light-content" />
+      <StatusBar barStyle="dark-content" />
         <SafeAreaView style={styles.safeArea}>
           <ScrollView 
             contentContainerStyle={styles.scrollContent}
@@ -193,7 +188,6 @@ export default function HomeScreen() {
             </View>
           </ScrollView>
         </SafeAreaView>
-      </LinearGradient>
     </View>
   );
 }
@@ -201,9 +195,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  gradient: {
-    flex: 1,
+    backgroundColor: '#FEFEFE',
   },
   safeArea: {
     flex: 1,
@@ -220,20 +212,21 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   greeting: {
+    fontFamily: 'VendSans-Bold',
     fontSize: 28,
-    fontWeight: 'bold',
-    color: 'white',
+    color: '#1F2937',
     marginBottom: 4,
   },
   subGreeting: {
+    fontFamily: 'VendSans-Regular',
     fontSize: 16,
-    color: 'rgba(255, 255, 255, 0.8)',
+    color: '#6B7280',
   },
   notificationButton: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: '#F3F4F6',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -247,7 +240,9 @@ const styles = StyleSheet.create({
   },
   statCard: {
     flex: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
     borderRadius: 16,
     padding: 16,
     alignItems: 'center',
@@ -258,14 +253,15 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   statNumber: {
+    fontFamily: 'VendSans-Bold',
     fontSize: 20,
-    fontWeight: 'bold',
-    color: 'white',
+    color: '#6B46C1',
     marginBottom: 4,
   },
   statLabel: {
+    fontFamily: 'VendSans-Regular',
     fontSize: 12,
-    color: 'rgba(255, 255, 255, 0.7)',
+    color: '#6B7280',
   },
   generatorCard: {
     backgroundColor: 'white',
@@ -282,8 +278,8 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   cardTitle: {
+    fontFamily: 'VendSans-Bold',
     fontSize: 22,
-    fontWeight: 'bold',
     color: '#1F2937',
     marginBottom: 20,
   },
@@ -291,8 +287,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   optionLabel: {
+    fontFamily: 'VendSans-SemiBold',
     fontSize: 14,
-    fontWeight: '600',
     color: '#6B7280',
     marginBottom: 10,
   },
@@ -313,17 +309,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   optionButtonActive: {
-    backgroundColor: '#4F46E5',
+    backgroundColor: '#6B46C1',
   },
   optionButtonText: {
+    fontFamily: 'VendSans-Medium',
     fontSize: 14,
-    fontWeight: '500',
     color: '#6B7280',
   },
   optionButtonTextActive: {
     color: 'white',
   },
   textInput: {
+    fontFamily: 'VendSans-Regular',
     backgroundColor: '#F9FAFB',
     borderWidth: 1,
     borderColor: '#E5E7EB',
@@ -336,11 +333,11 @@ const styles = StyleSheet.create({
     textAlignVertical: 'top',
   },
   generateButton: {
-    backgroundColor: '#4F46E5',
+    backgroundColor: '#6B46C1',
     paddingVertical: 16,
     borderRadius: 16,
     alignItems: 'center',
-    shadowColor: '#4F46E5',
+    shadowColor: '#6B46C1',
     shadowOffset: {
       width: 0,
       height: 4,
@@ -350,13 +347,15 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   generateButtonText: {
+    fontFamily: 'VendSans-SemiBold',
     color: 'white',
     fontSize: 18,
-    fontWeight: '600',
   },
   quickActionButton: {
     flex: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
     borderRadius: 16,
     padding: 16,
     alignItems: 'center',
@@ -367,8 +366,8 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   quickActionText: {
+    fontFamily: 'VendSans-Medium',
     fontSize: 12,
-    color: 'white',
-    fontWeight: '500',
+    color: '#1F2937',
   },
 });

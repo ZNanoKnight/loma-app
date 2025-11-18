@@ -9,7 +9,6 @@ import {
   ScrollView,
   TextInput
 } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import { useUser } from '../../context/UserContext';
 
@@ -97,13 +96,8 @@ export default function PaywallScreen() {
   };
 
   return (
-    <LinearGradient
-      colors={['#4F46E5', '#2D1B69', '#1A0F3D']}
-      style={styles.container}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}
-    >
-      <StatusBar barStyle="light-content" />
+    <View style={styles.container}>
+      <StatusBar barStyle="dark-content" />
       <SafeAreaView style={styles.safeArea}>
         <ScrollView 
           contentContainerStyle={styles.scrollContent}
@@ -199,7 +193,7 @@ export default function PaywallScreen() {
                   value={password}
                   onChangeText={setPassword}
                   placeholder="Minimum 8 characters"
-                  placeholderTextColor="rgba(255, 255, 255, 0.4)"
+                  placeholderTextColor="#9CA3AF"
                   secureTextEntry
                   autoCapitalize="none"
                 />
@@ -212,7 +206,7 @@ export default function PaywallScreen() {
                   value={confirmPassword}
                   onChangeText={setConfirmPassword}
                   placeholder="Re-enter password"
-                  placeholderTextColor="rgba(255, 255, 255, 0.4)"
+                  placeholderTextColor="#9CA3AF"
                   secureTextEntry
                   autoCapitalize="none"
                 />
@@ -280,13 +274,14 @@ export default function PaywallScreen() {
           </View>
         </ScrollView>
       </SafeAreaView>
-    </LinearGradient>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#FEFEFE',
   },
   safeArea: {
     flex: 1,
@@ -301,17 +296,18 @@ const styles = StyleSheet.create({
   },
   progressBar: {
     height: 4,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: '#E5E7EB',
     borderRadius: 2,
     overflow: 'hidden',
   },
   progressFill: {
     height: '100%',
-    backgroundColor: 'white',
+    backgroundColor: '#6B46C1',
     borderRadius: 2,
   },
   progressText: {
-    color: 'rgba(255, 255, 255, 0.7)',
+    fontFamily: 'VendSans-Regular',
+    color: '#6B7280',
     fontSize: 12,
     marginTop: 8,
     textAlign: 'center',
@@ -321,22 +317,23 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   backButtonText: {
-    color: 'white',
+    fontFamily: 'VendSans-Medium',
+    color: '#6B46C1',
     fontSize: 16,
-    fontWeight: '500',
   },
   content: {
     flex: 1,
   },
   title: {
+    fontFamily: 'VendSans-Bold',
     fontSize: 32,
-    fontWeight: 'bold',
-    color: 'white',
+    color: '#1F2937',
     marginBottom: 10,
   },
   subtitle: {
+    fontFamily: 'VendSans-Regular',
     fontSize: 16,
-    color: 'rgba(255, 255, 255, 0.8)',
+    color: '#6B7280',
     marginBottom: 25,
     lineHeight: 22,
   },
@@ -344,9 +341,9 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   planCard: {
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    backgroundColor: '#FFFFFF',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.2)',
+    borderColor: '#E5E7EB',
     borderRadius: 16,
     padding: 16,
     marginBottom: 12,
@@ -355,8 +352,9 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   planCardActive: {
-    backgroundColor: 'white',
-    borderColor: 'white',
+    backgroundColor: '#F3F0FF',
+    borderColor: '#6B46C1',
+    borderWidth: 2,
   },
   popularBadge: {
     position: 'absolute',
@@ -368,47 +366,48 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   popularText: {
+    fontFamily: 'VendSans-Bold',
     fontSize: 10,
-    fontWeight: 'bold',
     color: 'white',
   },
   planContent: {
     flex: 1,
   },
   planName: {
+    fontFamily: 'VendSans-SemiBold',
     fontSize: 18,
-    fontWeight: '600',
-    color: 'white',
+    color: '#1F2937',
     marginBottom: 4,
   },
   planNameActive: {
-    color: '#4F46E5',
+    color: '#6B46C1',
   },
   priceContainer: {
     flexDirection: 'row',
     alignItems: 'baseline',
   },
   planPrice: {
+    fontFamily: 'VendSans-Bold',
     fontSize: 24,
-    fontWeight: 'bold',
-    color: 'white',
+    color: '#1F2937',
   },
   planPriceActive: {
-    color: '#4F46E5',
+    color: '#6B46C1',
   },
   planPeriod: {
+    fontFamily: 'VendSans-Regular',
     fontSize: 14,
-    color: 'rgba(255, 255, 255, 0.7)',
+    color: '#6B7280',
     marginLeft: 4,
   },
   planPeriodActive: {
-    color: 'rgba(79, 70, 229, 0.7)',
+    color: '#6B46C1',
   },
   planSavings: {
+    fontFamily: 'VendSans-SemiBold',
     fontSize: 12,
     color: '#10B981',
     marginTop: 4,
-    fontWeight: '600',
   },
   planSavingsActive: {
     color: '#10B981',
@@ -417,42 +416,43 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     borderRadius: 12,
-    backgroundColor: '#4F46E5',
+    backgroundColor: '#6B46C1',
     justifyContent: 'center',
     alignItems: 'center',
   },
   checkmarkText: {
+    fontFamily: 'VendSans-Bold',
     color: 'white',
     fontSize: 14,
-    fontWeight: 'bold',
   },
   accountSection: {
     marginBottom: 25,
   },
   sectionTitle: {
+    fontFamily: 'VendSans-SemiBold',
     fontSize: 20,
-    fontWeight: '600',
-    color: 'white',
+    color: '#1F2937',
     marginBottom: 16,
   },
   inputContainer: {
     marginBottom: 16,
   },
   label: {
-    color: 'white',
+    fontFamily: 'VendSans-Medium',
+    color: '#1F2937',
     fontSize: 14,
-    fontWeight: '500',
     marginBottom: 8,
   },
   input: {
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    fontFamily: 'VendSans-Regular',
+    backgroundColor: '#FFFFFF',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.2)',
+    borderColor: '#E5E7EB',
     borderRadius: 12,
     paddingHorizontal: 16,
     paddingVertical: 14,
     fontSize: 16,
-    color: 'white',
+    color: '#1F2937',
   },
   termsContainer: {
     flexDirection: 'row',
@@ -463,30 +463,31 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     borderWidth: 2,
-    borderColor: 'rgba(255, 255, 255, 0.5)',
+    borderColor: '#D1D5DB',
     borderRadius: 4,
     marginRight: 10,
     justifyContent: 'center',
     alignItems: 'center',
   },
   checkboxActive: {
-    backgroundColor: 'white',
-    borderColor: 'white',
+    backgroundColor: '#6B46C1',
+    borderColor: '#6B46C1',
   },
   checkboxMark: {
-    color: '#4F46E5',
+    fontFamily: 'VendSans-Bold',
+    color: '#FFFFFF',
     fontSize: 14,
-    fontWeight: 'bold',
   },
   termsText: {
+    fontFamily: 'VendSans-Regular',
     flex: 1,
     fontSize: 14,
-    color: 'rgba(255, 255, 255, 0.8)',
+    color: '#6B7280',
     lineHeight: 20,
   },
   termsLink: {
-    color: 'white',
-    fontWeight: '600',
+    fontFamily: 'VendSans-SemiBold',
+    color: '#6B46C1',
     textDecorationLine: 'underline',
   },
   featuresContainer: {
@@ -502,11 +503,12 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   featureText: {
+    fontFamily: 'VendSans-Regular',
     fontSize: 12,
-    color: 'rgba(255, 255, 255, 0.8)',
+    color: '#6B7280',
   },
   completeButton: {
-    backgroundColor: 'white',
+    backgroundColor: '#6B46C1',
     paddingVertical: 16,
     borderRadius: 12,
     shadowColor: '#000',
@@ -520,20 +522,21 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   completeButtonDisabled: {
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    backgroundColor: '#D1D5DB',
   },
   completeButtonText: {
-    color: '#4F46E5',
+    fontFamily: 'VendSans-SemiBold',
+    color: '#FFFFFF',
     fontSize: 18,
-    fontWeight: '600',
     textAlign: 'center',
   },
   completeButtonTextDisabled: {
-    color: 'rgba(79, 70, 229, 0.5)',
+    color: '#9CA3AF',
   },
   securityNote: {
+    fontFamily: 'VendSans-Regular',
     fontSize: 12,
-    color: 'rgba(255, 255, 255, 0.6)',
+    color: '#6B7280',
     textAlign: 'center',
     marginBottom: 30,
   },

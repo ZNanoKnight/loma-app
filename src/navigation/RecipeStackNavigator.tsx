@@ -16,7 +16,6 @@ export default function RecipeStackNavigator() {
       <Stack.Screen name="EquipmentChecklist" component={EquipmentChecklistScreen} />
       <Stack.Screen name="IngredientsList" component={IngredientsListScreen} />
       <Stack.Screen name="CookingInstructions" component={CookingInstructionsScreen} />
-      <Stack.Screen name="Home" component={RecipeBookScreen} />
     </Stack.Navigator>
   );
 }

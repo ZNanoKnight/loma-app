@@ -86,7 +86,7 @@ export default function SettingsMainScreen() {
   return (
     <View style={styles.container}>
       <LinearGradient
-        colors={['#4F46E5', '#2D1B69', '#1A0F3D']}
+        colors={['#6B46C1', '#2D1B69', '#1A0F3D']}
         style={styles.gradient}
       >
         <StatusBar barStyle="light-content" />
@@ -191,7 +191,7 @@ export default function SettingsMainScreen() {
                       <Switch
                         value={notifications}
                         onValueChange={setNotifications}
-                        trackColor={{ false: '#E5E7EB', true: '#4F46E5' }}
+                        trackColor={{ false: '#E5E7EB', true: '#6B46C1' }}
                         thumbColor="white"
                       />
                     </View>
@@ -200,7 +200,7 @@ export default function SettingsMainScreen() {
                       <Switch
                         value={mealReminders}
                         onValueChange={setMealReminders}
-                        trackColor={{ false: '#E5E7EB', true: '#4F46E5' }}
+                        trackColor={{ false: '#E5E7EB', true: '#6B46C1' }}
                         thumbColor="white"
                       />
                     </View>
@@ -209,7 +209,7 @@ export default function SettingsMainScreen() {
                       <Switch
                         value={weeklyReport}
                         onValueChange={setWeeklyReport}
-                        trackColor={{ false: '#E5E7EB', true: '#4F46E5' }}
+                        trackColor={{ false: '#E5E7EB', true: '#6B46C1' }}
                         thumbColor="white"
                       />
                     </View>
@@ -244,7 +244,7 @@ export default function SettingsMainScreen() {
                       <Switch
                         value={darkMode}
                         onValueChange={setDarkMode}
-                        trackColor={{ false: '#E5E7EB', true: '#4F46E5' }}
+                        trackColor={{ false: '#E5E7EB', true: '#6B46C1' }}
                         thumbColor="white"
                       />
                     </View>
@@ -253,7 +253,7 @@ export default function SettingsMainScreen() {
                       <Switch
                         value={metricUnits}
                         onValueChange={setMetricUnits}
-                        trackColor={{ false: '#E5E7EB', true: '#4F46E5' }}
+                        trackColor={{ false: '#E5E7EB', true: '#6B46C1' }}
                         thumbColor="white"
                       />
                     </View>
@@ -272,6 +272,14 @@ export default function SettingsMainScreen() {
             {/* Sign Out Button */}
             <TouchableOpacity style={styles.signOutButton} onPress={handleSignOut}>
               <Text style={styles.signOutText}>Sign Out</Text>
+            </TouchableOpacity>
+
+            {/* DEV: Reset Onboarding Button */}
+            <TouchableOpacity
+              style={styles.resetOnboardingButton}
+              onPress={handleSignOut}
+            >
+              <Text style={styles.resetOnboardingText}>🔄 Reset Onboarding (Dev)</Text>
             </TouchableOpacity>
 
             {/* App Version */}
@@ -307,8 +315,8 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 18,
-    fontWeight: '600',
     color: 'white',
+    fontFamily: 'VendSans-SemiBold',
   },
   placeholder: {
     width: 40,
@@ -329,6 +337,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     textAlign: 'center',
     lineHeight: 100,
+    fontFamily: 'VendSans-Regular',
   },
   editBadge: {
     position: 'absolute',
@@ -343,21 +352,24 @@ const styles = StyleSheet.create({
   },
   editIcon: {
     fontSize: 16,
+    fontFamily: 'VendSans-Regular',
   },
   userName: {
     fontSize: 24,
-    fontWeight: 'bold',
     color: 'white',
     marginBottom: 4,
+    fontFamily: 'VendSans-Bold',
   },
   userEmail: {
     fontSize: 14,
     color: 'rgba(255, 255, 255, 0.8)',
     marginBottom: 8,
+    fontFamily: 'VendSans-Regular',
   },
   memberSince: {
     fontSize: 12,
     color: 'rgba(255, 255, 255, 0.6)',
+    fontFamily: 'VendSans-Regular',
   },
   statsContainer: {
     flexDirection: 'row',
@@ -374,13 +386,14 @@ const styles = StyleSheet.create({
   },
   statNumber: {
     fontSize: 20,
-    fontWeight: 'bold',
     color: 'white',
     marginBottom: 4,
+    fontFamily: 'VendSans-Bold',
   },
   statLabel: {
     fontSize: 11,
     color: 'rgba(255, 255, 255, 0.7)',
+    fontFamily: 'VendSans-Regular',
   },
   settingsContainer: {
     backgroundColor: 'white',
@@ -401,16 +414,18 @@ const styles = StyleSheet.create({
   sectionIcon: {
     fontSize: 20,
     marginRight: 12,
+    fontFamily: 'VendSans-Regular',
   },
   sectionTitle: {
     flex: 1,
     fontSize: 16,
-    fontWeight: '600',
     color: '#1F2937',
+    fontFamily: 'VendSans-SemiBold',
   },
   chevron: {
     fontSize: 18,
     color: '#9CA3AF',
+    fontFamily: 'VendSans-Regular',
   },
   expandedContent: {
     backgroundColor: '#F9FAFB',
@@ -426,14 +441,17 @@ const styles = StyleSheet.create({
   settingLabel: {
     fontSize: 14,
     color: '#4B5563',
+    fontFamily: 'VendSans-Regular',
   },
   settingValue: {
     fontSize: 14,
     color: '#9CA3AF',
+    fontFamily: 'VendSans-Regular',
   },
   settingChevron: {
     fontSize: 14,
     color: '#9CA3AF',
+    fontFamily: 'VendSans-Regular',
   },
   signOutButton: {
     backgroundColor: 'rgba(239, 68, 68, 0.1)',
@@ -441,17 +459,33 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     borderRadius: 12,
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 12,
   },
   signOutText: {
     color: '#EF4444',
     fontSize: 16,
-    fontWeight: '600',
+    fontFamily: 'VendSans-SemiBold',
+  },
+  resetOnboardingButton: {
+    backgroundColor: 'rgba(251, 191, 36, 0.15)',
+    marginHorizontal: 20,
+    paddingVertical: 14,
+    borderRadius: 12,
+    alignItems: 'center',
+    marginBottom: 20,
+    borderWidth: 1,
+    borderColor: 'rgba(251, 191, 36, 0.3)',
+  },
+  resetOnboardingText: {
+    color: '#F59E0B',
+    fontSize: 14,
+    fontFamily: 'VendSans-SemiBold',
   },
   versionText: {
     textAlign: 'center',
     color: 'rgba(255, 255, 255, 0.5)',
     fontSize: 12,
     marginBottom: 40,
+    fontFamily: 'VendSans-Regular',
   },
 });

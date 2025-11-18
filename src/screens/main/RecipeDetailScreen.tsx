@@ -40,8 +40,7 @@ export default function RecipeDetailScreen() {
   if (!recipe) {
     return (
       <View style={styles.container}>
-        <LinearGradient colors={['#4F46E5', '#2D1B69', '#1A0F3D']} style={styles.gradient}>
-          <SafeAreaView style={styles.safeArea}>
+        <SafeAreaView style={styles.safeArea}>
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
               <Text style={{ color: 'white', fontSize: 18 }}>Recipe not found</Text>
               <TouchableOpacity onPress={() => navigation.goBack()} style={{ marginTop: 20 }}>
@@ -49,7 +48,7 @@ export default function RecipeDetailScreen() {
               </TouchableOpacity>
             </View>
           </SafeAreaView>
-        </LinearGradient>
+        
       </View>
     );
   }
@@ -79,11 +78,7 @@ export default function RecipeDetailScreen() {
 
   return (
     <View style={styles.container}>
-      <LinearGradient
-        colors={['#4F46E5', '#2D1B69', '#1A0F3D']}
-        style={styles.gradient}
-      >
-        <StatusBar barStyle="light-content" />
+      <StatusBar barStyle="dark-content" />
         <SafeAreaView style={styles.safeArea}>
           <ScrollView 
             contentContainerStyle={styles.scrollContent}
@@ -158,7 +153,7 @@ export default function RecipeDetailScreen() {
                 
                 <View style={styles.historyStats}>
                   <Text style={styles.historyText}>
-                    Cooked {recipe.cookedCount} times • Last: {recipe.lastCooked}
+                    Cooked {recipe.cookedCount} times{recipe.lastCooked ? ` • Last: ${recipe.lastCooked}` : ''}
                   </Text>
                 </View>
               </View>
@@ -321,7 +316,7 @@ export default function RecipeDetailScreen() {
             </View>
           </ScrollView>
         </SafeAreaView>
-      </LinearGradient>
+      
 
       {/* Rating Modal */}
       <Modal
@@ -359,9 +354,7 @@ export default function RecipeDetailScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  gradient: {
-    flex: 1,
+    backgroundColor: '#FEFEFE',
   },
   safeArea: {
     flex: 1,
@@ -381,18 +374,19 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: '#F3F4F6',
     justifyContent: 'center',
     alignItems: 'center',
   },
   backIcon: {
-    color: 'white',
+    color: '#1F2937',
     fontSize: 24,
+    fontFamily: 'VendSans-Regular',
   },
   headerTitle: {
     fontSize: 18,
-    fontWeight: '600',
     color: 'white',
+    fontFamily: 'VendSans-SemiBold',
   },
   headerActions: {
     flexDirection: 'row',
@@ -402,12 +396,13 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: '#F3F4F6',
     justifyContent: 'center',
     alignItems: 'center',
   },
   actionIcon: {
     fontSize: 16,
+    fontFamily: 'VendSans-Regular',
   },
   recipeCard: {
     backgroundColor: 'white',
@@ -431,21 +426,23 @@ const styles = StyleSheet.create({
   },
   recipeEmoji: {
     fontSize: 40,
+    fontFamily: 'VendSans-Regular',
   },
   titleContainer: {
     flex: 1,
   },
   recipeTitle: {
     fontSize: 20,
-    fontWeight: 'bold',
     color: '#1F2937',
     marginBottom: 6,
+    fontFamily: 'VendSans-Bold',
   },
   recipeDescription: {
     fontSize: 13,
     color: '#6B7280',
     marginBottom: 12,
     lineHeight: 18,
+    fontFamily: 'VendSans-Regular',
   },
   quickStats: {
     flexDirection: 'row',
@@ -458,10 +455,12 @@ const styles = StyleSheet.create({
   },
   quickStatIcon: {
     fontSize: 12,
+    fontFamily: 'VendSans-Regular',
   },
   quickStatText: {
     fontSize: 12,
     color: '#6B7280',
+    fontFamily: 'VendSans-Regular',
   },
   historySection: {
     borderTopWidth: 1,
@@ -483,10 +482,12 @@ const styles = StyleSheet.create({
   star: {
     fontSize: 16,
     marginRight: 2,
+    fontFamily: 'VendSans-Regular',
   },
   ratingText: {
     fontSize: 12,
     color: '#9CA3AF',
+    fontFamily: 'VendSans-Regular',
   },
   historyStats: {
     flexDirection: 'row',
@@ -494,6 +495,7 @@ const styles = StyleSheet.create({
   historyText: {
     fontSize: 12,
     color: '#6B7280',
+    fontFamily: 'VendSans-Regular',
   },
   tabs: {
     flexDirection: 'row',
@@ -508,15 +510,15 @@ const styles = StyleSheet.create({
   },
   tabActive: {
     borderBottomWidth: 2,
-    borderBottomColor: '#4F46E5',
+    borderBottomColor: '#6B46C1',
   },
   tabText: {
     fontSize: 14,
-    fontWeight: '500',
     color: '#9CA3AF',
+    fontFamily: 'VendSans-Medium',
   },
   tabTextActive: {
-    color: '#4F46E5',
+    color: '#6B46C1',
   },
   tabContent: {
     minHeight: 200,
@@ -525,9 +527,9 @@ const styles = StyleSheet.create({
   overviewContent: {},
   sectionTitle: {
     fontSize: 16,
-    fontWeight: '600',
     color: '#1F2937',
     marginBottom: 12,
+    fontFamily: 'VendSans-SemiBold',
   },
   instructionItem: {
     flexDirection: 'row',
@@ -537,27 +539,29 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     borderRadius: 12,
-    backgroundColor: '#EEF2FF',
+    backgroundColor: '#F3E8FF',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
   },
   instructionNumberText: {
     fontSize: 12,
-    fontWeight: '600',
-    color: '#4F46E5',
+    color: '#6B46C1',
+    fontFamily: 'VendSans-SemiBold',
   },
   instructionText: {
     flex: 1,
     fontSize: 14,
     color: '#4B5563',
     lineHeight: 20,
+    fontFamily: 'VendSans-Regular',
   },
   notesText: {
     fontSize: 14,
     color: '#6B7280',
     lineHeight: 20,
     fontStyle: 'italic',
+    fontFamily: 'VendSans-Regular',
   },
   tagsContainer: {
     flexDirection: 'row',
@@ -566,15 +570,15 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   tag: {
-    backgroundColor: '#EEF2FF',
+    backgroundColor: '#F3E8FF',
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 12,
   },
   tagText: {
     fontSize: 12,
-    color: '#4F46E5',
-    fontWeight: '500',
+    color: '#6B46C1',
+    fontFamily: 'VendSans-Medium',
   },
   ingredientsContent: {},
   ingredientItem: {
@@ -592,18 +596,21 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#9CA3AF',
     marginBottom: 2,
+    fontFamily: 'VendSans-Regular',
   },
   ingredientName: {
     fontSize: 14,
     color: '#1F2937',
+    fontFamily: 'VendSans-Regular',
   },
   ingredientCalories: {
     fontSize: 12,
     color: '#9CA3AF',
+    fontFamily: 'VendSans-Regular',
   },
   addToListButton: {
     flexDirection: 'row',
-    backgroundColor: '#EEF2FF',
+    backgroundColor: '#F3E8FF',
     paddingVertical: 12,
     borderRadius: 12,
     alignItems: 'center',
@@ -613,17 +620,19 @@ const styles = StyleSheet.create({
   },
   addToListIcon: {
     fontSize: 16,
+    fontFamily: 'VendSans-Regular',
   },
   addToListText: {
     fontSize: 14,
-    fontWeight: '600',
-    color: '#4F46E5',
+    color: '#6B46C1',
+    fontFamily: 'VendSans-SemiBold',
   },
   nutritionContent: {},
   servingSizeText: {
     fontSize: 12,
     color: '#9CA3AF',
     marginBottom: 16,
+    fontFamily: 'VendSans-Regular',
   },
   mainMacros: {
     flexDirection: 'row',
@@ -638,13 +647,14 @@ const styles = StyleSheet.create({
   },
   mainMacroValue: {
     fontSize: 20,
-    fontWeight: 'bold',
-    color: '#4F46E5',
+    color: '#6B46C1',
     marginBottom: 4,
+    fontFamily: 'VendSans-Bold',
   },
   mainMacroLabel: {
     fontSize: 12,
     color: '#6B7280',
+    fontFamily: 'VendSans-Regular',
   },
   detailedNutrition: {},
   nutritionRow: {
@@ -657,14 +667,15 @@ const styles = StyleSheet.create({
   nutritionLabel: {
     fontSize: 14,
     color: '#6B7280',
+    fontFamily: 'VendSans-Regular',
   },
   nutritionValue: {
     fontSize: 14,
-    fontWeight: '500',
     color: '#1F2937',
+    fontFamily: 'VendSans-Medium',
   },
   startCookingButton: {
-    backgroundColor: '#4F46E5',
+    backgroundColor: '#6B46C1',
     paddingVertical: 16,
     borderRadius: 16,
     alignItems: 'center',
@@ -672,7 +683,7 @@ const styles = StyleSheet.create({
   startCookingText: {
     color: 'white',
     fontSize: 16,
-    fontWeight: '600',
+    fontFamily: 'VendSans-SemiBold',
   },
   actionButtons: {
     flexDirection: 'row',
@@ -685,10 +696,12 @@ const styles = StyleSheet.create({
   secondaryActionIcon: {
     fontSize: 20,
     marginBottom: 4,
+    fontFamily: 'VendSans-Regular',
   },
   secondaryActionText: {
     fontSize: 12,
     color: 'rgba(255, 255, 255, 0.8)',
+    fontFamily: 'VendSans-Regular',
   },
   modalOverlay: {
     flex: 1,
@@ -704,9 +717,9 @@ const styles = StyleSheet.create({
   },
   ratingModalTitle: {
     fontSize: 18,
-    fontWeight: '600',
     color: '#1F2937',
     marginBottom: 16,
+    fontFamily: 'VendSans-SemiBold',
   },
   ratingStars: {
     flexDirection: 'row',
@@ -714,5 +727,6 @@ const styles = StyleSheet.create({
   },
   ratingStar: {
     fontSize: 32,
+    fontFamily: 'VendSans-Regular',
   },
 });

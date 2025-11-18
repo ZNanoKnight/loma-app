@@ -27,11 +27,7 @@ export default function EditProfileScreen() {
 
   return (
     <View style={styles.container}>
-      <LinearGradient
-        colors={['#4F46E5', '#2D1B69', '#1A0F3D']}
-        style={styles.gradient}
-      >
-        <StatusBar barStyle="light-content" />
+      <StatusBar barStyle="dark-content" />
         <SafeAreaView style={styles.safeArea}>
           <ScrollView
             contentContainerStyle={styles.scrollContent}
@@ -100,7 +96,7 @@ export default function EditProfileScreen() {
             </View>
           </ScrollView>
         </SafeAreaView>
-      </LinearGradient>
+      
     </View>
   );
 }
@@ -108,9 +104,7 @@ export default function EditProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  gradient: {
-    flex: 1,
+    backgroundColor: '#FEFEFE',
   },
   safeArea: {
     flex: 1,
@@ -131,18 +125,19 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: '#F3F4F6',
     justifyContent: 'center',
     alignItems: 'center',
   },
   backIcon: {
-    color: 'white',
+    color: '#1F2937',
     fontSize: 24,
+    fontFamily: 'VendSans-Regular',
   },
   headerTitle: {
     fontSize: 18,
-    fontWeight: '600',
     color: 'white',
+    fontFamily: 'VendSans-SemiBold',
   },
   saveButton: {
     width: 60,
@@ -150,8 +145,8 @@ const styles = StyleSheet.create({
   saveButtonText: {
     color: 'white',
     fontSize: 16,
-    fontWeight: '600',
     textAlign: 'right',
+    fontFamily: 'VendSans-SemiBold',
   },
   avatarSection: {
     alignItems: 'center',
@@ -163,18 +158,19 @@ const styles = StyleSheet.create({
   },
   avatar: {
     fontSize: 60,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: '#F3F4F6',
     width: 100,
     height: 100,
     borderRadius: 50,
     textAlign: 'center',
     lineHeight: 100,
+    fontFamily: 'VendSans-Regular',
   },
   editBadge: {
     position: 'absolute',
     bottom: 0,
     right: 0,
-    backgroundColor: '#4F46E5',
+    backgroundColor: '#6B46C1',
     width: 32,
     height: 32,
     borderRadius: 16,
@@ -183,11 +179,12 @@ const styles = StyleSheet.create({
   },
   editIcon: {
     fontSize: 16,
+    fontFamily: 'VendSans-Regular',
   },
   avatarLabel: {
     fontSize: 14,
     color: 'rgba(255, 255, 255, 0.8)',
-    fontWeight: '500',
+    fontFamily: 'VendSans-Medium',
   },
   formContainer: {
     backgroundColor: 'white',
@@ -200,9 +197,9 @@ const styles = StyleSheet.create({
   },
   fieldLabel: {
     fontSize: 14,
-    fontWeight: '600',
     color: '#1F2937',
     marginBottom: 8,
+    fontFamily: 'VendSans-SemiBold',
   },
   input: {
     backgroundColor: '#F9FAFB',
@@ -212,6 +209,7 @@ const styles = StyleSheet.create({
     color: '#1F2937',
     borderWidth: 1,
     borderColor: '#E5E7EB',
+    fontFamily: 'VendSans-Regular',
   },
   textArea: {
     height: 100,

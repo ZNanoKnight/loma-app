@@ -9,7 +9,6 @@ import {
   ScrollView,
   Dimensions
 } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import { useUser } from '../../context/UserContext';  // ADD THIS
 
@@ -97,11 +96,7 @@ export default function ProgressScreen() {
 
   return (
     <View style={styles.container}>
-      <LinearGradient
-        colors={['#4F46E5', '#2D1B69', '#1A0F3D']}
-        style={styles.gradient}
-      >
-        <StatusBar barStyle="light-content" />
+      <StatusBar barStyle="dark-content" />
         <SafeAreaView style={styles.safeArea}>
           <ScrollView 
             contentContainerStyle={styles.scrollContent}
@@ -326,7 +321,7 @@ export default function ProgressScreen() {
             </View>
           </ScrollView>
         </SafeAreaView>
-      </LinearGradient>
+      
     </View>
   );
 }
@@ -334,9 +329,7 @@ export default function ProgressScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  gradient: {
-    flex: 1,
+    backgroundColor: '#FEFEFE',
   },
   safeArea: {
     flex: 1,
@@ -354,11 +347,11 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 32,
-    fontWeight: 'bold',
     color: 'white',
+    fontFamily: 'VendSans-Bold',
   },
   checkInButton: {
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: '#F3F4F6',
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
@@ -366,7 +359,7 @@ const styles = StyleSheet.create({
   checkInText: {
     color: 'white',
     fontSize: 14,
-    fontWeight: '600',
+    fontFamily: 'VendSans-SemiBold',
   },
   streakCard: {
     backgroundColor: 'white',
@@ -382,18 +375,20 @@ const styles = StyleSheet.create({
   streakEmoji: {
     fontSize: 32,
     marginRight: 16,
+    fontFamily: 'VendSans-Regular',
   },
   streakInfo: {
     alignItems: 'center',
   },
   streakNumber: {
     fontSize: 28,
-    fontWeight: 'bold',
     color: '#1F2937',
+    fontFamily: 'VendSans-Bold',
   },
   streakLabel: {
     fontSize: 12,
     color: '#6B7280',
+    fontFamily: 'VendSans-Regular',
   },
   streakDivider: {
     width: 1,
@@ -424,24 +419,26 @@ const styles = StyleSheet.create({
   dayCheck: {
     color: 'white',
     fontSize: 16,
-    fontWeight: 'bold',
+    fontFamily: 'VendSans-Bold',
   },
   dayLabel: {
     fontSize: 12,
     color: '#9CA3AF',
+    fontFamily: 'VendSans-Regular',
   },
   dayLabelActive: {
     color: '#10B981',
-    fontWeight: '600',
+    fontFamily: 'VendSans-SemiBold',
   },
   streakMessage: {
     textAlign: 'center',
     fontSize: 14,
     color: '#6B7280',
+    fontFamily: 'VendSans-Regular',
   },
   rangeSelector: {
     flexDirection: 'row',
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    backgroundColor: '#F9FAFB',
     borderRadius: 12,
     padding: 4,
     marginBottom: 20,
@@ -457,11 +454,11 @@ const styles = StyleSheet.create({
   },
   rangeText: {
     fontSize: 14,
-    fontWeight: '500',
     color: 'rgba(255, 255, 255, 0.7)',
+    fontFamily: 'VendSans-Medium',
   },
   rangeTextActive: {
-    color: '#4F46E5',
+    color: '#6B46C1',
   },
   nutritionCard: {
     backgroundColor: 'white',
@@ -471,9 +468,9 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     fontSize: 18,
-    fontWeight: '600',
     color: '#1F2937',
     marginBottom: 16,
+    fontFamily: 'VendSans-SemiBold',
   },
   nutritionGrid: {
     flexDirection: 'row',
@@ -485,16 +482,18 @@ const styles = StyleSheet.create({
   nutritionEmoji: {
     fontSize: 24,
     marginBottom: 8,
+    fontFamily: 'VendSans-Regular',
   },
   nutritionValue: {
     fontSize: 18,
-    fontWeight: 'bold',
-    color: '#4F46E5',
+    color: '#6B46C1',
     marginBottom: 4,
+    fontFamily: 'VendSans-Bold',
   },
   nutritionLabel: {
     fontSize: 12,
     color: '#6B7280',
+    fontFamily: 'VendSans-Regular',
   },
   goalsCard: {
     backgroundColor: 'white',
@@ -509,9 +508,9 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   editLink: {
-    color: '#4F46E5',
+    color: '#6B46C1',
     fontSize: 14,
-    fontWeight: '500',
+    fontFamily: 'VendSans-Medium',
   },
   goalItem: {
     marginBottom: 20,
@@ -523,12 +522,13 @@ const styles = StyleSheet.create({
   },
   goalType: {
     fontSize: 14,
-    fontWeight: '600',
     color: '#1F2937',
+    fontFamily: 'VendSans-SemiBold',
   },
   goalProgress: {
     fontSize: 14,
     color: '#6B7280',
+    fontFamily: 'VendSans-Regular',
   },
   progressBar: {
     height: 8,
@@ -539,12 +539,13 @@ const styles = StyleSheet.create({
   },
   progressFill: {
     height: '100%',
-    backgroundColor: '#4F46E5',
+    backgroundColor: '#FF8C00',
     borderRadius: 4,
   },
   goalPercentage: {
     fontSize: 12,
     color: '#9CA3AF',
+    fontFamily: 'VendSans-Regular',
   },
   trendCard: {
     backgroundColor: 'white',
@@ -572,18 +573,19 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   trendBarFill: {
-    backgroundColor: '#4F46E5',
+    backgroundColor: '#FF8C00',
     borderRadius: 4,
   },
   trendValue: {
     fontSize: 12,
-    fontWeight: '600',
     color: '#1F2937',
     marginBottom: 2,
+    fontFamily: 'VendSans-SemiBold',
   },
   trendLabel: {
     fontSize: 10,
     color: '#9CA3AF',
+    fontFamily: 'VendSans-Regular',
   },
   trendSummary: {
     flexDirection: 'row',
@@ -593,12 +595,13 @@ const styles = StyleSheet.create({
   },
   trendChange: {
     fontSize: 20,
-    fontWeight: 'bold',
     color: '#10B981',
+    fontFamily: 'VendSans-Bold',
   },
   trendPeriod: {
     fontSize: 14,
     color: '#6B7280',
+    fontFamily: 'VendSans-Regular',
   },
   achievementsCard: {
     backgroundColor: 'white',
@@ -607,9 +610,9 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   viewAllLink: {
-    color: '#4F46E5',
+    color: '#6B46C1',
     fontSize: 14,
-    fontWeight: '500',
+    fontFamily: 'VendSans-Medium',
   },
   achievementsGrid: {
     flexDirection: 'row',
@@ -629,17 +632,19 @@ const styles = StyleSheet.create({
   achievementIcon: {
     fontSize: 32,
     marginBottom: 8,
+    fontFamily: 'VendSans-Regular',
   },
   achievementTitle: {
     fontSize: 14,
-    fontWeight: '600',
     color: '#1F2937',
     marginBottom: 4,
     textAlign: 'center',
+    fontFamily: 'VendSans-SemiBold',
   },
   achievementDate: {
     fontSize: 12,
     color: '#10B981',
+    fontFamily: 'VendSans-Regular',
   },
   achievementProgress: {
     width: '100%',
@@ -654,25 +659,28 @@ const styles = StyleSheet.create({
   },
   achievementProgressFill: {
     height: '100%',
-    backgroundColor: '#4F46E5',
+    backgroundColor: '#FF8C00',
     borderRadius: 2,
   },
   achievementProgressText: {
     fontSize: 11,
     color: '#6B7280',
+    fontFamily: 'VendSans-Regular',
   },
   summaryCard: {
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    backgroundColor: 'white',
     borderRadius: 20,
     padding: 20,
     marginBottom: 20,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
   },
   summaryTitle: {
     fontSize: 18,
-    fontWeight: '600',
-    color: 'white',
+    color: '#1F2937',
     marginBottom: 16,
     textAlign: 'center',
+    fontFamily: 'VendSans-SemiBold',
   },
   summaryGrid: {
     flexDirection: 'row',
@@ -683,13 +691,14 @@ const styles = StyleSheet.create({
   },
   summaryNumber: {
     fontSize: 24,
-    fontWeight: 'bold',
-    color: 'white',
+    color: '#FF8C00',
     marginBottom: 4,
+    fontFamily: 'VendSans-Bold',
   },
   summaryLabel: {
     fontSize: 12,
-    color: 'rgba(255, 255, 255, 0.7)',
+    color: '#6B7280',
+    fontFamily: 'VendSans-Regular',
   },
   macroRing: {
     width: 60,
@@ -709,11 +718,12 @@ const styles = StyleSheet.create({
   },
   macroNumber: {
     fontSize: 18,
-    fontWeight: 'bold',
     color: '#1F2937',
+    fontFamily: 'VendSans-Bold',
   },
   macroUnit: {
     fontSize: 10,
     color: '#6B7280',
+    fontFamily: 'VendSans-Regular',
   },
 });

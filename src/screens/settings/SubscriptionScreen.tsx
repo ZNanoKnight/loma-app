@@ -16,11 +16,7 @@ export default function SubscriptionScreen() {
 
   return (
     <View style={styles.container}>
-      <LinearGradient
-        colors={['#4F46E5', '#2D1B69', '#1A0F3D']}
-        style={styles.gradient}
-      >
-        <StatusBar barStyle="light-content" />
+      <StatusBar barStyle="dark-content" />
         <SafeAreaView style={styles.safeArea}>
           <ScrollView
             contentContainerStyle={styles.scrollContent}
@@ -112,7 +108,7 @@ export default function SubscriptionScreen() {
             </View>
           </ScrollView>
         </SafeAreaView>
-      </LinearGradient>
+      
     </View>
   );
 }
@@ -120,9 +116,7 @@ export default function SubscriptionScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  gradient: {
-    flex: 1,
+    backgroundColor: '#FEFEFE',
   },
   safeArea: {
     flex: 1,
@@ -143,24 +137,25 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: '#F3F4F6',
     justifyContent: 'center',
     alignItems: 'center',
   },
   backIcon: {
-    color: 'white',
+    color: '#1F2937',
     fontSize: 24,
+    fontFamily: 'VendSans-Regular',
   },
   headerTitle: {
     fontSize: 18,
-    fontWeight: '600',
     color: 'white',
+    fontFamily: 'VendSans-SemiBold',
   },
   placeholder: {
     width: 40,
   },
   planCard: {
-    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    backgroundColor: '#F9FAFB',
     marginHorizontal: 20,
     borderRadius: 20,
     padding: 24,
@@ -170,7 +165,7 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(255, 255, 255, 0.2)',
   },
   planBadge: {
-    backgroundColor: '#4F46E5',
+    backgroundColor: '#6B46C1',
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 12,
@@ -179,24 +174,26 @@ const styles = StyleSheet.create({
   planBadgeText: {
     color: 'white',
     fontSize: 12,
-    fontWeight: 'bold',
+    fontFamily: 'VendSans-Bold',
   },
   planTitle: {
     fontSize: 24,
-    fontWeight: 'bold',
     color: 'white',
     marginBottom: 8,
+    fontFamily: 'VendSans-Bold',
   },
   planPrice: {
     fontSize: 18,
     color: 'rgba(255, 255, 255, 0.9)',
     marginBottom: 12,
+    fontFamily: 'VendSans-Regular',
   },
   planDescription: {
     fontSize: 14,
     color: 'rgba(255, 255, 255, 0.8)',
     textAlign: 'center',
     lineHeight: 20,
+    fontFamily: 'VendSans-Regular',
   },
   settingsContainer: {
     backgroundColor: 'white',
@@ -211,8 +208,8 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 14,
-    fontWeight: '600',
     color: '#4B5563',
+    fontFamily: 'VendSans-SemiBold',
   },
   settingRow: {
     flexDirection: 'row',
@@ -225,7 +222,7 @@ const styles = StyleSheet.create({
   settingLabel: {
     fontSize: 16,
     color: '#1F2937',
-    fontWeight: '500',
+    fontFamily: 'VendSans-Medium',
   },
   settingRight: {
     flexDirection: 'row',
@@ -235,17 +232,19 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#9CA3AF',
     marginRight: 8,
+    fontFamily: 'VendSans-Regular',
   },
   chevron: {
     fontSize: 18,
     color: '#9CA3AF',
+    fontFamily: 'VendSans-Regular',
   },
   actionsContainer: {
     paddingHorizontal: 20,
     marginBottom: 24,
   },
   primaryButton: {
-    backgroundColor: '#4F46E5',
+    backgroundColor: '#6B46C1',
     paddingVertical: 14,
     borderRadius: 12,
     alignItems: 'center',
@@ -254,10 +253,10 @@ const styles = StyleSheet.create({
   primaryButtonText: {
     color: 'white',
     fontSize: 16,
-    fontWeight: '600',
+    fontFamily: 'VendSans-SemiBold',
   },
   secondaryButton: {
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: '#F3F4F6',
     paddingVertical: 14,
     borderRadius: 12,
     alignItems: 'center',
@@ -266,7 +265,7 @@ const styles = StyleSheet.create({
   secondaryButtonText: {
     color: 'white',
     fontSize: 16,
-    fontWeight: '600',
+    fontFamily: 'VendSans-SemiBold',
   },
   dangerButton: {
     backgroundColor: 'rgba(239, 68, 68, 0.1)',
@@ -279,16 +278,16 @@ const styles = StyleSheet.create({
   dangerButtonText: {
     color: '#EF4444',
     fontSize: 16,
-    fontWeight: '600',
+    fontFamily: 'VendSans-SemiBold',
   },
   benefitsContainer: {
     paddingHorizontal: 20,
   },
   benefitsTitle: {
     fontSize: 16,
-    fontWeight: '600',
     color: 'rgba(255, 255, 255, 0.9)',
     marginBottom: 16,
+    fontFamily: 'VendSans-SemiBold',
   },
   benefit: {
     flexDirection: 'row',
@@ -297,7 +296,7 @@ const styles = StyleSheet.create({
   },
   benefitIcon: {
     fontSize: 18,
-    color: '#4F46E5',
+    color: '#6B46C1',
     marginRight: 12,
     backgroundColor: 'white',
     width: 24,
@@ -305,9 +304,11 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     textAlign: 'center',
     lineHeight: 24,
+    fontFamily: 'VendSans-Regular',
   },
   benefitText: {
     fontSize: 14,
     color: 'rgba(255, 255, 255, 0.8)',
+    fontFamily: 'VendSans-Regular',
   },
 });

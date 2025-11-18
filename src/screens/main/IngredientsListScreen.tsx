@@ -108,11 +108,7 @@ export default function IngredientsListScreen() {
 
   return (
     <View style={styles.container}>
-      <LinearGradient
-        colors={['#4F46E5', '#2D1B69', '#1A0F3D']}
-        style={styles.gradient}
-      >
-        <StatusBar barStyle="light-content" />
+      <StatusBar barStyle="dark-content" />
         <SafeAreaView style={styles.safeArea}>
           <ScrollView 
             contentContainerStyle={styles.scrollContent}
@@ -274,7 +270,7 @@ export default function IngredientsListScreen() {
             </View>
           </ScrollView>
         </SafeAreaView>
-      </LinearGradient>
+      
     </View>
   );
 }
@@ -282,9 +278,7 @@ export default function IngredientsListScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  gradient: {
-    flex: 1,
+    backgroundColor: '#FEFEFE',
   },
   safeArea: {
     flex: 1,
@@ -304,37 +298,40 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: '#F3F4F6',
     justifyContent: 'center',
     alignItems: 'center',
   },
   backIcon: {
-    color: 'white',
+    color: '#1F2937',
     fontSize: 24,
+    fontFamily: 'VendSans-Regular',
   },
   headerCenter: {
     alignItems: 'center',
   },
   headerTitle: {
     fontSize: 18,
-    fontWeight: '600',
     color: 'white',
+    fontFamily: 'VendSans-SemiBold',
   },
   headerSubtitle: {
     fontSize: 12,
     color: 'rgba(255, 255, 255, 0.7)',
     marginTop: 2,
+    fontFamily: 'VendSans-Regular',
   },
   cartButton: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: '#F3F4F6',
     justifyContent: 'center',
     alignItems: 'center',
   },
   cartIcon: {
     fontSize: 20,
+    fontFamily: 'VendSans-Regular',
   },
   progressContainer: {
     paddingHorizontal: 20,
@@ -342,7 +339,7 @@ const styles = StyleSheet.create({
   },
   progressBar: {
     height: 8,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: '#F3F4F6',
     borderRadius: 4,
     overflow: 'hidden',
   },
@@ -356,6 +353,7 @@ const styles = StyleSheet.create({
     color: 'rgba(255, 255, 255, 0.7)',
     marginTop: 8,
     textAlign: 'center',
+    fontFamily: 'VendSans-Regular',
   },
   servingsCard: {
     backgroundColor: 'white',
@@ -369,8 +367,8 @@ const styles = StyleSheet.create({
   },
   servingsLabel: {
     fontSize: 16,
-    fontWeight: '600',
     color: '#1F2937',
+    fontFamily: 'VendSans-SemiBold',
   },
   servingsControl: {
     flexDirection: 'row',
@@ -387,15 +385,15 @@ const styles = StyleSheet.create({
   },
   servingButtonText: {
     fontSize: 20,
-    color: '#4F46E5',
-    fontWeight: '600',
+    color: '#6B46C1',
+    fontFamily: 'VendSans-SemiBold',
   },
   servingCount: {
     fontSize: 18,
-    fontWeight: '600',
     color: '#1F2937',
     minWidth: 30,
     textAlign: 'center',
+    fontFamily: 'VendSans-SemiBold',
   },
   servingNote: {
     position: 'absolute',
@@ -404,6 +402,7 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: 'rgba(255, 255, 255, 0.7)',
     fontStyle: 'italic',
+    fontFamily: 'VendSans-Regular',
   },
   pantryToggle: {
     flexDirection: 'row',
@@ -440,10 +439,12 @@ const styles = StyleSheet.create({
   pantryToggleText: {
     fontSize: 14,
     color: 'white',
+    fontFamily: 'VendSans-Regular',
   },
   pantryNote: {
     fontSize: 12,
     color: 'rgba(255, 255, 255, 0.6)',
+    fontFamily: 'VendSans-Regular',
   },
   categorySection: {
     marginBottom: 20,
@@ -457,16 +458,18 @@ const styles = StyleSheet.create({
   categoryEmoji: {
     fontSize: 20,
     marginRight: 8,
+    fontFamily: 'VendSans-Regular',
   },
   categoryTitle: {
     flex: 1,
     fontSize: 16,
-    fontWeight: '600',
     color: 'white',
+    fontFamily: 'VendSans-SemiBold',
   },
   categoryCount: {
     fontSize: 14,
     color: 'rgba(255, 255, 255, 0.7)',
+    fontFamily: 'VendSans-Regular',
   },
   ingredientItem: {
     backgroundColor: 'white',
@@ -503,7 +506,7 @@ const styles = StyleSheet.create({
   checkmark: {
     color: 'white',
     fontSize: 14,
-    fontWeight: 'bold',
+    fontFamily: 'VendSans-Bold',
   },
   ingredientInfo: {
     flex: 1,
@@ -515,19 +518,21 @@ const styles = StyleSheet.create({
   },
   amount: {
     fontSize: 14,
-    fontWeight: '600',
-    color: '#4F46E5',
+    color: '#6B46C1',
+    fontFamily: 'VendSans-SemiBold',
   },
   ingredientName: {
     fontSize: 14,
     color: '#1F2937',
     flex: 1,
+    fontFamily: 'VendSans-Regular',
   },
   ingredientNote: {
     fontSize: 12,
     color: '#6B7280',
     marginTop: 2,
     fontStyle: 'italic',
+    fontFamily: 'VendSans-Regular',
   },
   textChecked: {
     color: '#9CA3AF',
@@ -542,7 +547,7 @@ const styles = StyleSheet.create({
   pantryBadgeText: {
     fontSize: 11,
     color: '#713F12',
-    fontWeight: '600',
+    fontFamily: 'VendSans-SemiBold',
   },
   shoppingActions: {
     paddingHorizontal: 20,
@@ -560,11 +565,12 @@ const styles = StyleSheet.create({
   },
   addToCartIcon: {
     fontSize: 20,
+    fontFamily: 'VendSans-Regular',
   },
   addToCartText: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#4F46E5',
+    color: '#6B46C1',
+    fontFamily: 'VendSans-SemiBold',
   },
   shoppingOptions: {
     flexDirection: 'row',
@@ -573,7 +579,7 @@ const styles = StyleSheet.create({
   shopOption: {
     flex: 1,
     flexDirection: 'row',
-    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    backgroundColor: '#F9FAFB',
     paddingVertical: 10,
     borderRadius: 10,
     alignItems: 'center',
@@ -582,11 +588,12 @@ const styles = StyleSheet.create({
   },
   shopOptionIcon: {
     fontSize: 16,
+    fontFamily: 'VendSans-Regular',
   },
   shopOptionText: {
     fontSize: 14,
     color: 'white',
-    fontWeight: '500',
+    fontFamily: 'VendSans-Medium',
   },
   bottomContainer: {
     paddingHorizontal: 20,
@@ -599,9 +606,9 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   continueButtonText: {
-    color: '#4F46E5',
+    color: '#6B46C1',
     fontSize: 16,
-    fontWeight: '600',
+    fontFamily: 'VendSans-SemiBold',
   },
   skipButton: {
     alignItems: 'center',
@@ -611,5 +618,6 @@ const styles = StyleSheet.create({
     color: 'rgba(255, 255, 255, 0.7)',
     fontSize: 14,
     textDecorationLine: 'underline',
+    fontFamily: 'VendSans-Regular',
   },
 });

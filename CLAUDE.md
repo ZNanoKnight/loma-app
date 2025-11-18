@@ -53,7 +53,6 @@ loma-app/
 │       │   └── PaymentScreen.tsx (PaywallScreen)
 │       └── main/              # 10 main app screens
 │           ├── HomeScreen.tsx
-│           ├── RecipeGeneratorScreen.tsx
 │           ├── RecipeGeneratedScreen.tsx
 │           ├── RecipeBookScreen.tsx
 │           ├── RecipeDetailScreen.tsx
@@ -121,16 +120,18 @@ typescriptUserData {
   email: string
   age: string
   weight: string
-  height: string
+  heightFeet: string
+  heightInches: string
   gender: 'male' | 'female' | 'other'
-  
+
   // Preferences
-  activityLevel: 'sedentary' | 'light' | 'moderate' | 'active' | 'very-active'
-  goal: 'lose' | 'maintain' | 'gain'
+  activityLevel: 'sedentary' | 'light' | 'moderate' | 'very' | 'extra'
+  goals: string[]
   dietaryPreferences: string[]
   allergens: string[]
-  equipment: string[]
-  cookingFrequency: number
+  equipment: string
+  cookingFrequency: string
+  mealPrepInterest: string
   
   // Targets
   targetWeight: string
@@ -141,6 +142,7 @@ typescriptUserData {
   currentStreak: number
   totalRecipes: number
   savedRecipes: any[]
+  favoriteRecipes: string[]
   weeklyProgress: boolean[] // 7 days
   
   // Settings
