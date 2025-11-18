@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   StyleSheet,
   Text,
@@ -11,7 +11,8 @@ import {
   TextInput,
   ScrollView,
   Platform,
-  Keyboard
+  Keyboard,
+  Animated
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
@@ -35,6 +36,35 @@ export default function WelcomeScreen() {
     player.loop = true;
     player.play();
   });
+
+  // Rotating text animation
+  const rotatingWords = ['nutritious', 'wholesome', 'balanced', 'nourishing', 'clean', 'simple', 'fresh', 'delicious', 'mindful', 'effortless'];
+  const [currentWordIndex, setCurrentWordIndex] = useState(0);
+  const slideAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      // Animate current word sliding up and out
+      Animated.timing(slideAnim, {
+        toValue: -50,
+        duration: 400,
+        useNativeDriver: true,
+      }).start(() => {
+        // Move to next word
+        setCurrentWordIndex((prevIndex) => (prevIndex + 1) % rotatingWords.length);
+        // Reset position for new word to slide in from bottom
+        slideAnim.setValue(50);
+        // Animate new word sliding up to center
+        Animated.timing(slideAnim, {
+          toValue: 0,
+          duration: 400,
+          useNativeDriver: true,
+        }).start();
+      });
+    }, 4000); // Change word every 4 seconds
+
+    return () => clearInterval(interval);
+  }, []);
 
   const handleSignIn = async () => {
     // TODO: Implement actual authentication with database
@@ -130,25 +160,33 @@ export default function WelcomeScreen() {
       {/* UI Content */}
       <StatusBar barStyle="dark-content" />
       <SafeAreaView style={styles.safeArea}>
-        
+
+        {/* Video in absolute top right corner */}
+        <View style={styles.videoContainer}>
+          <View style={styles.videoPlaceholder}>
+            <Text style={styles.placeholderText}>Art Placeholder</Text>
+          </View>
+        </View>
+
         <View style={styles.content}>
           <View style={styles.centerWrapper}>
-            <View style={styles.topSection}>
-              <View style={styles.mainContent}>
-                <Text style={styles.headline}>
-                  Loma does the work for you
-                </Text>
-                <Text style={styles.subheadline}>
-                  Take control of your goals with your 24/7, personalized AI dietician
-                </Text>
+            <View style={styles.mainContent}>
+              <View style={styles.headlineContainer}>
+                <Text style={styles.headline}>Loma meals are</Text>
+                <View style={styles.rotatingTextContainer}>
+                  <Animated.Text
+                    style={[
+                      styles.rotatingText,
+                      { transform: [{ translateY: slideAnim }] }
+                    ]}
+                  >
+                    {rotatingWords[currentWordIndex]}
+                  </Animated.Text>
+                </View>
               </View>
-              <VideoView
-                style={styles.videoPlayer}
-                player={player}
-                allowsFullscreen={false}
-                allowsPictureInPicture={false}
-                nativeControls={false}
-              />
+              <Text style={styles.subheadline}>
+                Take control of your goals with your 24/7, personalized AI dietician
+              </Text>
             </View>
           </View>
           
@@ -156,7 +194,7 @@ export default function WelcomeScreen() {
             <TouchableOpacity
               style={styles.button}
               activeOpacity={0.8}
-              onPress={() => navigation.navigate('NameEmail')}
+              onPress={() => navigation.navigate('AppFeatures')}
             >
               <Text style={styles.buttonText}>Get Started</Text>
             </TouchableOpacity>
@@ -316,23 +354,53 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
-  topSection: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    paddingHorizontal: 10,
+  videoContainer: {
+    position: 'absolute',
+    top: 60,
+    right: 20,
+    zIndex: 10,
+  },
+  videoPlaceholder: {
+    width: 120,
+    height: 120,
+    borderRadius: 16,
+    backgroundColor: '#E5E7EB',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: '#6B46C1',
+    borderStyle: 'dashed',
+  },
+  placeholderText: {
+    fontFamily: 'VendSans-Medium',
+    fontSize: 12,
+    color: '#6B46C1',
+    textAlign: 'center',
   },
   mainContent: {
-    flex: 1,
     alignItems: 'flex-start',
-    paddingRight: 20,
+    paddingHorizontal: 0,
+  },
+  headlineContainer: {
+    marginBottom: 20,
+    overflow: 'hidden',
   },
   headline: {
     fontFamily: 'VendSans-Bold',
     fontSize: 36,
     color: '#6B46C1',  // Purple text
     textAlign: 'left',
-    marginBottom: 20,
+    lineHeight: 44,
+  },
+  rotatingTextContainer: {
+    height: 44,
+    overflow: 'hidden',
+  },
+  rotatingText: {
+    fontFamily: 'VendSans-BoldItalic',
+    fontSize: 36,
+    color: '#FF8C00',  // Orange text for emphasis
+    textAlign: 'left',
     lineHeight: 44,
   },
   subheadline: {
@@ -341,12 +409,6 @@ const styles = StyleSheet.create({
     color: '#4B5563',  // Dark gray text
     textAlign: 'left',
     lineHeight: 26,
-  },
-  videoPlayer: {
-    width: 140,
-    height: 140,
-    borderRadius: 16,
-    overflow: 'hidden',
   },
   buttonSection: {
     width: '100%',

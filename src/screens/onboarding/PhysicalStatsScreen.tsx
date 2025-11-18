@@ -25,9 +25,11 @@ export default function PhysicalStatsScreen() {
   const [selectedGender, setSelectedGender] = useState(userData.gender || '');  // MODIFIED
   const [unit, setUnit] = useState<'imperial' | 'metric'>('imperial');
 
-  const isFormValid = 
-    age.length > 0 && 
-    weight.length > 0 && 
+  const isFormValid =
+    age.length > 0 &&
+    weight.length > 0 &&
+    heightFeet.length > 0 &&
+    heightInches.length > 0 &&
     selectedGender.length > 0;
 
   const handleContinue = () => {
@@ -61,7 +63,7 @@ export default function PhysicalStatsScreen() {
               <View style={styles.progressBar}>
                 <View style={[styles.progressFill, { width: '30%' }]} />
               </View>
-              <Text style={styles.progressText}>Step 3 of 11</Text>
+              <Text style={styles.progressText}>Step 3 of 10</Text>
             </View>
 
             {/* Back Button */}
@@ -245,7 +247,7 @@ const styles = StyleSheet.create({
   },
   progressFill: {
     height: '100%',
-    backgroundColor: '#6B46C1',
+    backgroundColor: '#FF8C00',
     borderRadius: 2,
   },
   progressText: {

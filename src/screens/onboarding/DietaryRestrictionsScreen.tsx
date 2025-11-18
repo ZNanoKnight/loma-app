@@ -12,29 +12,23 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { useUser } from '../../context/UserContext';  // ADD THIS
 
-type Allergen = 'none' | 'dairy' | 'eggs' | 'gluten' | 'nuts' | 'shellfish' | 'soy';  // KEEP THIS
-type Equipment = 'full' | 'basic' | 'minimal';  // KEEP THIS
+type Allergen = 'dairy' | 'eggs' | 'peanuts' | 'tree_nuts' | 'soy' | 'wheat' | 'shellfish' | 'sesame' | 'gluten';
+type Equipment = 'minimal' | 'basic' | 'full';
 
 export default function DietaryRestrictionsScreen() {
   const navigation = useNavigation<any>();
-  const { userData, updateUserData } = useUser();  // ADD THIS
-  
+  const { userData, updateUserData } = useUser();
+
   const [selectedRestrictions, setSelectedRestrictions] = useState<string[]>(
-    userData.allergens && userData.allergens.length > 0 ? userData.allergens : ['none']
+    userData.allergens && userData.allergens.length > 0 ? userData.allergens : []
   );
-  const [selectedEquipment, setSelectedEquipment] = useState<Equipment>((userData.equipment as Equipment) || 'basic');  // MODIFIED
-  const [customRestriction, setCustomRestriction] = useState('');
+  const [selectedEquipment, setSelectedEquipment] = useState<Equipment>((userData.equipment as Equipment) || 'basic');
 
   const allergens = [
     {
-      id: 'none',
-      emoji: '✓',
-      title: 'No Allergies',
-    },
-    {
-      id: 'dairy',
-      emoji: '🥛',
-      title: 'Dairy',
+      id: 'soy',
+      emoji: '🌱',
+      title: 'Soy',
     },
     {
       id: 'eggs',
@@ -42,24 +36,39 @@ export default function DietaryRestrictionsScreen() {
       title: 'Eggs',
     },
     {
-      id: 'gluten',
+      id: 'dairy',
+      emoji: '🥛',
+      title: 'Dairy',
+    },
+    {
+      id: 'wheat',
       emoji: '🌾',
+      title: 'Wheat',
+    },
+    {
+      id: 'gluten',
+      emoji: '🍞',
       title: 'Gluten',
     },
     {
-      id: 'nuts',
+      id: 'sesame',
+      emoji: '🫘',
+      title: 'Sesame',
+    },
+    {
+      id: 'peanuts',
       emoji: '🥜',
-      title: 'Nuts',
+      title: 'Peanuts',
+    },
+    {
+      id: 'tree_nuts',
+      emoji: '🌰',
+      title: 'Tree Nuts',
     },
     {
       id: 'shellfish',
       emoji: '🦐',
       title: 'Shellfish',
-    },
-    {
-      id: 'soy',
-      emoji: '🌱',
-      title: 'Soy',
     }
   ];
 
@@ -68,67 +77,40 @@ export default function DietaryRestrictionsScreen() {
       id: 'minimal',
       emoji: '🍳',
       title: 'Minimal',
-      description: 'Microwave, basic utensils'
+      description: 'Microwave, Toaster, Kettle, Basic Utensils',
+      prefix: null,
+      tierName: null
     },
     {
       id: 'basic',
       emoji: '👨‍🍳',
       title: 'Basic',
-      description: 'Stove, oven, standard cookware'
+      description: 'Stove, Oven, Pots & Pans, Baking Sheets',
+      prefix: 'Everything in',
+      tierName: 'Minimal'
     },
     {
       id: 'full',
-      emoji: '👨‍🍳',
+      emoji: '🔪',
       title: 'Full Kitchen',
-      description: 'All appliances including specialty items'
+      description: 'Food Processor, Blender, Instant Pot, Air Fryer',
+      prefix: 'Everything in',
+      tierName: 'Basic'
     }
   ];
 
   const toggleAllergen = (allergenId: string) => {
-    if (allergenId === 'none') {
-      setSelectedRestrictions(['none']);
+    if (selectedRestrictions.includes(allergenId)) {
+      setSelectedRestrictions(selectedRestrictions.filter(a => a !== allergenId));
     } else {
-      let newRestrictions = selectedRestrictions.filter(a => a !== 'none');
-      
-      if (selectedRestrictions.includes(allergenId)) {
-        newRestrictions = newRestrictions.filter(a => a !== allergenId);
-      } else {
-        newRestrictions = [...newRestrictions, allergenId];
-      }
-      
-      setSelectedRestrictions(newRestrictions.length > 0 ? newRestrictions : ['none']);
+      setSelectedRestrictions([...selectedRestrictions, allergenId]);
     }
-  };
-
-  const selectEquipment = (equipmentId: Equipment) => {
-    setSelectedEquipment(equipmentId);
-  };
-
-  const addCustomRestriction = () => {
-    if (customRestriction.trim()) {
-      const newRestrictions = selectedRestrictions.filter(a => a !== 'none');
-      setSelectedRestrictions([...newRestrictions, customRestriction.trim()]);
-      setCustomRestriction('');
-    }
-  };
-
-  const removeCustomRestriction = (restriction: string) => {
-    const newRestrictions = selectedRestrictions.filter(r => r !== restriction);
-    setSelectedRestrictions(newRestrictions.length > 0 ? newRestrictions : ['none']);
   };
 
   const handleContinue = () => {
-    updateUserData({   // ADD THIS BLOCK
+    updateUserData({
       allergens: selectedRestrictions,
       equipment: selectedEquipment
-    });
-    navigation.navigate('CookingFrequency');
-  };
-
-  const handleSkip = () => {
-    updateUserData({   // ADD THIS BLOCK
-      allergens: ['none'],
-      equipment: 'basic'
     });
     navigation.navigate('CookingFrequency');
   };
@@ -146,7 +128,7 @@ export default function DietaryRestrictionsScreen() {
             <View style={styles.progressBar}>
               <View style={[styles.progressFill, { width: '70%' }]} />
             </View>
-            <Text style={styles.progressText}>Step 7 of 11</Text>
+            <Text style={styles.progressText}>Step 7 of 10</Text>
           </View>
 
           {/* Back Button */}
@@ -208,18 +190,32 @@ export default function DietaryRestrictionsScreen() {
                     activeOpacity={0.8}
                   >
                     <Text style={styles.equipmentEmoji}>{equip.emoji}</Text>
-                    <Text style={[
-                      styles.equipmentTitle,
-                      selectedEquipment === equip.id && styles.equipmentTitleActive
-                    ]}>
-                      {equip.title}
-                    </Text>
-                    <Text style={[
-                      styles.equipmentDescription,
-                      selectedEquipment === equip.id && styles.equipmentDescriptionActive
-                    ]}>
-                      {equip.description}
-                    </Text>
+                    <View style={styles.equipmentTextContainer}>
+                      <Text style={[
+                        styles.equipmentTitle,
+                        selectedEquipment === equip.id && styles.equipmentTitleActive
+                      ]}>
+                        {equip.title}
+                      </Text>
+                      <Text style={[
+                        styles.equipmentDescription,
+                        selectedEquipment === equip.id && styles.equipmentDescriptionActive
+                      ]}>
+                        {equip.prefix && equip.tierName && (
+                          <>
+                            {equip.prefix}{' '}
+                            <Text style={[
+                              styles.equipmentTierName,
+                              selectedEquipment === equip.id && styles.equipmentTierNameActive
+                            ]}>
+                              {equip.tierName}
+                            </Text>
+                            {', plus:'}{'\n'}
+                          </>
+                        )}
+                        {equip.description}
+                      </Text>
+                    </View>
                   </TouchableOpacity>
                 ))}
               </View>
@@ -266,7 +262,7 @@ const styles = StyleSheet.create({
   },
   progressFill: {
     height: '100%',
-    backgroundColor: '#6B46C1',
+    backgroundColor: '#FF8C00',
     borderRadius: 2,
   },
   progressText: {
@@ -338,30 +334,33 @@ const styles = StyleSheet.create({
     color: '#6B46C1',
   },
   equipmentContainer: {
-    flexDirection: 'row',
-    gap: 10,
+    marginBottom: 10,
   },
   equipmentCard: {
-    flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#F9FAFB',
     borderWidth: 1,
     borderColor: '#E5E7EB',
-    borderRadius: 12,
-    padding: 14,
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 12,
+    flexDirection: 'row',
     alignItems: 'center',
   },
   equipmentCardActive: {
-    backgroundColor: '#F3F0FF',
+    backgroundColor: '#EEF2FF',
     borderColor: '#6B46C1',
     borderWidth: 2,
   },
   equipmentEmoji: {
-    fontSize: 28,
-    marginBottom: 8,
+    fontSize: 32,
+    marginRight: 16,
+  },
+  equipmentTextContainer: {
+    flex: 1,
   },
   equipmentTitle: {
     fontFamily: 'VendSans-SemiBold',
-    fontSize: 14,
+    fontSize: 18,
     color: '#1F2937',
     marginBottom: 4,
   },
@@ -370,11 +369,18 @@ const styles = StyleSheet.create({
   },
   equipmentDescription: {
     fontFamily: 'VendSans-Regular',
-    fontSize: 11,
+    fontSize: 14,
     color: '#6B7280',
-    textAlign: 'center',
+    lineHeight: 20,
   },
   equipmentDescriptionActive: {
+    color: '#6B46C1',
+  },
+  equipmentTierName: {
+    fontFamily: 'VendSans-SemiBold',
+    color: '#6B46C1',
+  },
+  equipmentTierNameActive: {
     color: '#6B46C1',
   },
   continueButton: {

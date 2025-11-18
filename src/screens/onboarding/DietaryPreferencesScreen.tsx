@@ -128,7 +128,7 @@ export default function DietaryPreferencesScreen() {
             <View style={styles.progressBar}>
               <View style={[styles.progressFill, { width: '60%' }]} />
             </View>
-            <Text style={styles.progressText}>Step 6 of 11</Text>
+            <Text style={styles.progressText}>Step 6 of 10</Text>
           </View>
 
           {/* Back Button */}
@@ -225,7 +225,7 @@ const styles = StyleSheet.create({
   },
   progressFill: {
     height: '100%',
-    backgroundColor: '#6B46C1',
+    backgroundColor: '#FF8C00',
     borderRadius: 2,
   },
   progressText: {

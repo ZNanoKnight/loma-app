@@ -82,7 +82,7 @@ export default function ActivityLevelScreen() {
             <View style={styles.progressBar}>
               <View style={[styles.progressFill, { width: '40%' }]} />
             </View>
-            <Text style={styles.progressText}>Step 4 of 11</Text>
+            <Text style={styles.progressText}>Step 4 of 10</Text>
           </View>
 
           {/* Back Button */}
@@ -112,29 +112,21 @@ export default function ActivityLevelScreen() {
                   onPress={() => setSelectedLevel(level.id as ActivityLevel)}
                   activeOpacity={0.8}
                 >
-                  <View style={styles.optionHeader}>
-                    <Text style={styles.optionEmoji}>{level.emoji}</Text>
-                    <View style={styles.optionTextContainer}>
-                      <Text style={[
-                        styles.optionTitle,
-                        selectedLevel === level.id && styles.optionTitleActive
-                      ]}>
-                        {level.title}
-                      </Text>
-                      <Text style={[
-                        styles.optionDescription,
-                        selectedLevel === level.id && styles.optionDescriptionActive
-                      ]}>
-                        {level.description}
-                      </Text>
-                    </View>
+                  <Text style={styles.optionEmoji}>{level.emoji}</Text>
+                  <View style={styles.optionTextContainer}>
+                    <Text style={[
+                      styles.optionTitle,
+                      selectedLevel === level.id && styles.optionTitleActive
+                    ]}>
+                      {level.title}
+                    </Text>
+                    <Text style={[
+                      styles.optionDescription,
+                      selectedLevel === level.id && styles.optionDescriptionActive
+                    ]}>
+                      {level.description}
+                    </Text>
                   </View>
-                  <Text style={[
-                    styles.optionDetails,
-                    selectedLevel === level.id && styles.optionDetailsActive
-                  ]}>
-                    {level.details}
-                  </Text>
                 </TouchableOpacity>
               ))}
             </View>
@@ -232,16 +224,13 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     padding: 16,
     marginBottom: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   optionCardActive: {
     backgroundColor: '#EEF2FF',
     borderColor: '#6B46C1',
     borderWidth: 2,
-  },
-  optionHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 8,
   },
   optionEmoji: {
     fontSize: 28,
@@ -265,16 +254,6 @@ const styles = StyleSheet.create({
     color: '#6B7280',
   },
   optionDescriptionActive: {
-    color: '#6B46C1',
-  },
-  optionDetails: {
-    fontFamily: 'VendSans-Regular',
-    fontSize: 12,
-    color: '#9CA3AF',
-    marginLeft: 40,
-    fontStyle: 'italic',
-  },
-  optionDetailsActive: {
     color: '#6B46C1',
   },
   continueButton: {

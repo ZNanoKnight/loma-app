@@ -16,41 +16,51 @@ type PlanType = 'weekly' | 'monthly' | 'yearly';
 
 export default function PaywallScreen() {
   const navigation = useNavigation<any>();
-  const { updateUserData } = useUser();
+  const { userData, updateUserData } = useUser();
   const [selectedPlan, setSelectedPlan] = useState<PlanType>('yearly');
+  const [email, setEmail] = useState(userData.email || '');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [agreeToTerms, setAgreeToTerms] = useState(false);
 
-  const isFormValid = password.length >= 6 && 
-                     password === confirmPassword && 
+  const isValidEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const isFormValid = isValidEmail(email) &&
+                     password.length >= 6 &&
+                     password === confirmPassword &&
                      agreeToTerms;
 
   const plans = [
     {
       id: 'weekly',
       name: 'Weekly',
-      price: '$4.99',
+      price: '$3.99',
       period: 'per week',
       savings: null,
-      trial: '3 days free'
+      trial: '3 days free',
+      munchies: '5 Munchies per week'
     },
     {
       id: 'monthly',
       name: 'Monthly',
-      price: '$9.99',
+      price: '$7.99',
       period: 'per month',
       savings: 'Save 50%',
-      trial: '7 days free'
+      trial: '7 days free',
+      popular: true,
+      munchies: '20 Munchies per month'
     },
     {
       id: 'yearly',
       name: 'Yearly',
-      price: '$59.99',
+      price: '$48.99',
       period: 'per year',
       savings: 'Save 70%',
       trial: '14 days free',
-      popular: true
+      munchies: '240 Munchies per year'
     }
   ];
 
@@ -91,7 +101,12 @@ export default function PaywallScreen() {
     if (isFormValid) {
       // Mark onboarding as complete
       // The RootNavigator will automatically re-render and show MainApp
-      updateUserData({ hasCompletedOnboarding: true });
+      updateUserData({
+        email,
+        selectedPlan,
+        password,
+        hasCompletedOnboarding: true
+      });
     }
   };
 
@@ -108,7 +123,7 @@ export default function PaywallScreen() {
             <View style={styles.progressBar}>
               <View style={[styles.progressFill, { width: '100%' }]} />
             </View>
-            <Text style={styles.progressText}>Step 11 of 11</Text>
+            <Text style={styles.progressText}>Step 10 of 10</Text>
           </View>
 
           {/* Back Button */}
@@ -125,6 +140,54 @@ export default function PaywallScreen() {
             <Text style={styles.subtitle}>
               Choose your plan and create your account
             </Text>
+
+            {/* Munchies System Explanation */}
+            <View style={styles.tokenSection}>
+              <View style={styles.tokenHeader}>
+                <Text style={styles.tokenEmoji}>🍪</Text>
+                <Text style={styles.tokenTitle}>How Munchies Work</Text>
+              </View>
+
+              <Text style={styles.tokenSubtitle}>
+                Munchies are the currency you use on Loma to generate personalized recipes
+              </Text>
+
+              <View style={styles.tokenCard}>
+                <View style={styles.tokenItem}>
+                  <View style={styles.tokenBullet}>
+                    <Text style={styles.tokenBulletText}>1</Text>
+                  </View>
+                  <Text style={styles.tokenText}>
+                    Each <Text style={styles.tokenHighlight}>munchie</Text> allows you to generate one personalized recipe
+                  </Text>
+                </View>
+
+                <View style={styles.tokenItem}>
+                  <View style={styles.tokenBullet}>
+                    <Text style={styles.tokenBulletText}>2</Text>
+                  </View>
+                  <Text style={styles.tokenText}>
+                    Munchies are added to your account based on your plan
+                  </Text>
+                </View>
+
+                <View style={styles.tokenItem}>
+                  <View style={styles.tokenBullet}>
+                    <Text style={styles.tokenBulletText}>3</Text>
+                  </View>
+                  <Text style={styles.tokenText}>
+                    All generated recipes are saved to your Recipe Book permanently
+                  </Text>
+                </View>
+              </View>
+
+              <View style={styles.tokenBenefitBox}>
+                <Text style={styles.tokenBenefitIcon}>✨</Text>
+                <Text style={styles.tokenBenefitText}>
+                  Higher tier plans include more munchies and additional premium features
+                </Text>
+              </View>
+            </View>
 
             {/* Plan Selection */}
             <View style={styles.plansContainer}>
@@ -172,6 +235,18 @@ export default function PaywallScreen() {
                         {plan.savings}
                       </Text>
                     )}
+                    <Text style={[
+                      styles.planMunchies,
+                      selectedPlan === plan.id && styles.planMunchiesActive
+                    ]}>
+                      {plan.munchies.split(' ').map((word, index) =>
+                        word === 'Munchies' ? (
+                          <Text key={index} style={styles.planMunchiesHighlight}>{word} </Text>
+                        ) : (
+                          word + ' '
+                        )
+                      )}
+                    </Text>
                   </View>
                   {selectedPlan === plan.id && (
                     <View style={styles.checkmark}>
@@ -185,7 +260,21 @@ export default function PaywallScreen() {
             {/* Account Creation */}
             <View style={styles.accountSection}>
               <Text style={styles.sectionTitle}>Create your account</Text>
-              
+
+              <View style={styles.inputContainer}>
+                <Text style={styles.label}>Email</Text>
+                <TextInput
+                  style={styles.input}
+                  value={email}
+                  onChangeText={setEmail}
+                  placeholder="your@email.com"
+                  placeholderTextColor="#9CA3AF"
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                />
+              </View>
+
               <View style={styles.inputContainer}>
                 <Text style={styles.label}>Password</Text>
                 <TextInput
@@ -302,7 +391,7 @@ const styles = StyleSheet.create({
   },
   progressFill: {
     height: '100%',
-    backgroundColor: '#6B46C1',
+    backgroundColor: '#FF8C00',
     borderRadius: 2,
   },
   progressText: {
@@ -411,6 +500,19 @@ const styles = StyleSheet.create({
   },
   planSavingsActive: {
     color: '#10B981',
+  },
+  planMunchies: {
+    fontFamily: 'VendSans-Regular',
+    fontSize: 13,
+    color: '#6B7280',
+    marginTop: 4,
+  },
+  planMunchiesActive: {
+    color: '#6B46C1',
+  },
+  planMunchiesHighlight: {
+    fontFamily: 'VendSans-SemiBold',
+    color: '#6B46C1',
   },
   checkmark: {
     width: 24,
@@ -539,5 +641,87 @@ const styles = StyleSheet.create({
     color: '#6B7280',
     textAlign: 'center',
     marginBottom: 30,
+  },
+  tokenSection: {
+    marginBottom: 30,
+  },
+  tokenHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  tokenEmoji: {
+    fontSize: 28,
+    marginRight: 10,
+  },
+  tokenTitle: {
+    fontFamily: 'VendSans-Bold',
+    fontSize: 22,
+    color: '#1F2937',
+  },
+  tokenSubtitle: {
+    fontFamily: 'VendSans-Regular',
+    fontSize: 14,
+    color: '#6B7280',
+    marginBottom: 16,
+    lineHeight: 20,
+  },
+  tokenCard: {
+    backgroundColor: '#F3F0FF',
+    borderRadius: 16,
+    padding: 20,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: '#6B46C1',
+  },
+  tokenItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  tokenBullet: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: '#6B46C1',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  tokenBulletText: {
+    fontFamily: 'VendSans-Bold',
+    color: '#FFFFFF',
+    fontSize: 14,
+  },
+  tokenText: {
+    fontFamily: 'VendSans-Regular',
+    fontSize: 15,
+    color: '#1F2937',
+    lineHeight: 22,
+    flex: 1,
+  },
+  tokenHighlight: {
+    fontFamily: 'VendSans-Bold',
+    color: '#6B46C1',
+  },
+  tokenBenefitBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FEF3C7',
+    borderRadius: 12,
+    padding: 14,
+    borderWidth: 1,
+    borderColor: '#F59E0B',
+  },
+  tokenBenefitIcon: {
+    fontSize: 20,
+    marginRight: 10,
+  },
+  tokenBenefitText: {
+    fontFamily: 'VendSans-Medium',
+    fontSize: 14,
+    color: '#92400E',
+    lineHeight: 20,
+    flex: 1,
   },
 });

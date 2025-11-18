@@ -16,13 +16,8 @@ export default function AppFeaturesScreen() {
   const features = [
     {
       emoji: '🤖',
-      title: 'AI-Powered Recipe Generation',
-      description: 'Get personalized recipes tailored to your goals, preferences, and dietary restrictions'
-    },
-    {
-      emoji: '🛒',
-      title: 'Smart Shopping Lists',
-      description: 'Automatically generated grocery lists with all ingredients you need'
+      title: 'AI-Powered Recipe Book',
+      description: 'Get personalized recipes tailored to your goals and save them forever'
     },
     {
       emoji: '👨‍🍳',
@@ -33,21 +28,11 @@ export default function AppFeaturesScreen() {
       emoji: '📊',
       title: 'Macro & Progress Tracking',
       description: 'Track your nutrition, calories, and progress toward your goals'
-    },
-    {
-      emoji: '📱',
-      title: 'Meal Planning',
-      description: 'Plan your weekly meals and stay organized with your nutrition'
-    },
-    {
-      emoji: '⭐',
-      title: 'Recipe Book',
-      description: 'Save and organize your favorite recipes for easy access'
     }
   ];
 
   const handleContinue = () => {
-    navigation.navigate('Payment');
+    navigation.navigate('NameEmail');
   };
 
   return (
@@ -61,22 +46,24 @@ export default function AppFeaturesScreen() {
           {/* Progress Bar */}
           <View style={styles.progressContainer}>
             <View style={styles.progressBar}>
-              <View style={[styles.progressFill, { width: '91%' }]} />
+              <View style={[styles.progressFill, { width: '10%' }]} />
             </View>
-            <Text style={styles.progressText}>Step 10 of 11</Text>
+            <Text style={styles.progressText}>Step 1 of 10</Text>
           </View>
 
           {/* Back Button */}
           <TouchableOpacity
             style={styles.backButton}
-            onPress={() => navigation.goBack()}
+            onPress={() => navigation.navigate('Welcome')}
           >
             <Text style={styles.backButtonText}>← Back</Text>
           </TouchableOpacity>
 
           {/* Content */}
           <View style={styles.content}>
-            <Text style={styles.title}>Welcome to Loma</Text>
+            <Text style={styles.title}>
+              Welcome to <Text style={styles.titleHighlight}>Loma</Text>
+            </Text>
             <Text style={styles.subtitle}>
               Your AI-powered cooking companion for achieving your health goals
             </Text>
@@ -96,12 +83,16 @@ export default function AppFeaturesScreen() {
               ))}
             </View>
 
-            {/* Token System Explanation */}
+            {/* Munchies System Explanation */}
             <View style={styles.tokenSection}>
               <View style={styles.tokenHeader}>
-                <Text style={styles.tokenEmoji}>🪙</Text>
-                <Text style={styles.tokenTitle}>How Tokens Work</Text>
+                <Text style={styles.tokenEmoji}>🍪</Text>
+                <Text style={styles.tokenTitle}>How Munchies Work</Text>
               </View>
+
+              <Text style={styles.tokenSubtitle}>
+                Munchies are the currency you use on Loma to generate personalized recipes
+              </Text>
 
               <View style={styles.tokenCard}>
                 <View style={styles.tokenItem}>
@@ -109,7 +100,7 @@ export default function AppFeaturesScreen() {
                     <Text style={styles.tokenBulletText}>1</Text>
                   </View>
                   <Text style={styles.tokenText}>
-                    Each <Text style={styles.tokenHighlight}>token</Text> allows you to generate one personalized recipe
+                    Each <Text style={styles.tokenHighlight}>munchie</Text> allows you to generate one personalized recipe
                   </Text>
                 </View>
 
@@ -118,7 +109,7 @@ export default function AppFeaturesScreen() {
                     <Text style={styles.tokenBulletText}>2</Text>
                   </View>
                   <Text style={styles.tokenText}>
-                    Your subscription includes tokens that refresh based on your plan
+                    Munchies are added to your account based on your plan
                   </Text>
                 </View>
 
@@ -127,16 +118,7 @@ export default function AppFeaturesScreen() {
                     <Text style={styles.tokenBulletText}>3</Text>
                   </View>
                   <Text style={styles.tokenText}>
-                    Generate unlimited recipes within your token allowance
-                  </Text>
-                </View>
-
-                <View style={styles.tokenItem}>
-                  <View style={styles.tokenBullet}>
-                    <Text style={styles.tokenBulletText}>4</Text>
-                  </View>
-                  <Text style={styles.tokenText}>
-                    All generated recipes are saved to your Recipe Book forever
+                    All generated recipes are saved to your Recipe Book permanently
                   </Text>
                 </View>
               </View>
@@ -144,7 +126,7 @@ export default function AppFeaturesScreen() {
               <View style={styles.tokenBenefitBox}>
                 <Text style={styles.tokenBenefitIcon}>✨</Text>
                 <Text style={styles.tokenBenefitText}>
-                  Higher tier plans include more tokens and additional premium features
+                  Higher tier plans include more munchies and additional premium features
                 </Text>
               </View>
             </View>
@@ -156,7 +138,7 @@ export default function AppFeaturesScreen() {
               activeOpacity={0.8}
             >
               <Text style={styles.continueButtonText}>
-                Choose Your Plan
+                Continue
               </Text>
             </TouchableOpacity>
           </View>
@@ -190,7 +172,7 @@ const styles = StyleSheet.create({
   },
   progressFill: {
     height: '100%',
-    backgroundColor: '#6B46C1',
+    backgroundColor: '#FF8C00',
     borderRadius: 2,
   },
   progressText: {
@@ -217,6 +199,9 @@ const styles = StyleSheet.create({
     fontSize: 32,
     color: '#1F2937',
     marginBottom: 10,
+  },
+  titleHighlight: {
+    color: '#6B46C1',
   },
   subtitle: {
     fontFamily: 'VendSans-Regular',
@@ -290,6 +275,13 @@ const styles = StyleSheet.create({
     fontSize: 22,
     color: '#1F2937',
   },
+  tokenSubtitle: {
+    fontFamily: 'VendSans-Regular',
+    fontSize: 14,
+    color: '#6B7280',
+    marginBottom: 16,
+    lineHeight: 20,
+  },
   tokenCard: {
     backgroundColor: '#F3F0FF',
     borderRadius: 16,
@@ -300,7 +292,7 @@ const styles = StyleSheet.create({
   },
   tokenItem: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     marginBottom: 16,
   },
   tokenBullet: {
@@ -311,7 +303,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
-    marginTop: 2,
   },
   tokenBulletText: {
     fontFamily: 'VendSans-Bold',

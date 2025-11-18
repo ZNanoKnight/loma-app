@@ -5,6 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 interface UserData {
   // Onboarding data
   firstName: string;
+  lastName: string;
   email: string;
   age: string;
   weight: string;
@@ -18,6 +19,8 @@ interface UserData {
   equipment: string;
   cookingFrequency: string;
   mealPrepInterest: string;
+  selectedPlan: string;
+  password: string;
 
   // App data
   currentStreak: number;
@@ -63,6 +66,7 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 const initialUserData: UserData = {
   // Onboarding
   firstName: '',
+  lastName: '',
   email: '',
   age: '',
   weight: '',
@@ -76,6 +80,8 @@ const initialUserData: UserData = {
   equipment: 'basic',
   cookingFrequency: '',
   mealPrepInterest: '',
+  selectedPlan: '',
+  password: '',
 
   // App data
   currentStreak: 0,

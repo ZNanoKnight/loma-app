@@ -18,19 +18,20 @@ export default function NameEmailScreen() {
   const navigation = useNavigation<any>();
   const { userData, updateUserData } = useUser();  // ADD THIS
   
-  const [firstName, setFirstName] = useState(userData.firstName || '');  // MODIFIED
-  const [email, setEmail] = useState(userData.email || '');  // MODIFIED
+  const [firstName, setFirstName] = useState(userData.firstName || '');
+  const [lastName, setLastName] = useState(userData.lastName || '');
+  const [email, setEmail] = useState(userData.email || '');
 
   const isValidEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
 
-  const isFormValid = firstName.length > 0 && isValidEmail(email);
+  const isFormValid = firstName.length > 0 && lastName.length > 0 && isValidEmail(email);
 
   const handleContinue = () => {
     if (isFormValid) {
-      updateUserData({ firstName, email });  // ADD THIS LINE
+      updateUserData({ firstName, lastName, email });
       navigation.navigate('PhysicalStats');
     }
   };
@@ -53,7 +54,7 @@ export default function NameEmailScreen() {
               <View style={styles.progressBar}>
                 <View style={[styles.progressFill, { width: '20%' }]} />
               </View>
-              <Text style={styles.progressText}>Step 2 of 11</Text>
+              <Text style={styles.progressText}>Step 2 of 10</Text>
             </View>
 
             {/* Back Button */}
@@ -80,6 +81,19 @@ export default function NameEmailScreen() {
                     value={firstName}
                     onChangeText={setFirstName}
                     placeholder="Enter your first name"
+                    placeholderTextColor="#9CA3AF"
+                    autoCapitalize="words"
+                    autoCorrect={false}
+                  />
+                </View>
+
+                <View style={styles.inputContainer}>
+                  <Text style={styles.label}>Last Name</Text>
+                  <TextInput
+                    style={styles.input}
+                    value={lastName}
+                    onChangeText={setLastName}
+                    placeholder="Enter your last name"
                     placeholderTextColor="#9CA3AF"
                     autoCapitalize="words"
                     autoCorrect={false}

@@ -92,7 +92,7 @@ export default function RecipePreviewScreen() {
   };
 
   const handleContinue = () => {
-    navigation.navigate('AppFeatures');
+    navigation.navigate('Payment');
   };
 
   return (
@@ -108,7 +108,7 @@ export default function RecipePreviewScreen() {
             <View style={styles.progressBar}>
               <View style={[styles.progressFill, { width: '90%' }]} />
             </View>
-            <Text style={styles.progressText}>Step 9 of 11</Text>
+            <Text style={styles.progressText}>Step 9 of 10</Text>
           </View>
 
           {/* Back Button */}
@@ -265,7 +265,7 @@ const styles = StyleSheet.create({
   },
   progressFill: {
     height: '100%',
-    backgroundColor: '#6B46C1',
+    backgroundColor: '#FF8C00',
     borderRadius: 2,
   },
   progressText: {

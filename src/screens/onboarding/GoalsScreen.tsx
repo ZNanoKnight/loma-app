@@ -84,7 +84,7 @@ export default function GoalsScreen() {
             <View style={styles.progressBar}>
               <View style={[styles.progressFill, { width: '50%' }]} />
             </View>
-            <Text style={styles.progressText}>Step 5 of 11</Text>
+            <Text style={styles.progressText}>Step 5 of 10</Text>
           </View>
 
           {/* Back Button */}
@@ -99,7 +99,7 @@ export default function GoalsScreen() {
           <View style={styles.content}>
             <Text style={styles.title}>What are your goals?</Text>
             <Text style={styles.subtitle}>
-              Select up to 2 goals. We'll tailor your nutrition plan accordingly.
+              Select at least one goal. We'll tailor your nutrition plan accordingly.
             </Text>
 
             {/* Goals Options */}
@@ -143,7 +143,7 @@ export default function GoalsScreen() {
 
             {/* Selected count indicator */}
             <Text style={styles.selectionIndicator}>
-              {selectedGoals.length} of 2 goals selected
+              {selectedGoals.length} {selectedGoals.length === 1 ? 'goal' : 'goals'} selected
             </Text>
 
             {/* Continue Button */}

@@ -11,15 +11,13 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { useUser } from '../../context/UserContext';  // ADD THIS
 
-type CookingFrequency = 'daily' | 'few_weekly' | 'weekends' | 'occasionally';  // KEEP THIS
-type MealPrepInterest = 'yes' | 'no' | 'maybe';  // ADD THIS
+type CookingFrequency = 'daily' | 'few_weekly' | 'weekends' | 'occasionally';
 
 export default function CookingFrequencyScreen() {
   const navigation = useNavigation<any>();
-  const { userData, updateUserData } = useUser();  // ADD THIS
-  
-  const [selectedFrequency, setSelectedFrequency] = useState<CookingFrequency | ''>(userData.cookingFrequency as CookingFrequency || '');  // MODIFIED
-  const [mealPrepInterest, setMealPrepInterest] = useState<MealPrepInterest | ''>(userData.mealPrepInterest as MealPrepInterest || '');  // ADD THIS
+  const { userData, updateUserData } = useUser();
+
+  const [selectedFrequency, setSelectedFrequency] = useState<CookingFrequency | ''>(userData.cookingFrequency as CookingFrequency || '');
 
   const frequencies = [
     {
@@ -48,34 +46,10 @@ export default function CookingFrequencyScreen() {
     }
   ];
 
-  const mealPrepOptions = [  // ADD THIS ARRAY
-    {
-      id: 'yes',
-      emoji: '✅',
-      title: 'Yes, definitely!',
-      description: 'I want to prep meals in advance'
-    },
-    {
-      id: 'maybe',
-      emoji: '🤔',
-      title: 'Maybe',
-      description: 'Show me easy prep options'
-    },
-    {
-      id: 'no',
-      emoji: '❌',
-      title: 'Not interested',
-      description: 'I prefer cooking fresh each time'
-    }
-  ];
-
-  const isFormValid = selectedFrequency !== '' && mealPrepInterest !== '';  // ADD THIS
-
   const handleContinue = () => {
-    if (isFormValid) {
-      updateUserData({   // MODIFIED TO SAVE BOTH
-        cookingFrequency: selectedFrequency,
-        mealPrepInterest: mealPrepInterest
+    if (selectedFrequency) {
+      updateUserData({
+        cookingFrequency: selectedFrequency
       });
       navigation.navigate('RecipePreview');
     }
@@ -94,7 +68,7 @@ export default function CookingFrequencyScreen() {
             <View style={styles.progressBar}>
               <View style={[styles.progressFill, { width: '80%' }]} />
             </View>
-            <Text style={styles.progressText}>Step 8 of 11</Text>
+            <Text style={styles.progressText}>Step 8 of 10</Text>
           </View>
 
           {/* Back Button */}
@@ -145,55 +119,19 @@ export default function CookingFrequencyScreen() {
               </View>
             </View>
 
-            {/* Meal Prep Section */}
-            <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Interested in meal prep?</Text>
-              <Text style={styles.sectionSubtitle}>
-                Cook once, eat multiple times
-              </Text>
-
-              <View style={styles.mealPrepContainer}>
-                {mealPrepOptions.map((option) => (
-                  <TouchableOpacity
-                    key={option.id}
-                    style={[
-                      styles.mealPrepCard,
-                      mealPrepInterest === option.id && styles.mealPrepCardActive
-                    ]}
-                    onPress={() => setMealPrepInterest(option.id as MealPrepInterest)}
-                    activeOpacity={0.8}
-                  >
-                    <Text style={styles.mealPrepEmoji}>{option.emoji}</Text>
-                    <Text style={[
-                      styles.mealPrepTitle,
-                      mealPrepInterest === option.id && styles.mealPrepTitleActive
-                    ]}>
-                      {option.title}
-                    </Text>
-                    <Text style={[
-                      styles.mealPrepDescription,
-                      mealPrepInterest === option.id && styles.mealPrepDescriptionActive
-                    ]}>
-                      {option.description}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-            </View>
-
             {/* Continue Button */}
             <TouchableOpacity
               style={[
                 styles.continueButton,
-                !isFormValid && styles.continueButtonDisabled
+                !selectedFrequency && styles.continueButtonDisabled
               ]}
               onPress={handleContinue}
-              disabled={!isFormValid}
+              disabled={!selectedFrequency}
               activeOpacity={0.8}
             >
               <Text style={[
                 styles.continueButtonText,
-                !isFormValid && styles.continueButtonTextDisabled
+                !selectedFrequency && styles.continueButtonTextDisabled
               ]}>
                 Continue
               </Text>
@@ -229,7 +167,7 @@ const styles = StyleSheet.create({
   },
   progressFill: {
     height: '100%',
-    backgroundColor: '#6B46C1',
+    backgroundColor: '#FF8C00',
     borderRadius: 2,
   },
   progressText: {
@@ -306,46 +244,6 @@ const styles = StyleSheet.create({
     color: '#6B7280',
   },
   optionDescriptionActive: {
-    color: '#6B46C1',
-  },
-  mealPrepContainer: {
-    flexDirection: 'row',
-    gap: 10,
-  },
-  mealPrepCard: {
-    flex: 1,
-    backgroundColor: '#FFFFFF',
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
-    borderRadius: 12,
-    padding: 14,
-    alignItems: 'center',
-  },
-  mealPrepCardActive: {
-    backgroundColor: '#F3F0FF',
-    borderColor: '#6B46C1',
-    borderWidth: 2,
-  },
-  mealPrepEmoji: {
-    fontSize: 28,
-    marginBottom: 8,
-  },
-  mealPrepTitle: {
-    fontFamily: 'VendSans-SemiBold',
-    fontSize: 14,
-    color: '#1F2937',
-    marginBottom: 4,
-  },
-  mealPrepTitleActive: {
-    color: '#6B46C1',
-  },
-  mealPrepDescription: {
-    fontFamily: 'VendSans-Regular',
-    fontSize: 11,
-    color: '#6B7280',
-    textAlign: 'center',
-  },
-  mealPrepDescriptionActive: {
     color: '#6B46C1',
   },
   continueButton: {
