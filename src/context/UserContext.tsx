@@ -37,6 +37,10 @@ interface UserData {
   targetWeight: string;
   targetProtein: string;
   targetCalories: string;
+  macroTargets?: { carbs: string; fat: string };
+  dislikedIngredients?: string[];
+  cuisinePreferences?: string[];
+  defaultServingSize?: number;
 
   // Onboarding status
   hasCompletedOnboarding: boolean;
@@ -88,6 +92,10 @@ const initialUserData: UserData = {
   targetWeight: '',
   targetProtein: '50',
   targetCalories: '2000',
+  macroTargets: { carbs: '', fat: '' },
+  dislikedIngredients: [],
+  cuisinePreferences: [],
+  defaultServingSize: 2,
 
   // Onboarding status
   hasCompletedOnboarding: false,

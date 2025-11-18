@@ -63,9 +63,6 @@ export default function HomeScreen() {
                 <Text style={styles.greeting}>Good afternoon, {userName}!</Text>
                 <Text style={styles.subGreeting}>What are we cooking today?</Text>
               </View>
-              <TouchableOpacity style={styles.notificationButton}>
-                <Text style={styles.notificationIcon}>🔔</Text>
-              </TouchableOpacity>
             </View>
 
             {/* Stats Cards */}
