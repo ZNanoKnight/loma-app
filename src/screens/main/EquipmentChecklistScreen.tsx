@@ -206,9 +206,12 @@ export default function EquipmentChecklistScreen() {
                 onPress={handleContinue}
                 activeOpacity={0.8}
               >
-                <Text style={styles.continueButtonText}>
-                  {essentialItems.every(i => i.checked) 
-                    ? 'Continue to Ingredients →' 
+                <Text style={[
+                  styles.continueButtonText,
+                  essentialItems.every(i => i.checked) && styles.continueButtonTextActive
+                ]}>
+                  {essentialItems.every(i => i.checked)
+                    ? 'Continue to Ingredients →'
                     : `Check ${essentialItems.filter(i => !i.checked).length} essential items`}
                 </Text>
               </TouchableOpacity>
@@ -266,12 +269,12 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 18,
-    color: 'white',
+    color: '#1F2937',
     fontFamily: 'VendSans-SemiBold',
   },
   headerSubtitle: {
     fontSize: 12,
-    color: 'rgba(255, 255, 255, 0.7)',
+    color: '#6B7280',
     marginTop: 2,
     fontFamily: 'VendSans-Regular',
   },
@@ -290,12 +293,12 @@ const styles = StyleSheet.create({
   },
   progressFill: {
     height: '100%',
-    backgroundColor: 'white',
+    backgroundColor: '#6B46C1',
     borderRadius: 4,
   },
   progressText: {
     fontSize: 12,
-    color: 'rgba(255, 255, 255, 0.7)',
+    color: '#6B7280',
     marginTop: 8,
     textAlign: 'center',
     fontFamily: 'VendSans-Regular',
@@ -319,13 +322,13 @@ const styles = StyleSheet.create({
   },
   recipeName: {
     fontSize: 16,
-    color: 'white',
+    color: '#1F2937',
     marginBottom: 4,
     fontFamily: 'VendSans-SemiBold',
   },
   recipeTime: {
     fontSize: 14,
-    color: 'rgba(255, 255, 255, 0.8)',
+    color: '#6B7280',
     fontFamily: 'VendSans-Regular',
   },
   tipsCard: {
@@ -374,12 +377,12 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 18,
-    color: 'white',
+    color: '#1F2937',
     fontFamily: 'VendSans-SemiBold',
   },
   sectionCount: {
     fontSize: 14,
-    color: 'rgba(255, 255, 255, 0.7)',
+    color: '#6B7280',
     fontFamily: 'VendSans-Regular',
   },
   equipmentItem: {
@@ -462,7 +465,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   checkAllText: {
-    color: 'white',
+    color: '#6B46C1',
     fontSize: 14,
     fontFamily: 'VendSans-SemiBold',
   },
@@ -470,26 +473,29 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   continueButton: {
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    backgroundColor: '#E5E7EB',
     paddingVertical: 16,
     borderRadius: 16,
     alignItems: 'center',
     marginBottom: 12,
   },
   continueButtonActive: {
-    backgroundColor: 'white',
+    backgroundColor: '#6B46C1',
   },
   continueButtonText: {
-    color: '#6B46C1',
+    color: '#1F2937',
     fontSize: 16,
     fontFamily: 'VendSans-SemiBold',
+  },
+  continueButtonTextActive: {
+    color: 'white',
   },
   skipButton: {
     alignItems: 'center',
     paddingVertical: 8,
   },
   skipText: {
-    color: 'rgba(255, 255, 255, 0.7)',
+    color: '#6B7280',
     fontSize: 14,
     textDecorationLine: 'underline',
     fontFamily: 'VendSans-Regular',

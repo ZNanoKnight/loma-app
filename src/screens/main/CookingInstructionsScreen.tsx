@@ -26,7 +26,10 @@ export default function CookingInstructionsScreen() {
   const [timerSeconds, setTimerSeconds] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 
-  const steps: CookingStep[] = currentRecipe?.instructions || [
+  // Safely get steps from current recipe, fallback to mock data if not available
+  const steps: CookingStep[] = currentRecipe?.instructions && currentRecipe.instructions.length > 0
+    ? currentRecipe.instructions.filter(step => step !== null && step !== undefined)
+    : [
     {
       id: '1',
       title: 'Prep Ingredients',
@@ -98,9 +101,9 @@ export default function CookingInstructionsScreen() {
 
   const totalSteps = steps.length;
   const progress = ((currentStep + 1) / totalSteps) * 100;
-  const currentStepData = steps[currentStep];
-  const totalTime = steps.reduce((acc, step) => acc + (step.time || 0), 0);
-  const elapsedTime = steps.slice(0, currentStep).reduce((acc, step) => acc + (step.time || 0), 0);
+  const currentStepData = steps[currentStep] || steps[0];
+  const totalTime = steps.reduce((acc, step) => acc + ((step && step.time) ? step.time : 0), 0);
+  const elapsedTime = steps.slice(0, currentStep).reduce((acc, step) => acc + ((step && step.time) ? step.time : 0), 0);
 
   // Timer effect
   useEffect(() => {
@@ -360,7 +363,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   closeIcon: {
-    color: 'white',
+    color: '#1F2937',
     fontSize: 20,
     fontFamily: 'VendSans-Regular',
   },
@@ -369,12 +372,12 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 18,
-    color: 'white',
+    color: '#1F2937',
     fontFamily: 'VendSans-SemiBold',
   },
   headerSubtitle: {
     fontSize: 12,
-    color: 'rgba(255, 255, 255, 0.7)',
+    color: '#6B7280',
     marginTop: 2,
     fontFamily: 'VendSans-Regular',
   },
@@ -402,12 +405,12 @@ const styles = StyleSheet.create({
   },
   progressFill: {
     height: '100%',
-    backgroundColor: 'white',
+    backgroundColor: '#6B46C1',
     borderRadius: 4,
   },
   progressText: {
     fontSize: 12,
-    color: 'rgba(255, 255, 255, 0.7)',
+    color: '#6B7280',
     marginTop: 8,
     textAlign: 'center',
     fontFamily: 'VendSans-Regular',
@@ -442,7 +445,7 @@ const styles = StyleSheet.create({
   },
   timerDisplay: {
     fontSize: 48,
-    color: 'white',
+    color: '#6B46C1',
     marginBottom: 12,
     fontFamily: 'VendSans-Bold',
   },
@@ -547,7 +550,7 @@ const styles = StyleSheet.create({
   },
   overviewTitle: {
     fontSize: 16,
-    color: 'white',
+    color: '#1F2937',
     marginBottom: 12,
     fontFamily: 'VendSans-SemiBold',
   },
@@ -564,18 +567,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   stepDotActive: {
-    backgroundColor: 'white',
+    backgroundColor: '#6B46C1',
   },
   stepDotCompleted: {
     backgroundColor: '#10B981',
   },
   stepDotNumber: {
     fontSize: 14,
-    color: 'white',
+    color: '#6B7280',
     fontFamily: 'VendSans-SemiBold',
   },
   stepDotNumberActive: {
-    color: '#6B46C1',
+    color: 'white',
   },
   stepDotCheck: {
     color: 'white',
@@ -602,12 +605,12 @@ const styles = StyleSheet.create({
   },
   navIcon: {
     fontSize: 18,
-    color: 'white',
+    color: '#6B7280',
     fontFamily: 'VendSans-Regular',
   },
   navText: {
     fontSize: 16,
-    color: 'white',
+    color: '#6B7280',
     fontFamily: 'VendSans-SemiBold',
   },
   completeButton: {

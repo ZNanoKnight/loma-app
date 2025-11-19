@@ -312,12 +312,12 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 18,
-    color: 'white',
+    color: '#1F2937',
     fontFamily: 'VendSans-SemiBold',
   },
   headerSubtitle: {
     fontSize: 12,
-    color: 'rgba(255, 255, 255, 0.7)',
+    color: '#6B7280',
     marginTop: 2,
     fontFamily: 'VendSans-Regular',
   },
@@ -345,12 +345,12 @@ const styles = StyleSheet.create({
   },
   progressFill: {
     height: '100%',
-    backgroundColor: 'white',
+    backgroundColor: '#6B46C1',
     borderRadius: 4,
   },
   progressText: {
     fontSize: 12,
-    color: 'rgba(255, 255, 255, 0.7)',
+    color: '#6B7280',
     marginTop: 8,
     textAlign: 'center',
     fontFamily: 'VendSans-Regular',
@@ -400,7 +400,7 @@ const styles = StyleSheet.create({
     bottom: -20,
     left: 16,
     fontSize: 11,
-    color: 'rgba(255, 255, 255, 0.7)',
+    color: '#6B7280',
     fontStyle: 'italic',
     fontFamily: 'VendSans-Regular',
   },
@@ -438,12 +438,12 @@ const styles = StyleSheet.create({
   },
   pantryToggleText: {
     fontSize: 14,
-    color: 'white',
+    color: '#1F2937',
     fontFamily: 'VendSans-Regular',
   },
   pantryNote: {
     fontSize: 12,
-    color: 'rgba(255, 255, 255, 0.6)',
+    color: '#6B7280',
     fontFamily: 'VendSans-Regular',
   },
   categorySection: {
@@ -463,12 +463,12 @@ const styles = StyleSheet.create({
   categoryTitle: {
     flex: 1,
     fontSize: 16,
-    color: 'white',
+    color: '#1F2937',
     fontFamily: 'VendSans-SemiBold',
   },
   categoryCount: {
     fontSize: 14,
-    color: 'rgba(255, 255, 255, 0.7)',
+    color: '#6B7280',
     fontFamily: 'VendSans-Regular',
   },
   ingredientItem: {
@@ -592,21 +592,21 @@ const styles = StyleSheet.create({
   },
   shopOptionText: {
     fontSize: 14,
-    color: 'white',
+    color: '#6B7280',
     fontFamily: 'VendSans-Medium',
   },
   bottomContainer: {
     paddingHorizontal: 20,
   },
   continueButton: {
-    backgroundColor: 'white',
+    backgroundColor: '#6B46C1',
     paddingVertical: 16,
     borderRadius: 16,
     alignItems: 'center',
     marginBottom: 12,
   },
   continueButtonText: {
-    color: '#6B46C1',
+    color: 'white',
     fontSize: 16,
     fontFamily: 'VendSans-SemiBold',
   },
@@ -615,7 +615,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   skipText: {
-    color: 'rgba(255, 255, 255, 0.7)',
+    color: '#6B7280',
     fontSize: 14,
     textDecorationLine: 'underline',
     fontFamily: 'VendSans-Regular',

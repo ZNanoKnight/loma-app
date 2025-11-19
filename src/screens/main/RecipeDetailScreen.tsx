@@ -191,14 +191,18 @@ export default function RecipeDetailScreen() {
                 {activeTab === 'overview' && (
                   <View style={styles.overviewContent}>
                     <Text style={styles.sectionTitle}>Instructions</Text>
-                    {recipe.instructions.map((step, index) => (
-                      <View key={step.id} style={styles.instructionItem}>
-                        <View style={styles.instructionNumber}>
-                          <Text style={styles.instructionNumberText}>{index + 1}</Text>
+                    {recipe.instructions && recipe.instructions.length > 0 ? (
+                      recipe.instructions.map((step, index) => (
+                        <View key={step.id} style={styles.instructionItem}>
+                          <View style={styles.instructionNumber}>
+                            <Text style={styles.instructionNumberText}>{index + 1}</Text>
+                          </View>
+                          <Text style={styles.instructionText}>{step.instruction}</Text>
                         </View>
-                        <Text style={styles.instructionText}>{step.instruction}</Text>
-                      </View>
-                    ))}
+                      ))
+                    ) : (
+                      <Text style={styles.instructionText}>No instructions available</Text>
+                    )}
                     
                     {recipe.notes && (
                       <>

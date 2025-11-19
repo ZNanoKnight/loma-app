@@ -11,10 +11,12 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useUser } from '../../context/UserContext';
+import { useRecipe } from '../../context/RecipeContext';
 
 export default function HomeScreen() {
   const navigation = useNavigation<any>();
   const { userData } = useUser();
+  const { setCurrentRecipe, getRecipeById } = useRecipe();
 
   // Use real user data
   const userName = userData.firstName || 'Friend';
@@ -45,7 +47,13 @@ export default function HomeScreen() {
     motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)]
   );
 
-  const handleGenerateRecipe = () => {  // ADD THIS FUNCTION
+  const handleGenerateRecipe = () => {
+    // In production, this would call the AI API to generate a recipe
+    // For now, we'll use the first mock recipe from RecipeContext
+    const mockRecipe = getRecipeById('1'); // Get the Mediterranean Grilled Chicken Bowl
+    if (mockRecipe) {
+      setCurrentRecipe(mockRecipe);
+    }
     navigation.navigate('RecipeGenerated');
   };
 

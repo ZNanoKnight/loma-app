@@ -261,7 +261,7 @@ export default function PaywallScreen() {
             <View style={styles.accountSection}>
               <Text style={styles.sectionTitle}>Create your account</Text>
 
-              <View style={styles.inputContainer}>
+              {/* <View style={styles.inputContainer}>
                 <Text style={styles.label}>Email</Text>
                 <TextInput
                   style={styles.input}
@@ -273,7 +273,7 @@ export default function PaywallScreen() {
                   autoCapitalize="none"
                   autoCorrect={false}
                 />
-              </View>
+              </View> */}
 
               <View style={styles.inputContainer}>
                 <Text style={styles.label}>Password</Text>
@@ -285,6 +285,8 @@ export default function PaywallScreen() {
                   placeholderTextColor="#9CA3AF"
                   secureTextEntry
                   autoCapitalize="none"
+                  textContentType="newPassword"
+                  passwordRules="minlength: 8;"
                 />
               </View>
 
@@ -298,6 +300,7 @@ export default function PaywallScreen() {
                   placeholderTextColor="#9CA3AF"
                   secureTextEntry
                   autoCapitalize="none"
+                  textContentType="newPassword"
                 />
               </View>
 
