@@ -20,6 +20,7 @@ export default function EditProfileScreen() {
   const { userData, updateUserData } = useUser();
 
   const [firstName, setFirstName] = useState(userData.firstName);
+  const [lastName, setLastName] = useState(userData.lastName);
   const [email, setEmail] = useState(userData.email);
   // TEMPORARY FEATURE: Store profile photo URI in context/AsyncStorage
   // In production: This would be uploaded to the backend and replaced with a permanent URL
@@ -88,6 +89,7 @@ export default function EditProfileScreen() {
   const handleSave = () => {
     updateUserData({
       firstName,
+      lastName,
       email,
       profileImageUri: profileImage || undefined // Save photo URI to context (persisted via AsyncStorage)
     });
@@ -149,6 +151,17 @@ export default function EditProfileScreen() {
               </View>
 
               <View style={styles.fieldGroup}>
+                <Text style={styles.fieldLabel}>Last Name</Text>
+                <TextInput
+                  style={styles.input}
+                  value={lastName}
+                  onChangeText={setLastName}
+                  placeholder="Enter your last name"
+                  placeholderTextColor="#9CA3AF"
+                />
+              </View>
+
+              <View style={styles.fieldGroup}>
                 <Text style={styles.fieldLabel}>Email</Text>
                 <TextInput
                   style={styles.input}
@@ -188,7 +201,7 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     flexGrow: 1,
-    paddingBottom: 40,
+    paddingBottom: 300,
   },
   header: {
     flexDirection: 'row',

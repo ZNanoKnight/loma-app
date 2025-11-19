@@ -82,25 +82,6 @@ export default function DietaryPreferencesScreen() {
     { id: 'french', emoji: '🥖', title: 'French' }
   ];
 
-    const macroParts: string[] = [];
-
-    if (userData.targetProtein) {
-      macroParts.push(`Protein: ${userData.targetProtein}g`);
-    }
-
-    if (userData.macroTargets?.carbs) {
-      macroParts.push(`Carbs: ${userData.macroTargets.carbs}g`);
-    }
-
-    if (userData.macroTargets?.fat) {
-      macroParts.push(`Fat: ${userData.macroTargets.fat}g`);
-    }
-
-    const macroSummary =
-      macroParts.length > 0
-        ? macroParts.join(', ')
-        : 'Set your daily protein, carbs, and fat targets';
-
   // Handler functions for opening modals
   const openDietaryModal = () => {
     setTempDietaryPrefs(userData.dietaryPreferences || []);
@@ -273,7 +254,9 @@ export default function DietaryPreferencesScreen() {
                 <View style={styles.settingInfo}>
                   <Text style={styles.settingLabel}>Macro Targets</Text>
                   <Text style={styles.settingDescription}>
-                    {macroSummary}
+                    {userData.targetProtein && userData.macroTargets?.carbs && userData.macroTargets?.fat
+                      ? `Protein: ${userData.targetProtein}g, Carbs: ${userData.macroTargets.carbs}g, Fat: ${userData.macroTargets.fat}g`
+                      : 'Set your daily protein, carbs, and fat targets'}
                   </Text>
                 </View>
                 <Text style={styles.chevron}>›</Text>

@@ -155,6 +155,13 @@ export default function SupportScreen() {
               </View>
             </View>
 
+            {/* Danger Zone */}
+            <View style={styles.dangerZone}>
+              <TouchableOpacity style={styles.dangerButton}>
+                <Text style={styles.dangerButtonText}>Delete Account</Text>
+              </TouchableOpacity>
+            </View>
+
             {/* App Information */}
             <View style={styles.infoContainer}>
               <Text style={styles.infoLabel}>App Version</Text>
@@ -307,6 +314,28 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#6B46C1',
     fontFamily: 'VendSans-Regular',
+  },
+  dangerZone: {
+    marginHorizontal: 20,
+  },
+  dangerTitle: {
+    fontSize: 14,
+    color: '#6B7280',
+    marginBottom: 12,
+    fontFamily: 'VendSans-SemiBold',
+  },
+  dangerButton: {
+    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+    paddingVertical: 14,
+    borderRadius: 12,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#EF4444',
+  },
+  dangerButtonText: {
+    color: '#EF4444',
+    fontSize: 16,
+    fontFamily: 'VendSans-SemiBold',
   },
   infoContainer: {
     paddingHorizontal: 20,

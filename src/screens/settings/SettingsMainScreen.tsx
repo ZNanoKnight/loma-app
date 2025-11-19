@@ -72,7 +72,6 @@ export default function SettingsMainScreen() {
       items: [
         { label: 'Edit Profile', screen: 'EditProfile' },
         { label: 'Change Password', screen: 'ChangePassword' },
-        { label: 'Privacy Settings', screen: 'AccountSettings' },
       ],
     },
     {
@@ -100,6 +99,12 @@ export default function SettingsMainScreen() {
       icon: '🥗',
       title: 'Recipe Preferences',
       directScreen: 'DietaryPreferences',
+    },
+    {
+      id: 'fitness',
+      icon: '( ◡̀_◡́)ᕤ',
+      title: 'Fitness Settings',
+      directScreen: 'FitnessSettings',
     },
     {
       id: 'preferences',
