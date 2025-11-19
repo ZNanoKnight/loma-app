@@ -45,6 +45,25 @@ export default function PhysicalStatsScreen() {
     }
   };
 
+  const handleInchesChange = (text: string) => {
+  // Remove non-numeric chars
+  const numeric = text.replace(/[^0-9]/g, '');
+
+  // Convert to number
+  const value = parseInt(numeric, 10);
+
+  // If empty, allow clearing the input
+  if (!numeric) {
+    setHeightInches('');
+    return;
+  }
+
+  // Clamp between 0 and 12
+  const clamped = Math.max(0, Math.min(12, value));
+
+  setHeightInches(clamped.toString());
+  };
+
   return (
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" />
@@ -169,7 +188,7 @@ export default function PhysicalStatsScreen() {
                       <TextInput
                         style={[styles.input, styles.heightInput]}
                         value={heightInches}
-                        onChangeText={setHeightInches}
+                        onChangeText={handleInchesChange}
                         placeholder="10"
                         placeholderTextColor="#9CA3AF"
                         keyboardType="number-pad"
