@@ -273,7 +273,7 @@ const styles = StyleSheet.create({
     fontSize: 32,
     color: '#000000',
     marginBottom: 4,
-    fontFamily: 'VendSans-Bold',
+    fontFamily: 'Quicksand-Bold',
   },
   headerStats: {
     flexDirection: 'row',
@@ -282,7 +282,7 @@ const styles = StyleSheet.create({
   headerStatText: {
     fontSize: 14,
     color: '#6B7280',
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   headerStatDivider: {
     marginHorizontal: 8,
@@ -306,18 +306,18 @@ const styles = StyleSheet.create({
   searchIcon: {
     fontSize: 16,
     marginRight: 10,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   searchInput: {
     flex: 1,
     fontSize: 16,
     color: '#1F2937',
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   clearIcon: {
     fontSize: 16,
     color: '#9CA3AF',
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   filterWrapper: {
     height: 50,
@@ -350,12 +350,12 @@ const styles = StyleSheet.create({
   filterEmoji: {
     fontSize: 16,
     marginRight: 6,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   filterText: {
     fontSize: 14,
     color: '#1F2937',
-    fontFamily: 'VendSans-Medium',
+    fontFamily: 'Quicksand-Medium',
   },
   filterTextActive: {
     color: 'white',
@@ -379,12 +379,12 @@ const styles = StyleSheet.create({
   sortIcon: {
     fontSize: 14,
     marginRight: 6,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   sortText: {
     fontSize: 13,
     color: '#1F2937',
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   sortDropdown: {
     position: 'absolute',
@@ -409,16 +409,16 @@ const styles = StyleSheet.create({
   sortOptionIcon: {
     fontSize: 16,
     marginRight: 8,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   sortOptionText: {
     fontSize: 14,
     color: '#6B7280',
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   sortOptionTextActive: {
     color: '#6B46C1',
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
   },
   recipeList: {
     paddingHorizontal: 20,
@@ -448,7 +448,7 @@ const styles = StyleSheet.create({
   },
   recipeEmoji: {
     fontSize: 48,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   favoriteIndicator: {
     position: 'absolute',
@@ -457,7 +457,7 @@ const styles = StyleSheet.create({
   },
   favoriteIcon: {
     fontSize: 16,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   recipeInfo: {
     padding: 12,
@@ -466,7 +466,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#1F2937',
     marginBottom: 8,
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
   },
   recipeStats: {
     flexDirection: 'row',
@@ -480,18 +480,18 @@ const styles = StyleSheet.create({
   statIcon: {
     fontSize: 12,
     marginRight: 2,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   statText: {
     fontSize: 12,
     color: '#6B7280',
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   cookedCount: {
     fontSize: 11,
     color: '#9CA3AF',
     fontStyle: 'italic',
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   emptyState: {
     alignItems: 'center',
@@ -500,18 +500,18 @@ const styles = StyleSheet.create({
   emptyEmoji: {
     fontSize: 48,
     marginBottom: 16,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   emptyTitle: {
     fontSize: 18,
     color: '#1F2937',
     marginBottom: 8,
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
   },
   emptySubtitle: {
     fontSize: 14,
     color: '#6B7280',
     textAlign: 'center',
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
 });

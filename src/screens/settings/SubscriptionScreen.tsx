@@ -73,37 +73,12 @@ export default function SubscriptionScreen() {
             {/* Actions */}
             <View style={styles.actionsContainer}>
               <TouchableOpacity style={styles.primaryButton}>
-                <Text style={styles.primaryButtonText}>Manage Subscription</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity style={styles.secondaryButton}>
-                <Text style={styles.secondaryButtonText}>Change Plan</Text>
+                <Text style={styles.primaryButtonText}>Change Plan</Text>
               </TouchableOpacity>
 
               <TouchableOpacity style={styles.dangerButton}>
                 <Text style={styles.dangerButtonText}>Cancel Subscription</Text>
               </TouchableOpacity>
-            </View>
-
-            {/* Benefits */}
-            <View style={styles.benefitsContainer}>
-              <Text style={styles.benefitsTitle}>Your Premium Benefits</Text>
-              <View style={styles.benefit}>
-                <Text style={styles.benefitIcon}>✓</Text>
-                <Text style={styles.benefitText}>Unlimited recipe generation</Text>
-              </View>
-              <View style={styles.benefit}>
-                <Text style={styles.benefitIcon}>✓</Text>
-                <Text style={styles.benefitText}>Advanced meal planning</Text>
-              </View>
-              <View style={styles.benefit}>
-                <Text style={styles.benefitIcon}>✓</Text>
-                <Text style={styles.benefitText}>Nutrition tracking & insights</Text>
-              </View>
-              <View style={styles.benefit}>
-                <Text style={styles.benefitIcon}>✓</Text>
-                <Text style={styles.benefitText}>Priority support</Text>
-              </View>
             </View>
           </ScrollView>
         </SafeAreaView>
@@ -143,12 +118,12 @@ const styles = StyleSheet.create({
   backIcon: {
     color: '#1F2937',
     fontSize: 24,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   headerTitle: {
     fontSize: 18,
     color: '#1F2937',
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
   },
   placeholder: {
     width: 40,
@@ -173,26 +148,26 @@ const styles = StyleSheet.create({
   planBadgeText: {
     color: 'white',
     fontSize: 12,
-    fontFamily: 'VendSans-Bold',
+    fontFamily: 'Quicksand-Bold',
   },
   planTitle: {
     fontSize: 24,
     color: '#1F2937',
     marginBottom: 8,
-    fontFamily: 'VendSans-Bold',
+    fontFamily: 'Quicksand-Bold',
   },
   planPrice: {
     fontSize: 18,
     color: '#6B7280',
     marginBottom: 12,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   planDescription: {
     fontSize: 14,
     color: '#6B7280',
     textAlign: 'center',
     lineHeight: 20,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   settingsContainer: {
     backgroundColor: 'white',
@@ -208,7 +183,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 14,
     color: '#4B5563',
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
   },
   settingRow: {
     flexDirection: 'row',
@@ -221,7 +196,7 @@ const styles = StyleSheet.create({
   settingLabel: {
     fontSize: 16,
     color: '#1F2937',
-    fontFamily: 'VendSans-Medium',
+    fontFamily: 'Quicksand-Medium',
   },
   settingRight: {
     flexDirection: 'row',
@@ -231,12 +206,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#9CA3AF',
     marginRight: 8,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   chevron: {
     fontSize: 18,
     color: '#9CA3AF',
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   actionsContainer: {
     paddingHorizontal: 20,
@@ -252,19 +227,7 @@ const styles = StyleSheet.create({
   primaryButtonText: {
     color: 'white',
     fontSize: 16,
-    fontFamily: 'VendSans-SemiBold',
-  },
-  secondaryButton: {
-    backgroundColor: '#F3F4F6',
-    paddingVertical: 14,
-    borderRadius: 12,
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  secondaryButtonText: {
-    color: '#6B46C1',
-    fontSize: 16,
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
   },
   dangerButton: {
     backgroundColor: 'rgba(239, 68, 68, 0.1)',
@@ -277,37 +240,6 @@ const styles = StyleSheet.create({
   dangerButtonText: {
     color: '#EF4444',
     fontSize: 16,
-    fontFamily: 'VendSans-SemiBold',
-  },
-  benefitsContainer: {
-    paddingHorizontal: 20,
-  },
-  benefitsTitle: {
-    fontSize: 16,
-    color: '#1F2937',
-    marginBottom: 16,
-    fontFamily: 'VendSans-SemiBold',
-  },
-  benefit: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  benefitIcon: {
-    fontSize: 18,
-    color: '#6B46C1',
-    marginRight: 12,
-    backgroundColor: 'white',
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    textAlign: 'center',
-    lineHeight: 24,
-    fontFamily: 'VendSans-Regular',
-  },
-  benefitText: {
-    fontSize: 14,
-    color: '#6B7280',
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-SemiBold',
   },
 });

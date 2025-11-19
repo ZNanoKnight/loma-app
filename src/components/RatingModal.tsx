@@ -158,11 +158,11 @@ const styles = StyleSheet.create({
   appIconText: {
     fontSize: 36,
     color: 'white',
-    fontFamily: 'VendSans-Bold',
+    fontFamily: 'Quicksand-Bold',
   },
   title: {
     fontSize: 17,
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
     color: '#000000',
     textAlign: 'center',
     marginBottom: 8,
@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 13,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
     color: '#000000',
     textAlign: 'center',
     marginBottom: 16,
@@ -210,11 +210,11 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 17,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
     color: '#007AFF',
   },
   rateButtonText: {
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
   },
   buttonTextDisabled: {
     color: '#C7C7CC',

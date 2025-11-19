@@ -229,7 +229,7 @@ const styles = StyleSheet.create({
     borderRadius: 2,
   },
   progressText: {
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
     color: '#6B7280',
     fontSize: 12,
     marginTop: 8,
@@ -240,7 +240,7 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   backButtonText: {
-    fontFamily: 'VendSans-Medium',
+    fontFamily: 'Quicksand-Medium',
     color: '#6B46C1',
     fontSize: 16,
   },
@@ -248,13 +248,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   title: {
-    fontFamily: 'VendSans-Bold',
+    fontFamily: 'Quicksand-Bold',
     fontSize: 32,
     color: '#1F2937',
     marginBottom: 10,
   },
   subtitle: {
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
     fontSize: 16,
     color: '#6B7280',
     marginBottom: 30,
@@ -292,7 +292,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   preferenceTitle: {
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
     fontSize: 17,
     color: '#1F2937',
     marginBottom: 2,
@@ -301,7 +301,7 @@ const styles = StyleSheet.create({
     color: '#6B46C1',
   },
   preferenceDescription: {
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
     fontSize: 13,
     color: '#6B7280',
   },
@@ -317,7 +317,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   checkmarkText: {
-    fontFamily: 'VendSans-Bold',
+    fontFamily: 'Quicksand-Bold',
     color: 'white',
     fontSize: 14,
   },
@@ -336,7 +336,7 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   continueButtonText: {
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
     color: '#FFFFFF',
     fontSize: 18,
     textAlign: 'center',

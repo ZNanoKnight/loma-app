@@ -28,6 +28,8 @@ interface UserData {
   savedRecipes: any[];
   favoriteRecipes: string[];
   weeklyProgress: boolean[];
+  hoursSaved: number;
+  moneySaved: number;
 
   // Settings
   notifications: boolean;
@@ -50,12 +52,14 @@ interface UserData {
 
   // Onboarding status
   hasCompletedOnboarding: boolean;
+  isAuthenticated: boolean;
 }
 
 interface UserContextType {
   userData: UserData;
   updateUserData: (updates: Partial<UserData>) => void;
   clearUserData: () => void;
+  signOut: () => void;
   isLoading: boolean;
 }
 
@@ -89,6 +93,8 @@ const initialUserData: UserData = {
   savedRecipes: [],
   favoriteRecipes: [],
   weeklyProgress: [false, false, false, false, false, false, false],
+  hoursSaved: 0,
+  moneySaved: 0,
 
   // Settings
   notifications: true,
@@ -109,6 +115,7 @@ const initialUserData: UserData = {
 
   // Onboarding status
   hasCompletedOnboarding: false,
+  isAuthenticated: false,
 };
 
 export function UserProvider({ children }: { children: ReactNode }) {
@@ -162,8 +169,12 @@ export function UserProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const signOut = () => {
+    setUserData(prev => ({ ...prev, isAuthenticated: false }));
+  };
+
   return (
-    <UserContext.Provider value={{ userData, updateUserData, clearUserData, isLoading }}>
+    <UserContext.Provider value={{ userData, updateUserData, clearUserData, signOut, isLoading }}>
       {children}
     </UserContext.Provider>
   );

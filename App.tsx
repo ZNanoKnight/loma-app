@@ -17,16 +17,11 @@ export default function App() {
     async function loadFonts() {
       try {
         await Font.loadAsync({
-          'VendSans-Regular': require('./assets/fonts/VendSans-Regular.ttf'),
-          'VendSans-Bold': require('./assets/fonts/VendSans-Bold.ttf'),
-          'VendSans-BoldItalic': require('./assets/fonts/VendSans-BoldItalic.ttf'),
-          'VendSans-Italic': require('./assets/fonts/VendSans-Italic.ttf'),
-          'VendSans-Light': require('./assets/fonts/VendSans-Light.ttf'),
-          'VendSans-LightItalic': require('./assets/fonts/VendSans-LightItalic.ttf'),
-          'VendSans-Medium': require('./assets/fonts/VendSans-Medium.ttf'),
-          'VendSans-MediumItalic': require('./assets/fonts/VendSans-MediumItalic.ttf'),
-          'VendSans-SemiBold': require('./assets/fonts/VendSans-SemiBold.ttf'),
-          'VendSans-SemiBoldItalic': require('./assets/fonts/VendSans-SemiBoldItalic.ttf'),
+          'Quicksand-Regular': require('./assets/fonts/Quicksand-Regular.ttf'),
+          'Quicksand-Bold': require('./assets/fonts/Quicksand-Bold.ttf'),
+          'Quicksand-Light': require('./assets/fonts/Quicksand-Light.ttf'),
+          'Quicksand-Medium': require('./assets/fonts/Quicksand-Medium.ttf'),
+          'Quicksand-SemiBold': require('./assets/fonts/Quicksand-SemiBold.ttf'),
         });
         
         setFontsLoaded(true);

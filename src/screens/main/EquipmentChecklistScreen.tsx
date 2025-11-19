@@ -201,29 +201,19 @@ export default function EquipmentChecklistScreen() {
               <TouchableOpacity
                 style={[
                   styles.continueButton,
-                  essentialItems.every(i => i.checked) && styles.continueButtonActive
+                  equipment.every(i => i.checked) && styles.continueButtonActive
                 ]}
                 onPress={handleContinue}
+                disabled={!equipment.every(i => i.checked)}
                 activeOpacity={0.8}
               >
                 <Text style={[
                   styles.continueButtonText,
-                  essentialItems.every(i => i.checked) && styles.continueButtonTextActive
+                  equipment.every(i => i.checked) && styles.continueButtonTextActive
                 ]}>
-                  {essentialItems.every(i => i.checked)
-                    ? 'Continue to Ingredients →'
-                    : `Check ${essentialItems.filter(i => !i.checked).length} essential items`}
+                  Continue
                 </Text>
               </TouchableOpacity>
-              
-              {!essentialItems.every(i => i.checked) && (
-                <TouchableOpacity 
-                  style={styles.skipButton}
-                  onPress={handleContinue}
-                >
-                  <Text style={styles.skipText}>Skip for now</Text>
-                </TouchableOpacity>
-              )}
             </View>
           </ScrollView>
         </SafeAreaView>
@@ -262,7 +252,7 @@ const styles = StyleSheet.create({
   backIcon: {
     color: '#1F2937',
     fontSize: 24,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   headerCenter: {
     alignItems: 'center',
@@ -270,13 +260,13 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 18,
     color: '#1F2937',
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
   },
   headerSubtitle: {
     fontSize: 12,
     color: '#6B7280',
     marginTop: 2,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   placeholder: {
     width: 40,
@@ -301,7 +291,7 @@ const styles = StyleSheet.create({
     color: '#6B7280',
     marginTop: 8,
     textAlign: 'center',
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   recipeCard: {
     flexDirection: 'row',
@@ -315,7 +305,7 @@ const styles = StyleSheet.create({
   recipeEmoji: {
     fontSize: 32,
     marginRight: 12,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   recipeInfo: {
     flex: 1,
@@ -324,12 +314,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#1F2937',
     marginBottom: 4,
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
   },
   recipeTime: {
     fontSize: 14,
     color: '#6B7280',
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   tipsCard: {
     backgroundColor: '#10B981',
@@ -346,24 +336,24 @@ const styles = StyleSheet.create({
   tipsIcon: {
     fontSize: 20,
     marginRight: 8,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   tipsTitle: {
     flex: 1,
     fontSize: 16,
     color: 'white',
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
   },
   dismissText: {
     fontSize: 16,
     color: 'rgba(255, 255, 255, 0.8)',
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   tipsText: {
     fontSize: 14,
     color: 'white',
     lineHeight: 20,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   section: {
     marginBottom: 24,
@@ -378,12 +368,12 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     color: '#1F2937',
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
   },
   sectionCount: {
     fontSize: 14,
     color: '#6B7280',
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   equipmentItem: {
     flexDirection: 'row',
@@ -417,12 +407,12 @@ const styles = StyleSheet.create({
   checkmark: {
     color: 'white',
     fontSize: 14,
-    fontFamily: 'VendSans-Bold',
+    fontFamily: 'Quicksand-Bold',
   },
   itemEmoji: {
     fontSize: 24,
     marginRight: 12,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   itemTextContainer: {
     flex: 1,
@@ -430,7 +420,7 @@ const styles = StyleSheet.create({
   itemName: {
     fontSize: 16,
     color: '#1F2937',
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   itemNameChecked: {
     color: '#9CA3AF',
@@ -441,7 +431,7 @@ const styles = StyleSheet.create({
     color: '#6B7280',
     marginTop: 2,
     fontStyle: 'italic',
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   checkedBadge: {
     backgroundColor: '#ECFDF5',
@@ -452,7 +442,7 @@ const styles = StyleSheet.create({
   checkedText: {
     fontSize: 12,
     color: '#10B981',
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
   },
   quickActions: {
     paddingHorizontal: 20,
@@ -467,7 +457,7 @@ const styles = StyleSheet.create({
   checkAllText: {
     color: '#6B46C1',
     fontSize: 14,
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
   },
   bottomContainer: {
     paddingHorizontal: 20,
@@ -485,7 +475,7 @@ const styles = StyleSheet.create({
   continueButtonText: {
     color: '#1F2937',
     fontSize: 16,
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
   },
   continueButtonTextActive: {
     color: 'white',
@@ -498,6 +488,6 @@ const styles = StyleSheet.create({
     color: '#6B7280',
     fontSize: 14,
     textDecorationLine: 'underline',
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
 });

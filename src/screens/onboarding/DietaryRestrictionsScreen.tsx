@@ -266,7 +266,7 @@ const styles = StyleSheet.create({
     borderRadius: 2,
   },
   progressText: {
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
     color: '#6B7280',
     fontSize: 12,
     marginTop: 8,
@@ -277,7 +277,7 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   backButtonText: {
-    fontFamily: 'VendSans-Medium',
+    fontFamily: 'Quicksand-Medium',
     color: '#6B46C1',
     fontSize: 16,
   },
@@ -288,13 +288,13 @@ const styles = StyleSheet.create({
     marginBottom: 35,
   },
   sectionTitle: {
-    fontFamily: 'VendSans-Bold',
+    fontFamily: 'Quicksand-Bold',
     fontSize: 28,
     color: '#1F2937',
     marginBottom: 8,
   },
   sectionSubtitle: {
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
     fontSize: 15,
     color: '#6B7280',
     marginBottom: 20,
@@ -326,7 +326,7 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   allergenTitle: {
-    fontFamily: 'VendSans-Medium',
+    fontFamily: 'Quicksand-Medium',
     fontSize: 15,
     color: '#1F2937',
   },
@@ -359,7 +359,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   equipmentTitle: {
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
     fontSize: 18,
     color: '#1F2937',
     marginBottom: 4,
@@ -368,7 +368,7 @@ const styles = StyleSheet.create({
     color: '#6B46C1',
   },
   equipmentDescription: {
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
     fontSize: 14,
     color: '#6B7280',
     lineHeight: 20,
@@ -377,7 +377,7 @@ const styles = StyleSheet.create({
     color: '#6B46C1',
   },
   equipmentTierName: {
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
     color: '#6B46C1',
   },
   equipmentTierNameActive: {
@@ -399,7 +399,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   continueButtonText: {
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
     color: '#FFFFFF',
     fontSize: 18,
     textAlign: 'center',

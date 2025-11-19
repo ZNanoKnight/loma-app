@@ -155,12 +155,12 @@ export default function CookingInstructionsScreen() {
   };
 
   const handleComplete = () => {
-    // Update streak and recipe count when completing cooking  // MODIFIED
-    updateUserData({ 
+    // Update streak and recipe count when completing cooking
+    updateUserData({
       currentStreak: userData.currentStreak + 1,
       totalRecipes: userData.totalRecipes + 1
     });
-    navigation.navigate('Home');
+    navigation.navigate('RecipeCompletion');
   };
 
   const jumpToStep = (stepIndex: number) => {
@@ -365,7 +365,7 @@ const styles = StyleSheet.create({
   closeIcon: {
     color: '#1F2937',
     fontSize: 20,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   headerCenter: {
     alignItems: 'center',
@@ -373,13 +373,13 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 18,
     color: '#1F2937',
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
   },
   headerSubtitle: {
     fontSize: 12,
     color: '#6B7280',
     marginTop: 2,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   voiceButton: {
     width: 40,
@@ -391,7 +391,7 @@ const styles = StyleSheet.create({
   },
   voiceIcon: {
     fontSize: 20,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   progressContainer: {
     paddingHorizontal: 20,
@@ -413,7 +413,7 @@ const styles = StyleSheet.create({
     color: '#6B7280',
     marginTop: 8,
     textAlign: 'center',
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   timerSection: {
     paddingHorizontal: 20,
@@ -430,12 +430,12 @@ const styles = StyleSheet.create({
   },
   timerIcon: {
     fontSize: 20,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   startTimerText: {
     color: 'white',
     fontSize: 16,
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
   },
   activeTimerContainer: {
     backgroundColor: '#F9FAFB',
@@ -447,7 +447,7 @@ const styles = StyleSheet.create({
     fontSize: 48,
     color: '#6B46C1',
     marginBottom: 12,
-    fontFamily: 'VendSans-Bold',
+    fontFamily: 'Quicksand-Bold',
   },
   timerControls: {
     flexDirection: 'row',
@@ -463,7 +463,7 @@ const styles = StyleSheet.create({
   },
   timerControlText: {
     fontSize: 20,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   scrollContent: {
     paddingHorizontal: 20,
@@ -492,20 +492,20 @@ const styles = StyleSheet.create({
   stepNumberText: {
     color: '#1F2937',
     fontSize: 18,
-    fontFamily: 'VendSans-Bold',
+    fontFamily: 'Quicksand-Bold',
   },
   stepTitle: {
     fontSize: 22,
     color: '#1F2937',
     flex: 1,
-    fontFamily: 'VendSans-Bold',
+    fontFamily: 'Quicksand-Bold',
   },
   instruction: {
     fontSize: 16,
     color: '#4B5563',
     lineHeight: 24,
     marginBottom: 16,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   tipContainer: {
     flexDirection: 'row',
@@ -517,14 +517,14 @@ const styles = StyleSheet.create({
   tipIcon: {
     fontSize: 16,
     marginRight: 8,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   tipText: {
     flex: 1,
     fontSize: 14,
     color: '#6B46C1',
     lineHeight: 20,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   warningContainer: {
     flexDirection: 'row',
@@ -536,14 +536,14 @@ const styles = StyleSheet.create({
   warningIcon: {
     fontSize: 16,
     marginRight: 8,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   warningText: {
     flex: 1,
     fontSize: 14,
     color: '#92400E',
     lineHeight: 20,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   stepOverview: {
     marginBottom: 20,
@@ -552,7 +552,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#1F2937',
     marginBottom: 12,
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
   },
   stepDots: {
     flexDirection: 'row',
@@ -575,7 +575,7 @@ const styles = StyleSheet.create({
   stepDotNumber: {
     fontSize: 14,
     color: '#6B7280',
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
   },
   stepDotNumberActive: {
     color: 'white',
@@ -583,7 +583,7 @@ const styles = StyleSheet.create({
   stepDotCheck: {
     color: 'white',
     fontSize: 14,
-    fontFamily: 'VendSans-Bold',
+    fontFamily: 'Quicksand-Bold',
   },
   navigationControls: {
     flexDirection: 'row',
@@ -606,12 +606,12 @@ const styles = StyleSheet.create({
   navIcon: {
     fontSize: 18,
     color: '#6B7280',
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   navText: {
     fontSize: 16,
     color: '#6B7280',
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
   },
   completeButton: {
     flexDirection: 'row',
@@ -625,11 +625,11 @@ const styles = StyleSheet.create({
   completeIcon: {
     fontSize: 18,
     color: 'white',
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   completeText: {
     fontSize: 16,
     color: 'white',
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
   },
 });

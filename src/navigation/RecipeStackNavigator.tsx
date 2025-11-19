@@ -5,6 +5,7 @@ import RecipeDetailScreen from '../screens/main/RecipeDetailScreen';
 import EquipmentChecklistScreen from '../screens/main/EquipmentChecklistScreen';
 import IngredientsListScreen from '../screens/main/IngredientsListScreen';
 import CookingInstructionsScreen from '../screens/main/CookingInstructionsScreen';
+import RecipeCompletionScreen from '../screens/main/RecipeCompletionScreen';
 
 const Stack = createStackNavigator();
 
@@ -16,6 +17,7 @@ export default function RecipeStackNavigator() {
       <Stack.Screen name="EquipmentChecklist" component={EquipmentChecklistScreen} />
       <Stack.Screen name="IngredientsList" component={IngredientsListScreen} />
       <Stack.Screen name="CookingInstructions" component={CookingInstructionsScreen} />
+      <Stack.Screen name="RecipeCompletion" component={RecipeCompletionScreen} />
       <Stack.Screen name="Home" component={RecipeBookScreen} />
     </Stack.Navigator>
   );

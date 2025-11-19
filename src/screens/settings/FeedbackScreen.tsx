@@ -216,12 +216,12 @@ const styles = StyleSheet.create({
   backIcon: {
     color: '#1F2937',
     fontSize: 24,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   headerTitle: {
     fontSize: 18,
     color: '#1F2937',
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
   },
   placeholder: {
     width: 40,
@@ -244,7 +244,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#6B7280',
     textAlign: 'center',
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
     lineHeight: 20,
   },
   formContainer: {
@@ -257,7 +257,7 @@ const styles = StyleSheet.create({
   inputLabel: {
     fontSize: 14,
     color: '#374151',
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
   },
   input: {
     backgroundColor: 'white',
@@ -268,7 +268,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     fontSize: 14,
     color: '#1F2937',
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   textArea: {
     minHeight: 120,
@@ -277,7 +277,7 @@ const styles = StyleSheet.create({
   inputHint: {
     fontSize: 12,
     color: '#9CA3AF',
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   footer: {
     paddingHorizontal: 20,
@@ -305,6 +305,6 @@ const styles = StyleSheet.create({
   submitButtonText: {
     fontSize: 16,
     color: 'white',
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
   },
 });

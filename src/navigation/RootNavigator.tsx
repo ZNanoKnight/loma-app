@@ -10,7 +10,7 @@ const Stack = createStackNavigator();
 export default function RootNavigator() {
   const { userData, isLoading } = useUser();
 
-  // Show loading screen while checking onboarding status
+  // Show loading screen while checking authentication status
   if (isLoading) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#4F46E5' }}>
@@ -21,7 +21,7 @@ export default function RootNavigator() {
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      {userData.hasCompletedOnboarding ? (
+      {userData.isAuthenticated ? (
         <Stack.Screen name="MainApp" component={MainTabNavigator} />
       ) : (
         <Stack.Screen name="Onboarding" component={OnboardingNavigator} />

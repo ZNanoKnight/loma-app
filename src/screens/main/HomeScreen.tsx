@@ -20,34 +20,17 @@ export default function HomeScreen() {
 
   // Use real user data
   const userName = userData.firstName || 'Friend';
-  const todayRecipes = userData.totalRecipes;
-  const weekStreak = userData.currentStreak;
 
-  // Add missing state variables that your JSX expects
+  // State variables for recipe generation form
   const [mealType, setMealType] = useState('');
-  const [cookTime, setCookTime] = useState('');
-  const [servings, setServings] = useState('');
   const [customRequest, setCustomRequest] = useState('');
 
-  const recentRecipes = [
-    { id: '1', name: 'Grilled Chicken Salad', emoji: '🥗', time: '25 min', calories: 320 },
-    { id: '2', name: 'Protein Smoothie', emoji: '🥤', time: '5 min', calories: 280 },
-    { id: '3', name: 'Quinoa Bowl', emoji: '🍚', time: '30 min', calories: 400 },
-  ];
-
-  const motivationalQuotes = [
-    "Every meal is a chance to nourish your body!",
-    "Small changes lead to big results!",
-    "You're building healthy habits that last!",
-    "Cooking is self-care in action!",
-    "Your journey to health starts in the kitchen!"
-  ];
-
-  const [currentQuote] = useState(
-    motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)]
-  );
-
   const handleGenerateRecipe = () => {
+    // Validate that meal type is selected
+    if (!mealType) {
+      return;
+    }
+
     // In production, this would call the AI API to generate a recipe
     // For now, we'll use the first mock recipe from RecipeContext
     const mockRecipe = getRecipeById('1'); // Get the Mediterranean Grilled Chicken Bowl
@@ -56,6 +39,9 @@ export default function HomeScreen() {
     }
     navigation.navigate('RecipeGenerated');
   };
+
+  // Check if form is valid for button enable/disable
+  const isFormValid = mealType !== '';
 
   return (
     <View style={styles.container}>
@@ -68,28 +54,17 @@ export default function HomeScreen() {
             {/* Header */}
             <View style={styles.header}>
               <View>
-                <Text style={styles.greeting}>Good afternoon, {userName}!</Text>
+                <Text style={styles.greeting}>How's it going, {userName}!</Text>
                 <Text style={styles.subGreeting}>What are we cooking today?</Text>
               </View>
             </View>
 
-            {/* Stats Cards */}
-            <View style={styles.statsContainer}>
-              <View style={styles.statCard}>
-                <Text style={styles.statEmoji}>🍳</Text>
-                <Text style={styles.statNumber}>{todayRecipes}</Text>
-                <Text style={styles.statLabel}>Today</Text>
-              </View>
-              <View style={styles.statCard}>
-                <Text style={styles.statEmoji}>🔥</Text>
-                <Text style={styles.statNumber}>{weekStreak}</Text>
-                <Text style={styles.statLabel}>Day Streak</Text>
-              </View>
-              <View style={styles.statCard}>
-                <Text style={styles.statEmoji}>📊</Text>
-                <Text style={styles.statNumber}>92%</Text>
-                <Text style={styles.statLabel}>Goal Met</Text>
-              </View>
+            {/* Munchies Callout Box */}
+            <View style={styles.munchiesCallout}>
+              <Text style={styles.munchiesTitle}>🍪 You have 8 Munchies!</Text>
+              <Text style={styles.munchiesSubtext}>
+                Each recipe costs <Text style={styles.boldText}>1 Munchie</Text>.{'\n'}You can generate <Text style={styles.boldText}>8 meals</Text> total.
+              </Text>
             </View>
 
             {/* Recipe Generator Card */}
@@ -99,70 +74,27 @@ export default function HomeScreen() {
               {/* Meal Type Selection */}
               <View style={styles.optionSection}>
                 <Text style={styles.optionLabel}>Meal Type</Text>
-                <View style={styles.optionButtons}>
-                  {(['breakfast', 'lunch', 'dinner', 'snack'] as const).map((type) => (
+                <View style={styles.mealTypeContainer}>
+                  {[
+                    { type: 'breakfast', emoji: '🥞', label: 'Breakfast' },
+                    { type: 'lunch', emoji: '🥗', label: 'Lunch' },
+                    { type: 'dinner', emoji: '🍽️', label: 'Dinner' },
+                    { type: 'snack', emoji: '🍪', label: 'Snack' }
+                  ].map((item) => (
                     <TouchableOpacity
-                      key={type}
+                      key={item.type}
                       style={[
-                        styles.optionButton,
-                        mealType === type && styles.optionButtonActive
+                        styles.mealTypeCard,
+                        mealType === item.type && styles.mealTypeCardActive
                       ]}
-                      onPress={() => setMealType(type)}
+                      onPress={() => setMealType(item.type)}
                     >
+                      <Text style={styles.mealTypeEmoji}>{item.emoji}</Text>
                       <Text style={[
-                        styles.optionButtonText,
-                        mealType === type && styles.optionButtonTextActive
+                        styles.mealTypeText,
+                        mealType === item.type && styles.mealTypeTextActive
                       ]}>
-                        {type.charAt(0).toUpperCase() + type.slice(1)}
-                      </Text>
-                    </TouchableOpacity>
-                  ))}
-                </View>
-              </View>
-
-              {/* Cook Time Selection */}
-              <View style={styles.optionSection}>
-                <Text style={styles.optionLabel}>Cook Time</Text>
-                <View style={styles.optionButtons}>
-                  {(['15', '30', '45', '60'] as const).map((time) => (
-                    <TouchableOpacity
-                      key={time}
-                      style={[
-                        styles.optionButton,
-                        cookTime === time && styles.optionButtonActive
-                      ]}
-                      onPress={() => setCookTime(time)}
-                    >
-                      <Text style={[
-                        styles.optionButtonText,
-                        cookTime === time && styles.optionButtonTextActive
-                      ]}>
-                        {time} min
-                      </Text>
-                    </TouchableOpacity>
-                  ))}
-                </View>
-              </View>
-
-              {/* Servings Selection */}
-              <View style={styles.optionSection}>
-                <Text style={styles.optionLabel}>Servings</Text>
-                <View style={styles.optionButtons}>
-                  {(['1', '2', '4'] as const).map((serving) => (
-                    <TouchableOpacity
-                      key={serving}
-                      style={[
-                        styles.optionButton,
-                        styles.servingButton,
-                        servings === serving && styles.optionButtonActive
-                      ]}
-                      onPress={() => setServings(serving)}
-                    >
-                      <Text style={[
-                        styles.optionButtonText,
-                        servings === serving && styles.optionButtonTextActive
-                      ]}>
-                        {serving}
+                        {item.label}
                       </Text>
                     </TouchableOpacity>
                   ))}
@@ -184,11 +116,20 @@ export default function HomeScreen() {
 
               {/* Generate Button */}
               <TouchableOpacity
-                style={styles.generateButton}
+                style={[
+                  styles.generateButton,
+                  !isFormValid && styles.generateButtonDisabled
+                ]}
                 onPress={handleGenerateRecipe}
+                disabled={!isFormValid}
                 activeOpacity={0.8}
               >
-                <Text style={styles.generateButtonText}>✨ Generate Recipe</Text>
+                <Text style={[
+                  styles.generateButtonText,
+                  !isFormValid && styles.generateButtonTextDisabled
+                ]}>
+                  ✨ Generate Recipe
+                </Text>
               </TouchableOpacity>
             </View>
           </ScrollView>
@@ -214,18 +155,42 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginTop: 20,
-    marginBottom: 20,
+    marginBottom: 16,
   },
   greeting: {
-    fontFamily: 'VendSans-Bold',
+    fontFamily: 'Quicksand-Bold',
     fontSize: 28,
     color: '#1F2937',
     marginBottom: 4,
   },
   subGreeting: {
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
     fontSize: 16,
     color: '#6B7280',
+  },
+  munchiesCallout: {
+    backgroundColor: '#F3F0FF',
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 20,
+    borderWidth: 1,
+    borderColor: '#E9D5FF',
+  },
+  munchiesTitle: {
+    fontFamily: 'Quicksand-Bold',
+    fontSize: 18,
+    color: '#6B46C1',
+    marginBottom: 4,
+  },
+  munchiesSubtext: {
+    fontFamily: 'Quicksand-Regular',
+    fontSize: 14,
+    color: '#8B5CF6',
+    lineHeight: 20,
+  },
+  boldText: {
+    fontFamily: 'Quicksand-Bold',
+    color: '#6B46C1',
   },
   notificationButton: {
     width: 40,
@@ -237,36 +202,6 @@ const styles = StyleSheet.create({
   },
   notificationIcon: {
     fontSize: 20,
-  },
-  statsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 20,
-  },
-  statCard: {
-    flex: 1,
-    backgroundColor: '#FFFFFF',
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
-    borderRadius: 16,
-    padding: 16,
-    alignItems: 'center',
-    marginHorizontal: 5,
-  },
-  statEmoji: {
-    fontSize: 24,
-    marginBottom: 8,
-  },
-  statNumber: {
-    fontFamily: 'VendSans-Bold',
-    fontSize: 20,
-    color: '#6B46C1',
-    marginBottom: 4,
-  },
-  statLabel: {
-    fontFamily: 'VendSans-Regular',
-    fontSize: 12,
-    color: '#6B7280',
   },
   generatorCard: {
     backgroundColor: 'white',
@@ -283,7 +218,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   cardTitle: {
-    fontFamily: 'VendSans-Bold',
+    fontFamily: 'Quicksand-Bold',
     fontSize: 22,
     color: '#1F2937',
     marginBottom: 20,
@@ -292,40 +227,54 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   optionLabel: {
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
     fontSize: 14,
     color: '#6B7280',
     marginBottom: 10,
   },
-  optionButtons: {
+  mealTypeContainer: {
+    gap: 12,
+  },
+  mealTypeCard: {
     flexDirection: 'row',
-    gap: 8,
-  },
-  optionButton: {
-    flex: 1,
-    paddingVertical: 10,
-    paddingHorizontal: 16,
-    backgroundColor: '#F3F4F6',
-    borderRadius: 12,
     alignItems: 'center',
+    backgroundColor: '#F9FAFB',
+    borderWidth: 2,
+    borderColor: '#E5E7EB',
+    borderRadius: 12,
+    paddingVertical: 14,
+    paddingHorizontal: 16,
   },
-  servingButton: {
-    flex: 0,
-    paddingHorizontal: 24,
+  mealTypeCardActive: {
+    backgroundColor: '#F3F0FF',
+    borderColor: '#6B46C1',
   },
-  optionButtonActive: {
-    backgroundColor: '#6B46C1',
+  mealTypeEmoji: {
+    fontSize: 24,
+    marginRight: 12,
   },
-  optionButtonText: {
-    fontFamily: 'VendSans-Medium',
+  mealTypeText: {
+    fontFamily: 'Quicksand-Medium',
+    fontSize: 16,
+    color: '#4B5563',
+  },
+  mealTypeTextActive: {
+    fontFamily: 'Quicksand-SemiBold',
+    color: '#6B46C1',
+  },
+  servingsInput: {
+    fontFamily: 'Quicksand-Regular',
+    backgroundColor: '#F9FAFB',
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
     fontSize: 14,
-    color: '#6B7280',
-  },
-  optionButtonTextActive: {
-    color: 'white',
+    color: '#1F2937',
   },
   textInput: {
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
     backgroundColor: '#F9FAFB',
     borderWidth: 1,
     borderColor: '#E5E7EB',
@@ -351,10 +300,18 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 5,
   },
+  generateButtonDisabled: {
+    backgroundColor: '#D1D5DB',
+    shadowOpacity: 0,
+    elevation: 0,
+  },
   generateButtonText: {
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
     color: 'white',
     fontSize: 18,
+  },
+  generateButtonTextDisabled: {
+    color: '#9CA3AF',
   },
   quickActionButton: {
     flex: 1,
@@ -371,7 +328,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   quickActionText: {
-    fontFamily: 'VendSans-Medium',
+    fontFamily: 'Quicksand-Medium',
     fontSize: 12,
     color: '#1F2937',
   },

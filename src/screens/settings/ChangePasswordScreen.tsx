@@ -117,10 +117,6 @@ export default function ChangePasswordScreen() {
               >
                 <Text style={styles.changeButtonText}>Change Password</Text>
               </TouchableOpacity>
-
-              <TouchableOpacity style={styles.forgotButton}>
-                <Text style={styles.forgotButtonText}>Forgot Password?</Text>
-              </TouchableOpacity>
             </View>
           </ScrollView>
         </SafeAreaView>
@@ -160,12 +156,12 @@ const styles = StyleSheet.create({
   backIcon: {
     color: '#1F2937',
     fontSize: 24,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   headerTitle: {
     fontSize: 18,
     color: '#1F2937',
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
   },
   placeholder: {
     width: 40,
@@ -184,14 +180,14 @@ const styles = StyleSheet.create({
   infoIcon: {
     fontSize: 24,
     marginRight: 12,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   infoText: {
     flex: 1,
     fontSize: 14,
     color: '#1F2937',
     lineHeight: 20,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   formContainer: {
     backgroundColor: 'white',
@@ -206,7 +202,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#1F2937',
     marginBottom: 8,
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
   },
   input: {
     backgroundColor: '#F9FAFB',
@@ -216,13 +212,13 @@ const styles = StyleSheet.create({
     color: '#1F2937',
     borderWidth: 1,
     borderColor: '#E5E7EB',
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   hint: {
     fontSize: 12,
     color: '#9CA3AF',
     marginTop: 6,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   changeButton: {
     backgroundColor: '#6B46C1',
@@ -234,15 +230,6 @@ const styles = StyleSheet.create({
   changeButtonText: {
     color: 'white',
     fontSize: 16,
-    fontFamily: 'VendSans-SemiBold',
-  },
-  forgotButton: {
-    alignItems: 'center',
-    marginTop: 16,
-  },
-  forgotButtonText: {
-    color: '#6B46C1',
-    fontSize: 14,
-    fontFamily: 'VendSans-Medium',
+    fontFamily: 'Quicksand-SemiBold',
   },
 });

@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
     borderRadius: 2,
   },
   progressText: {
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
     color: '#6B7280',
     fontSize: 12,
     marginTop: 8,
@@ -187,7 +187,7 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   backButtonText: {
-    fontFamily: 'VendSans-Medium',
+    fontFamily: 'Quicksand-Medium',
     color: '#6B46C1',
     fontSize: 16,
   },
@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   title: {
-    fontFamily: 'VendSans-Bold',
+    fontFamily: 'Quicksand-Bold',
     fontSize: 32,
     color: '#1F2937',
     marginBottom: 10,
@@ -204,7 +204,7 @@ const styles = StyleSheet.create({
     color: '#6B46C1',
   },
   subtitle: {
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
     fontSize: 16,
     color: '#6B7280',
     marginBottom: 25,
@@ -247,13 +247,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   featureTitle: {
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
     fontSize: 16,
     color: '#1F2937',
     marginBottom: 4,
   },
   featureDescription: {
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
     fontSize: 14,
     color: '#6B7280',
     lineHeight: 18,
@@ -271,12 +271,12 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   tokenTitle: {
-    fontFamily: 'VendSans-Bold',
+    fontFamily: 'Quicksand-Bold',
     fontSize: 22,
     color: '#1F2937',
   },
   tokenSubtitle: {
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
     fontSize: 14,
     color: '#6B7280',
     marginBottom: 16,
@@ -305,19 +305,19 @@ const styles = StyleSheet.create({
     marginRight: 12,
   },
   tokenBulletText: {
-    fontFamily: 'VendSans-Bold',
+    fontFamily: 'Quicksand-Bold',
     color: '#FFFFFF',
     fontSize: 14,
   },
   tokenText: {
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
     fontSize: 15,
     color: '#1F2937',
     lineHeight: 22,
     flex: 1,
   },
   tokenHighlight: {
-    fontFamily: 'VendSans-Bold',
+    fontFamily: 'Quicksand-Bold',
     color: '#6B46C1',
   },
   tokenBenefitBox: {
@@ -334,7 +334,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   tokenBenefitText: {
-    fontFamily: 'VendSans-Medium',
+    fontFamily: 'Quicksand-Medium',
     fontSize: 14,
     color: '#92400E',
     lineHeight: 20,
@@ -355,7 +355,7 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   continueButtonText: {
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
     color: '#FFFFFF',
     fontSize: 18,
     textAlign: 'center',

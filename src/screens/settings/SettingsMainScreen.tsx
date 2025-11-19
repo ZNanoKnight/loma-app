@@ -32,7 +32,7 @@ type SettingSection = {
 
 export default function SettingsMainScreen() {
   const navigation = useNavigation<any>();
-  const { userData: globalUserData, clearUserData } = useUser();
+  const { userData: globalUserData, signOut } = useUser();
 
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
   const [notifications, setNotifications] = useState(false);
@@ -45,15 +45,12 @@ export default function SettingsMainScreen() {
     name: globalUserData.firstName || 'User',
     email: globalUserData.email || 'not set',
     memberSince: 'January 2024',
-    recipesCooked: globalUserData.totalRecipes,
-    currentStreak: globalUserData.currentStreak,
-    savedRecipes: globalUserData.savedRecipes.length,
     plan: 'Free Plan',
     nextBilling: 'N/A',
   };
 
-  const handleSignOut = async () => {
-    await clearUserData();
+  const handleSignOut = () => {
+    signOut();
   };
 
   const toggleSection = (section: string) => {
@@ -90,28 +87,19 @@ export default function SettingsMainScreen() {
       title: 'Notifications',
       items: [
         { label: 'Push Notifications', type: 'switch', value: notifications, onChange: setNotifications },
-        { label: 'Meal Reminders', type: 'switch', value: mealReminders, onChange: setMealReminders },
-        { label: 'Weekly Report', type: 'switch', value: weeklyReport, onChange: setWeeklyReport },
       ],
     },
     {
-      id: 'dietary',
-      icon: '🥗',
-      title: 'Recipe Preferences',
-      directScreen: 'DietaryPreferences',
-    },
-    {
-      id: 'fitness',
-      icon: '( ◡̀_◡́)ᕤ',
-      title: 'Fitness Settings',
-      directScreen: 'FitnessSettings',
-    },
-    {
       id: 'preferences',
+      icon: '⭐',
+      title: 'Your Preferences',
+      directScreen: 'YourPreferences',
+    },
+    {
+      id: 'app_preferences',
       icon: '⚙️',
-      title: 'App Preferences',
+      title: 'App Settings',
       items: [
-        { label: 'Dark Mode', type: 'switch', value: darkMode, onChange: setDarkMode },
         { label: 'Metric Units', type: 'switch', value: metricUnits, onChange: setMetricUnits },
         { label: 'Language', screen: 'AppPreferences', value: 'English' },
       ],
@@ -160,26 +148,6 @@ export default function SettingsMainScreen() {
                 </View>
               </View>
 
-              {/* Stats Summary */}
-              <View style={styles.statsContainer}>
-                <View style={styles.statCard}>
-                  <Text style={styles.statEmoji}>📚</Text>
-                  <Text style={styles.statNumber}>{userData.recipesCooked}</Text>
-                  <Text style={styles.statLabel}>Recipes</Text>
-                </View>
-                <View style={styles.statDivider} />
-                <View style={styles.statCard}>
-                  <Text style={styles.statEmoji}>🔥</Text>
-                  <Text style={styles.statNumber}>{userData.currentStreak}</Text>
-                  <Text style={styles.statLabel}>Day Streak</Text>
-                </View>
-                <View style={styles.statDivider} />
-                <View style={styles.statCard}>
-                  <Text style={styles.statEmoji}>❤️</Text>
-                  <Text style={styles.statNumber}>{userData.savedRecipes}</Text>
-                  <Text style={styles.statLabel}>Saved</Text>
-                </View>
-              </View>
             </View>
 
             {/* Settings Menu */}
@@ -214,6 +182,8 @@ export default function SettingsMainScreen() {
                   {!section.directScreen && expandedSections.includes(section.id) && section.items && (
                     <View style={styles.expandedContent}>
                       {section.items.map((item, index) => {
+                        const isLastItem = index === section.items!.length - 1;
+
                         // Primary button (like Manage Subscription)
                         if (item.isPrimary) {
                           return (
@@ -230,7 +200,7 @@ export default function SettingsMainScreen() {
                         // Switch toggle
                         if (item.type === 'switch' && typeof item.value === 'boolean' && item.onChange) {
                           return (
-                            <View key={index} style={styles.settingRow}>
+                            <View key={index} style={[styles.settingRow, isLastItem && styles.settingRowLast]}>
                               <Text style={styles.settingLabel}>{item.label}</Text>
                               <Switch
                                 value={item.value}
@@ -247,7 +217,7 @@ export default function SettingsMainScreen() {
                           return (
                             <TouchableOpacity
                               key={index}
-                              style={styles.settingRow}
+                              style={[styles.settingRow, isLastItem && styles.settingRowLast]}
                               onPress={() => navigation.navigate(item.screen)}
                             >
                               <Text style={styles.settingLabel}>{item.label}</Text>
@@ -260,7 +230,7 @@ export default function SettingsMainScreen() {
 
                         // Static value display
                         return (
-                          <View key={index} style={styles.settingRow}>
+                          <View key={index} style={[styles.settingRow, isLastItem && styles.settingRowLast]}>
                             <Text style={styles.settingLabel}>{item.label}</Text>
                             <Text style={styles.settingValue}>{item.value}</Text>
                           </View>
@@ -308,7 +278,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 32,
     color: '#000000',
-    fontFamily: 'VendSans-Bold',
+    fontFamily: 'Quicksand-Bold',
   },
   placeholder: {
     width: 40,
@@ -328,10 +298,6 @@ const styles = StyleSheet.create({
   profileHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 20,
-    paddingBottom: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: '#F3F4F6',
   },
   profileInfo: {
     flex: 1,
@@ -348,7 +314,7 @@ const styles = StyleSheet.create({
     borderRadius: 40,
     textAlign: 'center',
     lineHeight: 80,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   avatarImage: {
     width: 80,
@@ -369,54 +335,24 @@ const styles = StyleSheet.create({
   },
   editIcon: {
     fontSize: 14,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   userName: {
     fontSize: 20,
     color: '#000000',
     marginBottom: 4,
-    fontFamily: 'VendSans-Bold',
+    fontFamily: 'Quicksand-Bold',
   },
   userEmail: {
     fontSize: 14,
     color: '#6B7280',
     marginBottom: 4,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   memberSince: {
     fontSize: 12,
     color: '#9CA3AF',
-    fontFamily: 'VendSans-Regular',
-  },
-  statsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  statCard: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  statDivider: {
-    width: 1,
-    height: 40,
-    backgroundColor: '#E5E7EB',
-  },
-  statEmoji: {
-    fontSize: 24,
-    marginBottom: 4,
-    fontFamily: 'VendSans-Regular',
-  },
-  statNumber: {
-    fontSize: 24,
-    color: '#6B46C1',
-    marginBottom: 2,
-    fontFamily: 'VendSans-Bold',
-  },
-  statLabel: {
-    fontSize: 11,
-    color: '#6B7280',
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   settingsContainer: {
     marginHorizontal: 20,
@@ -448,18 +384,18 @@ const styles = StyleSheet.create({
   sectionIcon: {
     fontSize: 24,
     marginRight: 12,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   sectionTitle: {
     flex: 1,
     fontSize: 16,
     color: '#1F2937',
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
   },
   chevron: {
     fontSize: 20,
     color: '#6B46C1',
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   expandedContent: {
     backgroundColor: '#FAFAFA',
@@ -474,20 +410,23 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#E5E7EB',
   },
+  settingRowLast: {
+    borderBottomWidth: 0,
+  },
   settingLabel: {
     fontSize: 14,
     color: '#374151',
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   settingValue: {
     fontSize: 14,
     color: '#6B46C1',
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   settingChevron: {
     fontSize: 14,
     color: '#6B46C1',
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   primaryButton: {
     backgroundColor: '#6B46C1',
@@ -500,7 +439,7 @@ const styles = StyleSheet.create({
   primaryButtonText: {
     color: 'white',
     fontSize: 14,
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
   },
   signOutButton: {
     backgroundColor: 'white',
@@ -515,13 +454,13 @@ const styles = StyleSheet.create({
   signOutText: {
     color: '#EF4444',
     fontSize: 16,
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
   },
   versionText: {
     textAlign: 'center',
     color: '#9CA3AF',
     fontSize: 12,
     marginBottom: 40,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
 });

@@ -289,12 +289,12 @@ const styles = StyleSheet.create({
   closeIcon: {
     color: '#1F2937',
     fontSize: 18,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   headerTitle: {
     fontSize: 18,
     color: 'white',
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
   },
   placeholder: {
     width: 32,
@@ -325,7 +325,7 @@ const styles = StyleSheet.create({
   progressText: {
     fontSize: 14,
     color: 'rgba(255, 255, 255, 0.8)',
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   scrollContent: {
     flexGrow: 1,
@@ -339,13 +339,13 @@ const styles = StyleSheet.create({
     fontSize: 28,
     color: 'white',
     marginBottom: 8,
-    fontFamily: 'VendSans-Bold',
+    fontFamily: 'Quicksand-Bold',
   },
   stepSubtitle: {
     fontSize: 16,
     color: 'rgba(255, 255, 255, 0.8)',
     marginBottom: 30,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   weightCard: {
     backgroundColor: 'white',
@@ -358,7 +358,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#6B7280',
     marginBottom: 20,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   weightInputContainer: {
     flexDirection: 'row',
@@ -370,13 +370,13 @@ const styles = StyleSheet.create({
     color: '#1F2937',
     minWidth: 120,
     textAlign: 'center',
-    fontFamily: 'VendSans-Bold',
+    fontFamily: 'Quicksand-Bold',
   },
   weightUnit: {
     fontSize: 24,
     color: '#6B7280',
     marginLeft: 8,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   weightChange: {
     flexDirection: 'row',
@@ -386,17 +386,17 @@ const styles = StyleSheet.create({
   weightChangeDown: {
     fontSize: 24,
     color: '#10B981',
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   weightChangeUp: {
     fontSize: 24,
     color: '#EF4444',
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   weightChangeText: {
     fontSize: 16,
     color: '#4B5563',
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   skipButton: {
     alignItems: 'center',
@@ -405,7 +405,7 @@ const styles = StyleSheet.create({
     color: 'rgba(255, 255, 255, 0.7)',
     fontSize: 14,
     textDecorationLine: 'underline',
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   feelingSection: {
     marginBottom: 30,
@@ -414,7 +414,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: 'white',
     marginBottom: 12,
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
   },
   moodContainer: {
     flexDirection: 'row',
@@ -438,7 +438,7 @@ const styles = StyleSheet.create({
   },
   moodEmoji: {
     fontSize: 28,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   energyContainer: {
     flexDirection: 'row',
@@ -459,16 +459,16 @@ const styles = StyleSheet.create({
   energyEmoji: {
     fontSize: 32,
     marginBottom: 8,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   energyLabel: {
     fontSize: 14,
     color: '#6B7280',
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   energyLabelActive: {
     color: '#6B46C1',
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
   },
   textArea: {
     backgroundColor: 'white',
@@ -477,7 +477,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#1F2937',
     minHeight: 80,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   statsCard: {
     backgroundColor: 'white',
@@ -495,18 +495,18 @@ const styles = StyleSheet.create({
   statEmoji: {
     fontSize: 24,
     marginBottom: 8,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   statValue: {
     fontSize: 20,
     color: '#1F2937',
     marginBottom: 4,
-    fontFamily: 'VendSans-Bold',
+    fontFamily: 'Quicksand-Bold',
   },
   statLabel: {
     fontSize: 12,
     color: '#6B7280',
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   reviewSection: {
     marginBottom: 24,
@@ -533,16 +533,16 @@ const styles = StyleSheet.create({
   },
   optionEmoji: {
     fontSize: 16,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   optionText: {
     fontSize: 14,
     color: 'white',
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   optionTextActive: {
     color: '#6B46C1',
-    fontFamily: 'VendSans-Medium',
+    fontFamily: 'Quicksand-Medium',
   },
   recommendationsCard: {
     backgroundColor: '#F9FAFB',
@@ -554,7 +554,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: 'white',
     marginBottom: 12,
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
   },
   recommendation: {
     flexDirection: 'row',
@@ -569,7 +569,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: 'rgba(255, 255, 255, 0.9)',
     lineHeight: 20,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   goalSection: {
     marginBottom: 20,
@@ -581,7 +581,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: 'rgba(255, 255, 255, 0.7)',
     marginBottom: 10,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   quickGoalChip: {
     backgroundColor: '#F9FAFB',
@@ -593,7 +593,7 @@ const styles = StyleSheet.create({
   quickGoalText: {
     color: 'white',
     fontSize: 14,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   navigation: {
     flexDirection: 'row',
@@ -609,7 +609,7 @@ const styles = StyleSheet.create({
   backText: {
     color: 'rgba(255, 255, 255, 0.8)',
     fontSize: 16,
-    fontFamily: 'VendSans-Medium',
+    fontFamily: 'Quicksand-Medium',
   },
   continueButton: {
     backgroundColor: 'white',
@@ -623,7 +623,7 @@ const styles = StyleSheet.create({
   continueText: {
     color: '#6B46C1',
     fontSize: 16,
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
   },
   completeButton: {
     backgroundColor: '#10B981',
@@ -637,6 +637,6 @@ const styles = StyleSheet.create({
   completeText: {
     color: 'white',
     fontSize: 16,
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
   },
 });

@@ -1,41 +1,35 @@
 /**
- * Font utility for mapping font weights to VendSans font families
+ * Font utility for mapping font weights to Quicksand font families
+ * Note: Quicksand doesn't have italic variants, so italic parameter is ignored
  */
 
 export const getFontFamily = (weight?: string, italic?: boolean): string => {
-  const isItalic = italic || false;
-
   switch (weight) {
     case 'bold':
     case '700':
-      return isItalic ? 'VendSans-BoldItalic' : 'VendSans-Bold';
+      return 'Quicksand-Bold';
 
     case '600':
-      return isItalic ? 'VendSans-SemiBoldItalic' : 'VendSans-SemiBold';
+      return 'Quicksand-SemiBold';
 
     case '500':
-      return isItalic ? 'VendSans-MediumItalic' : 'VendSans-Medium';
+      return 'Quicksand-Medium';
 
     case '300':
-      return isItalic ? 'VendSans-LightItalic' : 'VendSans-Light';
+      return 'Quicksand-Light';
 
     case 'normal':
     case '400':
     default:
-      return isItalic ? 'VendSans-Italic' : 'VendSans-Regular';
+      return 'Quicksand-Regular';
   }
 };
 
 // Font families for direct use
 export const Fonts = {
-  regular: 'VendSans-Regular',
-  italic: 'VendSans-Italic',
-  light: 'VendSans-Light',
-  lightItalic: 'VendSans-LightItalic',
-  medium: 'VendSans-Medium',
-  mediumItalic: 'VendSans-MediumItalic',
-  semiBold: 'VendSans-SemiBold',
-  semiBoldItalic: 'VendSans-SemiBoldItalic',
-  bold: 'VendSans-Bold',
-  boldItalic: 'VendSans-BoldItalic',
+  regular: 'Quicksand-Regular',
+  light: 'Quicksand-Light',
+  medium: 'Quicksand-Medium',
+  semiBold: 'Quicksand-SemiBold',
+  bold: 'Quicksand-Bold',
 };

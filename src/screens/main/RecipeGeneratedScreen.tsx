@@ -7,257 +7,164 @@ import {
   SafeAreaView,
   StatusBar,
   ScrollView,
-  ActivityIndicator
+  Dimensions
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { useUser } from '../../context/UserContext';  // ADD THIS
+import { useUser } from '../../context/UserContext';
 
-export default function RecipeGeneratorScreen() {
+const { width } = Dimensions.get('window');
+const CARD_WIDTH = (width - 60) / 2; // Account for padding and gap
+
+export default function RecipeGeneratedScreen() {
   const navigation = useNavigation<any>();
-  const { userData, updateUserData } = useUser();  // ADD THIS
-  const [isLoading, setIsLoading] = useState(false);
-  const [isSaved, setIsSaved] = useState(false);
+  const { userData } = useUser();
+  const [selectedMealId, setSelectedMealId] = useState<string | null>(null);
 
-  // Mock recipe data - in production, this would come from AI generation
-  const recipe = {
-    title: "Mediterranean Grilled Chicken Bowl",
-    description: "A protein-packed, flavorful bowl with perfectly seasoned chicken, quinoa, and fresh vegetables",
-    image: "🥗",
-    prepTime: 15,
-    cookTime: 20,
-    totalTime: 35,
-    servings: 2,
-    difficulty: "Easy",
-    calories: 485,
-    protein: 42,
-    carbs: 38,
-    fats: 18,
-    ingredients: [
-      { amount: "2", unit: "pieces", item: "Chicken breasts (6 oz each)" },
-      { amount: "1", unit: "cup", item: "Quinoa, uncooked" },
-      { amount: "2", unit: "cups", item: "Mixed greens" },
-      { amount: "1", unit: "medium", item: "Cucumber, diced" },
-      { amount: "1", unit: "cup", item: "Cherry tomatoes, halved" },
-      { amount: "1/2", unit: "cup", item: "Red onion, sliced" },
-      { amount: "1/4", unit: "cup", item: "Feta cheese, crumbled" },
-      { amount: "2", unit: "tbsp", item: "Olive oil" },
-      { amount: "1", unit: "tsp", item: "Oregano" },
-      { amount: "2", unit: "cloves", item: "Garlic, minced" },
-    ],
-    tags: ["High Protein", "Gluten-Free", "Mediterranean", "Meal Prep"]
+  // Mock meal options - in production, these would come from AI generation
+  const mealOptions = [
+    {
+      id: '1',
+      title: 'Mediterranean Chicken Bowl',
+      emoji: '🥗',
+      calories: 485,
+      protein: 42,
+      carbs: 38,
+      fats: 18,
+    },
+    {
+      id: '2',
+      title: 'Teriyaki Salmon Rice',
+      emoji: '🍣',
+      calories: 520,
+      protein: 38,
+      carbs: 45,
+      fats: 20,
+    },
+    {
+      id: '3',
+      title: 'Veggie Stir-Fry Bowl',
+      emoji: '🥘',
+      calories: 380,
+      protein: 15,
+      carbs: 52,
+      fats: 14,
+    },
+    {
+      id: '4',
+      title: 'Grilled Steak Plate',
+      emoji: '🥩',
+      calories: 550,
+      protein: 48,
+      carbs: 32,
+      fats: 24,
+    },
+  ];
+
+  const handleMealSelect = (mealId: string) => {
+    setSelectedMealId(mealId);
   };
 
-  const handleRegenerate = () => {
-    setIsLoading(true);
-    // Simulate API call
-    setTimeout(() => {
-      updateUserData({  // ADD THIS - increment recipes generated
-        totalRecipes: userData.totalRecipes + 1
-      });
-      setIsLoading(false);
-      // In production, this would fetch new recipe
-    }, 1500);
-  };
-
-  const handleSaveRecipe = () => {
-    setIsSaved(!isSaved);
-    if (!isSaved) {  // ADD THIS - save to global state when saving
-      const updatedSavedRecipes = [...userData.savedRecipes, recipe];
-      updateUserData({ 
-        savedRecipes: updatedSavedRecipes 
-      });
+  const handleSelectMeal = () => {
+    if (selectedMealId) {
+      // Navigate to the Recipe Review screen
+      navigation.navigate('RecipeReview');
     }
-    // In production, this would also save to database
-  };
-
-  const handleStartCooking = () => {
-    navigation.navigate('EquipmentChecklist');
-  };
-
-  const handleCustomize = () => {
-    // Navigate to customization screen or open modal
-    console.log('Customize recipe');
   };
 
   return (
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" />
-        <SafeAreaView style={styles.safeArea}>
-          <ScrollView 
-            contentContainerStyle={styles.scrollContent}
-            showsVerticalScrollIndicator={false}
+      <SafeAreaView style={styles.safeArea}>
+        <ScrollView
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+        >
+          {/* Header */}
+          <View style={styles.header}>
+            <TouchableOpacity
+              style={styles.backButton}
+              onPress={() => navigation.goBack()}
+            >
+              <Text style={styles.backIcon}>←</Text>
+            </TouchableOpacity>
+            <Text style={styles.headerTitle}>Choose Your Meal</Text>
+            <View style={styles.placeholder} />
+          </View>
+
+          {/* Subtitle */}
+          <Text style={styles.subtitle}>
+            Based on your preferences, here are 4 personalized meal options
+          </Text>
+
+          {/* 2x2 Grid of Meal Options */}
+          <View style={styles.gridContainer}>
+            {mealOptions.map((meal) => (
+              <TouchableOpacity
+                key={meal.id}
+                style={[
+                  styles.mealCard,
+                  selectedMealId === meal.id && styles.mealCardSelected
+                ]}
+                onPress={() => handleMealSelect(meal.id)}
+                activeOpacity={0.7}
+              >
+                {/* Selection Indicator */}
+                {selectedMealId === meal.id && (
+                  <View style={styles.selectionIndicator}>
+                    <Text style={styles.checkmark}>✓</Text>
+                  </View>
+                )}
+
+                {/* Meal Emoji */}
+                <Text style={styles.mealEmoji}>{meal.emoji}</Text>
+
+                {/* Meal Title */}
+                <Text style={styles.mealTitle} numberOfLines={2}>
+                  {meal.title}
+                </Text>
+
+                {/* Macros */}
+                <View style={styles.macrosContainer}>
+                  <View style={styles.macroRow}>
+                    <Text style={styles.macroLabel}>Cal</Text>
+                    <Text style={styles.macroValue}>{meal.calories}</Text>
+                  </View>
+                  <View style={styles.macroRow}>
+                    <Text style={styles.macroLabel}>P</Text>
+                    <Text style={styles.macroValue}>{meal.protein}g</Text>
+                  </View>
+                  <View style={styles.macroRow}>
+                    <Text style={styles.macroLabel}>C</Text>
+                    <Text style={styles.macroValue}>{meal.carbs}g</Text>
+                  </View>
+                  <View style={styles.macroRow}>
+                    <Text style={styles.macroLabel}>F</Text>
+                    <Text style={styles.macroValue}>{meal.fats}g</Text>
+                  </View>
+                </View>
+              </TouchableOpacity>
+            ))}
+          </View>
+
+          {/* Select Meal Button */}
+          <TouchableOpacity
+            style={[
+              styles.selectButton,
+              !selectedMealId && styles.selectButtonDisabled
+            ]}
+            onPress={handleSelectMeal}
+            disabled={!selectedMealId}
+            activeOpacity={0.8}
           >
-            {/* Header */}
-            <View style={styles.header}>
-              <TouchableOpacity 
-                style={styles.backButton}
-                onPress={() => navigation.goBack()}
-              >
-                <Text style={styles.backIcon}>←</Text>
-              </TouchableOpacity>
-              <Text style={styles.headerTitle}>Your Recipe</Text>
-              <TouchableOpacity 
-                style={styles.saveButton}
-                onPress={handleSaveRecipe}
-              >
-                <Text style={styles.saveIcon}>{isSaved ? '❤️' : '🤍'}</Text>
-              </TouchableOpacity>
-            </View>
-
-            {isLoading ? (
-              <View style={styles.loadingContainer}>
-                <ActivityIndicator size="large" color="#6B46C1" />
-                <Text style={styles.loadingText}>Generating new recipe...</Text>
-              </View>
-            ) : (
-              <>
-                {/* Recipe Card */}
-                <View style={styles.recipeCard}>
-                  {/* Recipe Image */}
-                  <View style={styles.imageContainer}>
-                    <Text style={styles.recipeEmoji}>{recipe.image}</Text>
-                    <View style={styles.difficultyBadge}>
-                      <Text style={styles.difficultyText}>{recipe.difficulty}</Text>
-                    </View>
-                  </View>
-
-                  {/* Recipe Info */}
-                  <View style={styles.recipeInfo}>
-                    <Text style={styles.recipeTitle}>{recipe.title}</Text>
-                    <Text style={styles.recipeDescription}>{recipe.description}</Text>
-
-                    {/* Time Stats */}
-                    <View style={styles.timeStats}>
-                      <View style={styles.timeStat}>
-                        <Text style={styles.timeIcon}>⏱️</Text>
-                        <View>
-                          <Text style={styles.timeValue}>{recipe.prepTime} min</Text>
-                          <Text style={styles.timeLabel}>Prep</Text>
-                        </View>
-                      </View>
-                      <View style={styles.timeStat}>
-                        <Text style={styles.timeIcon}>🔥</Text>
-                        <View>
-                          <Text style={styles.timeValue}>{recipe.cookTime} min</Text>
-                          <Text style={styles.timeLabel}>Cook</Text>
-                        </View>
-                      </View>
-                      <View style={styles.timeStat}>
-                        <Text style={styles.timeIcon}>⏰</Text>
-                        <View>
-                          <Text style={styles.timeValue}>{recipe.totalTime} min</Text>
-                          <Text style={styles.timeLabel}>Total</Text>
-                        </View>
-                      </View>
-                    </View>
-
-                    {/* Macros */}
-                    <View style={styles.macrosContainer}>
-                      <Text style={styles.macrosTitle}>Nutrition per serving</Text>
-                      <View style={styles.macrosGrid}>
-                        <View style={styles.macroItem}>
-                          <Text style={styles.macroValue}>{recipe.calories}</Text>
-                          <Text style={styles.macroLabel}>Calories</Text>
-                        </View>
-                        <View style={styles.macroItem}>
-                          <Text style={styles.macroValue}>{recipe.protein}g</Text>
-                          <Text style={styles.macroLabel}>Protein</Text>
-                        </View>
-                        <View style={styles.macroItem}>
-                          <Text style={styles.macroValue}>{recipe.carbs}g</Text>
-                          <Text style={styles.macroLabel}>Carbs</Text>
-                        </View>
-                        <View style={styles.macroItem}>
-                          <Text style={styles.macroValue}>{recipe.fats}g</Text>
-                          <Text style={styles.macroLabel}>Fats</Text>
-                        </View>
-                      </View>
-                    </View>
-
-                    {/* Tags */}
-                    <View style={styles.tagsContainer}>
-                      {recipe.tags.map((tag, index) => (
-                        <View key={index} style={styles.tag}>
-                          <Text style={styles.tagText}>{tag}</Text>
-                        </View>
-                      ))}
-                    </View>
-
-                    {/* Ingredients Preview */}
-                    <View style={styles.ingredientsPreview}>
-                      <Text style={styles.ingredientsTitle}>
-                        Ingredients ({recipe.ingredients.length} items)
-                      </Text>
-                      <View style={styles.ingredientsList}>
-                        {recipe.ingredients.slice(0, 3).map((ing, index) => (
-                          <Text key={index} style={styles.ingredientItem}>
-                            • {ing.amount} {ing.unit} {ing.item}
-                          </Text>
-                        ))}
-                        {recipe.ingredients.length > 3 && (
-                          <Text style={styles.moreIngredients}>
-                            + {recipe.ingredients.length - 3} more ingredients
-                          </Text>
-                        )}
-                      </View>
-                    </View>
-                  </View>
-                </View>
-
-                {/* Action Buttons */}
-                <View style={styles.actionButtons}>
-                  <TouchableOpacity
-                    style={styles.primaryButton}
-                    onPress={handleStartCooking}
-                    activeOpacity={0.8}
-                  >
-                    <Text style={styles.primaryButtonText}>Start Cooking →</Text>
-                  </TouchableOpacity>
-
-                  <View style={styles.secondaryButtons}>
-                    <TouchableOpacity
-                      style={styles.secondaryButton}
-                      onPress={handleCustomize}
-                      activeOpacity={0.8}
-                    >
-                      <Text style={styles.secondaryButtonIcon}>✏️</Text>
-                      <Text style={styles.secondaryButtonText}>Customize</Text>
-                    </TouchableOpacity>
-                    
-                    <TouchableOpacity
-                      style={styles.secondaryButton}
-                      onPress={handleRegenerate}
-                      activeOpacity={0.8}
-                    >
-                      <Text style={styles.secondaryButtonIcon}>🔄</Text>
-                      <Text style={styles.secondaryButtonText}>Regenerate</Text>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-
-                {/* Quick Actions */}
-                <View style={styles.quickActions}>
-                  <TouchableOpacity style={styles.quickAction}>
-                    <Text style={styles.quickActionIcon}>📤</Text>
-                    <Text style={styles.quickActionText}>Share</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.quickAction}>
-                    <Text style={styles.quickActionIcon}>🛒</Text>
-                    <Text style={styles.quickActionText}>Shop</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.quickAction}>
-                    <Text style={styles.quickActionIcon}>📅</Text>
-                    <Text style={styles.quickActionText}>Plan</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.quickAction}>
-                    <Text style={styles.quickActionIcon}>📝</Text>
-                    <Text style={styles.quickActionText}>Notes</Text>
-                  </TouchableOpacity>
-                </View>
-              </>
-            )}
-          </ScrollView>
-        </SafeAreaView>
+            <Text style={[
+              styles.selectButtonText,
+              !selectedMealId && styles.selectButtonTextDisabled
+            ]}>
+              Select Meal
+            </Text>
+          </TouchableOpacity>
+        </ScrollView>
+      </SafeAreaView>
     </View>
   );
 }
@@ -279,7 +186,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginTop: 20,
-    marginBottom: 20,
+    marginBottom: 16,
   },
   backButton: {
     width: 40,
@@ -290,245 +197,129 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   backIcon: {
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
     color: '#1F2937',
     fontSize: 24,
   },
   headerTitle: {
-    fontFamily: 'VendSans-SemiBold',
-    fontSize: 18,
+    fontFamily: 'Quicksand-Bold',
+    fontSize: 20,
     color: '#1F2937',
   },
-  saveButton: {
+  placeholder: {
     width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#F3F4F6',
-    justifyContent: 'center',
-    alignItems: 'center',
   },
-  saveIcon: {
-    fontSize: 20,
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: 100,
-  },
-  loadingText: {
-    fontFamily: 'VendSans-Regular',
+  subtitle: {
+    fontFamily: 'Quicksand-Regular',
+    fontSize: 14,
     color: '#6B7280',
-    marginTop: 16,
-    fontSize: 16,
+    textAlign: 'center',
+    marginBottom: 24,
+    lineHeight: 20,
+    paddingHorizontal: 20,
   },
-  recipeCard: {
-    backgroundColor: 'white',
-    borderRadius: 24,
-    overflow: 'hidden',
-    marginBottom: 20,
+  gridContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    gap: 16,
+    marginBottom: 32,
+  },
+  mealCard: {
+    width: CARD_WIDTH,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 2,
+    borderColor: '#E5E7EB',
+    borderRadius: 20,
+    padding: 16,
+    alignItems: 'center',
+    position: 'relative',
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 4,
+      height: 2,
     },
-    shadowOpacity: 0.15,
-    shadowRadius: 8,
-    elevation: 5,
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
-  imageContainer: {
-    height: 180,
-    backgroundColor: '#F3F4F6',
+  mealCardSelected: {
+    borderColor: '#6B46C1',
+    backgroundColor: '#F3F0FF',
+  },
+  selectionIndicator: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: '#6B46C1',
     justifyContent: 'center',
     alignItems: 'center',
-    position: 'relative',
   },
-  recipeEmoji: {
-    fontSize: 80,
-  },
-  difficultyBadge: {
-    position: 'absolute',
-    top: 16,
-    right: 16,
-    backgroundColor: '#10B981',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 12,
-  },
-  difficultyText: {
-    fontFamily: 'VendSans-SemiBold',
-    color: 'white',
-    fontSize: 12,
-  },
-  recipeInfo: {
-    padding: 20,
-  },
-  recipeTitle: {
-    fontFamily: 'VendSans-Bold',
-    fontSize: 24,
-    color: '#1F2937',
-    marginBottom: 8,
-  },
-  recipeDescription: {
-    fontFamily: 'VendSans-Regular',
+  checkmark: {
+    fontFamily: 'Quicksand-Bold',
+    color: '#FFFFFF',
     fontSize: 14,
-    color: '#6B7280',
-    marginBottom: 20,
-    lineHeight: 20,
   },
-  timeStats: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 20,
+  mealEmoji: {
+    fontSize: 48,
+    marginBottom: 12,
   },
-  timeStat: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  timeIcon: {
-    fontSize: 20,
-  },
-  timeValue: {
-    fontFamily: 'VendSans-SemiBold',
+  mealTitle: {
+    fontFamily: 'Quicksand-SemiBold',
     fontSize: 14,
     color: '#1F2937',
-  },
-  timeLabel: {
-    fontFamily: 'VendSans-Regular',
-    fontSize: 12,
-    color: '#9CA3AF',
+    textAlign: 'center',
+    marginBottom: 12,
+    height: 36,
+    lineHeight: 18,
   },
   macrosContainer: {
-    backgroundColor: '#F9FAFB',
-    borderRadius: 16,
-    padding: 16,
-    marginBottom: 20,
-  },
-  macrosTitle: {
-    fontFamily: 'VendSans-SemiBold',
-    fontSize: 12,
-    color: '#6B7280',
-    marginBottom: 12,
-  },
-  macrosGrid: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  macroItem: {
-    alignItems: 'center',
-  },
-  macroValue: {
-    fontFamily: 'VendSans-Bold',
-    fontSize: 18,
-    color: '#6B46C1',
-    marginBottom: 4,
-  },
-  macroLabel: {
-    fontFamily: 'VendSans-Regular',
-    fontSize: 12,
-    color: '#9CA3AF',
-  },
-  tagsContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-    marginBottom: 20,
-  },
-  tag: {
-    backgroundColor: '#F3E8FF',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 12,
-  },
-  tagText: {
-    fontFamily: 'VendSans-Medium',
-    fontSize: 12,
-    color: '#6B46C1',
-  },
-  ingredientsPreview: {
-    borderTopWidth: 1,
-    borderTopColor: '#E5E7EB',
-    paddingTop: 16,
-  },
-  ingredientsTitle: {
-    fontFamily: 'VendSans-SemiBold',
-    fontSize: 16,
-    color: '#1F2937',
-    marginBottom: 12,
-  },
-  ingredientsList: {
+    width: '100%',
     gap: 6,
   },
-  ingredientItem: {
-    fontFamily: 'VendSans-Regular',
-    fontSize: 14,
-    color: '#6B7280',
+  macroRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
-  moreIngredients: {
-    fontFamily: 'VendSans-Regular',
-    fontSize: 14,
+  macroLabel: {
+    fontFamily: 'Quicksand-Medium',
+    fontSize: 11,
     color: '#9CA3AF',
-    fontStyle: 'italic',
-    marginTop: 4,
   },
-  actionButtons: {
-    marginBottom: 20,
+  macroValue: {
+    fontFamily: 'Quicksand-SemiBold',
+    fontSize: 12,
+    color: '#6B46C1',
   },
-  primaryButton: {
+  selectButton: {
     backgroundColor: '#6B46C1',
     paddingVertical: 16,
     borderRadius: 16,
     alignItems: 'center',
-    marginBottom: 12,
+    shadowColor: '#6B46C1',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 5,
   },
-  primaryButtonText: {
-    fontFamily: 'VendSans-SemiBold',
-    color: 'white',
+  selectButtonDisabled: {
+    backgroundColor: '#D1D5DB',
+    shadowOpacity: 0,
+    elevation: 0,
+  },
+  selectButtonText: {
+    fontFamily: 'Quicksand-SemiBold',
+    color: '#FFFFFF',
     fontSize: 18,
   },
-  secondaryButtons: {
-    flexDirection: 'row',
-    gap: 12,
-  },
-  secondaryButton: {
-    flex: 1,
-    flexDirection: 'row',
-    backgroundColor: '#F3F4F6',
-    paddingVertical: 12,
-    borderRadius: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-  },
-  secondaryButtonIcon: {
-    fontSize: 16,
-  },
-  secondaryButtonText: {
-    fontFamily: 'VendSans-Medium',
-    color: '#6B7280',
-    fontSize: 14,
-  },
-  quickActions: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingTop: 20,
-  },
-  quickAction: {
-    flex: 1,
-    alignItems: 'center',
-    backgroundColor: '#F9FAFB',
-    paddingVertical: 12,
-    borderRadius: 12,
-    marginHorizontal: 4,
-  },
-  quickActionIcon: {
-    fontSize: 24,
-    marginBottom: 4,
-  },
-  quickActionText: {
-    fontFamily: 'VendSans-Regular',
-    fontSize: 11,
-    color: '#6B7280',
+  selectButtonTextDisabled: {
+    color: '#9CA3AF',
   },
 });

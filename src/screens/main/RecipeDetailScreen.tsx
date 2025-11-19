@@ -7,7 +7,8 @@ import {
   SafeAreaView,
   StatusBar,
   ScrollView,
-  Modal
+  Modal,
+  TextInput
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -24,6 +25,7 @@ export default function RecipeDetailScreen() {
   const [isFavorite, setIsFavorite] = useState(false);
   const [showRatingModal, setShowRatingModal] = useState(false);
   const [rating, setRating] = useState(0);
+  const [servings, setServings] = useState('2');
 
   // Get recipe from navigation params or current recipe
   const recipeId = route.params?.recipeId;
@@ -293,6 +295,32 @@ export default function RecipeDetailScreen() {
                 )}
               </View>
 
+              {/* Servings Section */}
+              <View style={styles.servingsSection}>
+                <Text style={styles.sectionTitle}>Servings</Text>
+                <TextInput
+                  style={styles.servingsInput}
+                  value={servings}
+                  onChangeText={(text) => {
+                    // Only allow positive integers
+                    const numericValue = text.replace(/[^0-9]/g, '');
+                    setServings(numericValue);
+                  }}
+                  placeholder="Enter number of servings"
+                  placeholderTextColor="#9CA3AF"
+                  keyboardType="number-pad"
+                  maxLength={2}
+                />
+              </View>
+
+              {/* Generate Amazon Fresh Cart Button */}
+              <TouchableOpacity
+                style={styles.amazonFreshButton}
+                activeOpacity={0.8}
+              >
+                <Text style={styles.amazonFreshText}>Generate Amazon Fresh cart</Text>
+              </TouchableOpacity>
+
               {/* Start Cooking Button */}
               <TouchableOpacity
                 style={styles.startCookingButton}
@@ -300,22 +328,6 @@ export default function RecipeDetailScreen() {
                 activeOpacity={0.8}
               >
                 <Text style={styles.startCookingText}>Start Cooking →</Text>
-              </TouchableOpacity>
-            </View>
-
-            {/* Action Buttons */}
-            <View style={styles.actionButtons}>
-              <TouchableOpacity style={styles.secondaryActionButton}>
-                <Text style={styles.secondaryActionIcon}>✏️</Text>
-                <Text style={styles.secondaryActionText}>Edit</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.secondaryActionButton}>
-                <Text style={styles.secondaryActionIcon}>📅</Text>
-                <Text style={styles.secondaryActionText}>Schedule</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.secondaryActionButton}>
-                <Text style={styles.secondaryActionIcon}>🗑️</Text>
-                <Text style={styles.secondaryActionText}>Delete</Text>
               </TouchableOpacity>
             </View>
           </ScrollView>
@@ -385,12 +397,12 @@ const styles = StyleSheet.create({
   backIcon: {
     color: '#1F2937',
     fontSize: 24,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   headerTitle: {
     fontSize: 18,
     color: 'white',
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
   },
   headerActions: {
     flexDirection: 'row',
@@ -406,7 +418,7 @@ const styles = StyleSheet.create({
   },
   actionIcon: {
     fontSize: 16,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   recipeCard: {
     backgroundColor: 'white',
@@ -430,7 +442,7 @@ const styles = StyleSheet.create({
   },
   recipeEmoji: {
     fontSize: 40,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   titleContainer: {
     flex: 1,
@@ -439,14 +451,14 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: '#1F2937',
     marginBottom: 6,
-    fontFamily: 'VendSans-Bold',
+    fontFamily: 'Quicksand-Bold',
   },
   recipeDescription: {
     fontSize: 13,
     color: '#6B7280',
     marginBottom: 12,
     lineHeight: 18,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   quickStats: {
     flexDirection: 'row',
@@ -459,12 +471,12 @@ const styles = StyleSheet.create({
   },
   quickStatIcon: {
     fontSize: 12,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   quickStatText: {
     fontSize: 12,
     color: '#6B7280',
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   historySection: {
     borderTopWidth: 1,
@@ -486,12 +498,12 @@ const styles = StyleSheet.create({
   star: {
     fontSize: 16,
     marginRight: 2,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   ratingText: {
     fontSize: 12,
     color: '#9CA3AF',
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   historyStats: {
     flexDirection: 'row',
@@ -499,7 +511,7 @@ const styles = StyleSheet.create({
   historyText: {
     fontSize: 12,
     color: '#6B7280',
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   tabs: {
     flexDirection: 'row',
@@ -519,7 +531,7 @@ const styles = StyleSheet.create({
   tabText: {
     fontSize: 14,
     color: '#9CA3AF',
-    fontFamily: 'VendSans-Medium',
+    fontFamily: 'Quicksand-Medium',
   },
   tabTextActive: {
     color: '#6B46C1',
@@ -533,7 +545,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#1F2937',
     marginBottom: 12,
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
   },
   instructionItem: {
     flexDirection: 'row',
@@ -551,21 +563,21 @@ const styles = StyleSheet.create({
   instructionNumberText: {
     fontSize: 12,
     color: '#6B46C1',
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
   },
   instructionText: {
     flex: 1,
     fontSize: 14,
     color: '#4B5563',
     lineHeight: 20,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   notesText: {
     fontSize: 14,
     color: '#6B7280',
     lineHeight: 20,
     fontStyle: 'italic',
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   tagsContainer: {
     flexDirection: 'row',
@@ -582,7 +594,7 @@ const styles = StyleSheet.create({
   tagText: {
     fontSize: 12,
     color: '#6B46C1',
-    fontFamily: 'VendSans-Medium',
+    fontFamily: 'Quicksand-Medium',
   },
   ingredientsContent: {},
   ingredientItem: {
@@ -600,17 +612,17 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#9CA3AF',
     marginBottom: 2,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   ingredientName: {
     fontSize: 14,
     color: '#1F2937',
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   ingredientCalories: {
     fontSize: 12,
     color: '#9CA3AF',
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   addToListButton: {
     flexDirection: 'row',
@@ -624,19 +636,19 @@ const styles = StyleSheet.create({
   },
   addToListIcon: {
     fontSize: 16,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   addToListText: {
     fontSize: 14,
     color: '#6B46C1',
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
   },
   nutritionContent: {},
   servingSizeText: {
     fontSize: 12,
     color: '#9CA3AF',
     marginBottom: 16,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   mainMacros: {
     flexDirection: 'row',
@@ -653,12 +665,12 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: '#6B46C1',
     marginBottom: 4,
-    fontFamily: 'VendSans-Bold',
+    fontFamily: 'Quicksand-Bold',
   },
   mainMacroLabel: {
     fontSize: 12,
     color: '#6B7280',
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   detailedNutrition: {},
   nutritionRow: {
@@ -671,12 +683,38 @@ const styles = StyleSheet.create({
   nutritionLabel: {
     fontSize: 14,
     color: '#6B7280',
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   nutritionValue: {
     fontSize: 14,
     color: '#1F2937',
-    fontFamily: 'VendSans-Medium',
+    fontFamily: 'Quicksand-Medium',
+  },
+  servingsSection: {
+    marginBottom: 20,
+  },
+  servingsInput: {
+    fontFamily: 'Quicksand-Regular',
+    backgroundColor: '#F9FAFB',
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    fontSize: 14,
+    color: '#1F2937',
+  },
+  amazonFreshButton: {
+    backgroundColor: '#FF8C00',
+    paddingVertical: 16,
+    borderRadius: 16,
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  amazonFreshText: {
+    color: 'white',
+    fontSize: 16,
+    fontFamily: 'Quicksand-SemiBold',
   },
   startCookingButton: {
     backgroundColor: '#6B46C1',
@@ -687,25 +725,7 @@ const styles = StyleSheet.create({
   startCookingText: {
     color: 'white',
     fontSize: 16,
-    fontFamily: 'VendSans-SemiBold',
-  },
-  actionButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    paddingHorizontal: 20,
-  },
-  secondaryActionButton: {
-    alignItems: 'center',
-  },
-  secondaryActionIcon: {
-    fontSize: 20,
-    marginBottom: 4,
-    fontFamily: 'VendSans-Regular',
-  },
-  secondaryActionText: {
-    fontSize: 12,
-    color: 'rgba(255, 255, 255, 0.8)',
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-SemiBold',
   },
   modalOverlay: {
     flex: 1,
@@ -723,7 +743,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#1F2937',
     marginBottom: 16,
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
   },
   ratingStars: {
     flexDirection: 'row',
@@ -731,6 +751,6 @@ const styles = StyleSheet.create({
   },
   ratingStar: {
     fontSize: 32,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
 });

@@ -57,14 +57,6 @@ export default function SupportScreen() {
 
             {/* Quick Actions */}
             <View style={styles.quickActions}>
-              <TouchableOpacity style={styles.actionCard}>
-                <Text style={styles.actionIcon}>📚</Text>
-                <Text style={styles.actionTitle}>Help Center</Text>
-                <Text style={styles.actionDescription}>
-                  Browse articles and guides
-                </Text>
-              </TouchableOpacity>
-
               <TouchableOpacity style={styles.actionCard} onPress={() => handleFeedbackPress('support')}>
                 <Text style={styles.actionIcon}>💬</Text>
                 <Text style={styles.actionTitle}>Contact Support</Text>
@@ -76,46 +68,6 @@ export default function SupportScreen() {
 
             {/* Settings Sections */}
             <View style={styles.settingsContainer}>
-              {/* Resources Bubble */}
-              <View style={styles.categoryBubble}>
-                <View style={styles.bubbleHeader}>
-                  <Text style={styles.bubbleIcon}>📚</Text>
-                  <Text style={styles.bubbleTitle}>Resources</Text>
-                </View>
-                <View style={styles.bubbleItems}>
-                  <TouchableOpacity style={styles.settingRow}>
-                    <Text style={styles.settingLabel}>Getting Started Guide</Text>
-                    <Text style={styles.chevron}>›</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={[styles.settingRow, styles.settingRowLast]}>
-                    <Text style={styles.settingLabel}>FAQs</Text>
-                    <Text style={styles.chevron}>›</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-
-              {/* Legal Bubble */}
-              <View style={styles.categoryBubble}>
-                <View style={styles.bubbleHeader}>
-                  <Text style={styles.bubbleIcon}>⚖️</Text>
-                  <Text style={styles.bubbleTitle}>Legal</Text>
-                </View>
-                <View style={styles.bubbleItems}>
-                  <TouchableOpacity style={styles.settingRow}>
-                    <Text style={styles.settingLabel}>Privacy Policy</Text>
-                    <Text style={styles.chevron}>›</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.settingRow}>
-                    <Text style={styles.settingLabel}>Terms of Service</Text>
-                    <Text style={styles.chevron}>›</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={[styles.settingRow, styles.settingRowLast]}>
-                    <Text style={styles.settingLabel}>Licenses</Text>
-                    <Text style={styles.chevron}>›</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-
               {/* Feedback Bubble */}
               <View style={styles.categoryBubble}>
                 <View style={styles.bubbleHeader}>
@@ -213,12 +165,12 @@ const styles = StyleSheet.create({
   backIcon: {
     color: '#1F2937',
     fontSize: 24,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   headerTitle: {
     fontSize: 18,
     color: '#1F2937',
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
   },
   placeholder: {
     width: 40,
@@ -241,20 +193,20 @@ const styles = StyleSheet.create({
   actionIcon: {
     fontSize: 32,
     marginBottom: 8,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   actionTitle: {
     fontSize: 14,
     color: '#1F2937',
     marginBottom: 4,
     textAlign: 'center',
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
   },
   actionDescription: {
     fontSize: 11,
     color: '#6B7280',
     textAlign: 'center',
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   settingsContainer: {
     marginHorizontal: 20,
@@ -282,13 +234,13 @@ const styles = StyleSheet.create({
   bubbleIcon: {
     fontSize: 24,
     marginRight: 12,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   bubbleTitle: {
     flex: 1,
     fontSize: 16,
     color: '#1F2937',
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
   },
   bubbleItems: {
     backgroundColor: '#FAFAFA',
@@ -308,12 +260,12 @@ const styles = StyleSheet.create({
   settingLabel: {
     fontSize: 14,
     color: '#374151',
-    fontFamily: 'VendSans-Medium',
+    fontFamily: 'Quicksand-Medium',
   },
   chevron: {
     fontSize: 14,
     color: '#6B46C1',
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   dangerZone: {
     marginHorizontal: 20,
@@ -322,7 +274,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#6B7280',
     marginBottom: 12,
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
   },
   dangerButton: {
     backgroundColor: 'rgba(239, 68, 68, 0.1)',
@@ -335,7 +287,7 @@ const styles = StyleSheet.create({
   dangerButtonText: {
     color: '#EF4444',
     fontSize: 16,
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
   },
   infoContainer: {
     paddingHorizontal: 20,
@@ -346,12 +298,12 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#9CA3AF',
     marginTop: 8,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   infoValue: {
     fontSize: 14,
     color: '#6B7280',
     marginTop: 2,
-    fontFamily: 'VendSans-Medium',
+    fontFamily: 'Quicksand-Medium',
   },
 });

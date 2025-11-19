@@ -672,7 +672,7 @@ const styles = StyleSheet.create({
     borderRadius: 2,
   },
   progressText: {
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
     color: '#6B7280',
     fontSize: 12,
     marginTop: 8,
@@ -683,7 +683,7 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   backButtonText: {
-    fontFamily: 'VendSans-Medium',
+    fontFamily: 'Quicksand-Medium',
     color: '#6B46C1',
     fontSize: 16,
   },
@@ -691,13 +691,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   title: {
-    fontFamily: 'VendSans-Bold',
+    fontFamily: 'Quicksand-Bold',
     fontSize: 28,
     color: '#1F2937',
     marginBottom: 10,
   },
   subtitle: {
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
     fontSize: 16,
     color: '#6B7280',
     marginBottom: 25,
@@ -733,14 +733,14 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   recipeTitle: {
-    fontFamily: 'VendSans-Bold',
+    fontFamily: 'Quicksand-Bold',
     fontSize: 20,
     color: '#1F2937',
     marginBottom: 8,
     height: 30,
   },
   recipeDescription: {
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
     fontSize: 14,
     color: '#6B7280',
     marginBottom: 16,
@@ -761,7 +761,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   statValue: {
-    fontFamily: 'VendSans-Medium',
+    fontFamily: 'Quicksand-Medium',
     fontSize: 14,
     color: '#4B5563',
   },
@@ -776,13 +776,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   macroLabel: {
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
     fontSize: 12,
     color: '#9CA3AF',
     marginBottom: 4,
   },
   macroValue: {
-    fontFamily: 'VendSans-Bold',
+    fontFamily: 'Quicksand-Bold',
     fontSize: 18,
     color: '#6B46C1',
   },
@@ -801,7 +801,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   navButtonText: {
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
     fontSize: 20,
     color: '#4B5563',
   },
@@ -822,7 +822,7 @@ const styles = StyleSheet.create({
     marginBottom: 25,
   },
   benefitsTitle: {
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
     fontSize: 18,
     color: '#1F2937',
     marginBottom: 12,
@@ -838,7 +838,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   benefitText: {
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
     fontSize: 15,
     color: '#4B5563',
   },
@@ -857,7 +857,7 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   continueButtonText: {
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
     color: '#FFFFFF',
     fontSize: 18,
     textAlign: 'center',

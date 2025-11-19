@@ -171,7 +171,7 @@ const styles = StyleSheet.create({
     borderRadius: 2,
   },
   progressText: {
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
     color: '#6B7280',
     fontSize: 12,
     marginTop: 8,
@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   backButtonText: {
-    fontFamily: 'VendSans-Medium',
+    fontFamily: 'Quicksand-Medium',
     color: '#6B46C1',
     fontSize: 16,
   },
@@ -190,13 +190,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   title: {
-    fontFamily: 'VendSans-Bold',
+    fontFamily: 'Quicksand-Bold',
     fontSize: 32,
     color: '#6B46C1',
     marginBottom: 10,
   },
   subtitle: {
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
     fontSize: 16,
     color: '#6B7280',
     marginBottom: 40,
@@ -209,13 +209,13 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   label: {
-    fontFamily: 'VendSans-Medium',
+    fontFamily: 'Quicksand-Medium',
     color: '#1F2937',
     fontSize: 14,
     marginBottom: 8,
   },
   input: {
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
     backgroundColor: '#F9FAFB',
     borderWidth: 1,
     borderColor: '#E5E7EB',
@@ -242,7 +242,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#D1D5DB',
   },
   continueButtonText: {
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
     color: 'white',
     fontSize: 18,
     textAlign: 'center',

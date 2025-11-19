@@ -1,8 +1,45 @@
 import React from 'react';
 import { View, TouchableOpacity, Text, StyleSheet, Platform } from 'react-native';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
+import { useNavigationState } from '@react-navigation/native';
 
 export default function FloatingTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
+  // Get the current route name from the nested navigator
+  const currentRoute = useNavigationState(navState => {
+    if (!navState) return null;
+
+    // Get the active tab
+    const activeTab = navState.routes[navState.index];
+
+    // If the tab has a nested state (stack navigator), get the active screen
+    if (activeTab.state) {
+      const nestedState = activeTab.state as any;
+      if (nestedState.routes && nestedState.index !== undefined) {
+        const activeScreen = nestedState.routes[nestedState.index];
+        return activeScreen.name;
+      }
+    }
+
+    // If no nested state, we're on the initial screen of the stack
+    // Map tab names to their initial screen names
+    const tabToInitialScreen: Record<string, string> = {
+      'HomeTab': 'Home',
+      'RecipesTab': 'RecipeBook',
+      'ProgressTab': 'Progress',
+      'SettingsTab': 'SettingsMain'
+    };
+
+    return tabToInitialScreen[activeTab.name] || null;
+  });
+
+  // List of screens where tab bar should be visible
+  const screensWithTabBar = ['Home', 'RecipeBook', 'Progress', 'SettingsMain'];
+
+  // Hide tab bar if not on one of the main screens
+  if (!currentRoute || !screensWithTabBar.includes(currentRoute)) {
+    return null;
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.tabBar}>
@@ -26,6 +63,9 @@ export default function FloatingTabBar({ state, descriptors, navigation }: Botto
 
             if (!isFocused && !event.defaultPrevented) {
               navigation.navigate(route.name);
+            } else if (isFocused && route.name === 'HomeTab') {
+              // If already on Home tab, reset to HomeScreen
+              navigation.navigate('HomeTab', { screen: 'Home' });
             }
           };
 
@@ -120,7 +160,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(107, 70, 193, 0.4)',
   },
   tabLabel: {
-    fontFamily: 'VendSans-Medium',
+    fontFamily: 'Quicksand-Medium',
     fontSize: 11,
     color: 'rgba(255, 255, 255, 0.75)',
     marginTop: 2,
@@ -128,6 +168,6 @@ const styles = StyleSheet.create({
   },
   tabLabelActive: {
     color: '#FFFFFF',
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
   },
 });

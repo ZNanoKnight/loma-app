@@ -99,13 +99,14 @@ export default function PaywallScreen() {
 
   const handleComplete = () => {
     if (isFormValid) {
-      // Mark onboarding as complete
+      // Mark onboarding as complete and authenticate user
       // The RootNavigator will automatically re-render and show MainApp
       updateUserData({
         email,
         selectedPlan,
         password,
-        hasCompletedOnboarding: true
+        hasCompletedOnboarding: true,
+        isAuthenticated: true
       });
     }
   };
@@ -398,7 +399,7 @@ const styles = StyleSheet.create({
     borderRadius: 2,
   },
   progressText: {
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
     color: '#6B7280',
     fontSize: 12,
     marginTop: 8,
@@ -409,7 +410,7 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   backButtonText: {
-    fontFamily: 'VendSans-Medium',
+    fontFamily: 'Quicksand-Medium',
     color: '#6B46C1',
     fontSize: 16,
   },
@@ -417,13 +418,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   title: {
-    fontFamily: 'VendSans-Bold',
+    fontFamily: 'Quicksand-Bold',
     fontSize: 32,
     color: '#1F2937',
     marginBottom: 10,
   },
   subtitle: {
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
     fontSize: 16,
     color: '#6B7280',
     marginBottom: 25,
@@ -458,7 +459,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   popularText: {
-    fontFamily: 'VendSans-Bold',
+    fontFamily: 'Quicksand-Bold',
     fontSize: 10,
     color: 'white',
   },
@@ -466,7 +467,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   planName: {
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
     fontSize: 18,
     color: '#1F2937',
     marginBottom: 4,
@@ -479,7 +480,7 @@ const styles = StyleSheet.create({
     alignItems: 'baseline',
   },
   planPrice: {
-    fontFamily: 'VendSans-Bold',
+    fontFamily: 'Quicksand-Bold',
     fontSize: 24,
     color: '#1F2937',
   },
@@ -487,7 +488,7 @@ const styles = StyleSheet.create({
     color: '#6B46C1',
   },
   planPeriod: {
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
     fontSize: 14,
     color: '#6B7280',
     marginLeft: 4,
@@ -496,7 +497,7 @@ const styles = StyleSheet.create({
     color: '#6B46C1',
   },
   planSavings: {
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
     fontSize: 12,
     color: '#10B981',
     marginTop: 4,
@@ -505,7 +506,7 @@ const styles = StyleSheet.create({
     color: '#10B981',
   },
   planMunchies: {
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
     fontSize: 13,
     color: '#6B7280',
     marginTop: 4,
@@ -514,7 +515,7 @@ const styles = StyleSheet.create({
     color: '#6B46C1',
   },
   planMunchiesHighlight: {
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
     color: '#6B46C1',
   },
   checkmark: {
@@ -526,7 +527,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   checkmarkText: {
-    fontFamily: 'VendSans-Bold',
+    fontFamily: 'Quicksand-Bold',
     color: 'white',
     fontSize: 14,
   },
@@ -534,7 +535,7 @@ const styles = StyleSheet.create({
     marginBottom: 25,
   },
   sectionTitle: {
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
     fontSize: 20,
     color: '#1F2937',
     marginBottom: 16,
@@ -543,13 +544,13 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   label: {
-    fontFamily: 'VendSans-Medium',
+    fontFamily: 'Quicksand-Medium',
     color: '#1F2937',
     fontSize: 14,
     marginBottom: 8,
   },
   input: {
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
     backgroundColor: '#FFFFFF',
     borderWidth: 1,
     borderColor: '#E5E7EB',
@@ -579,19 +580,19 @@ const styles = StyleSheet.create({
     borderColor: '#6B46C1',
   },
   checkboxMark: {
-    fontFamily: 'VendSans-Bold',
+    fontFamily: 'Quicksand-Bold',
     color: '#FFFFFF',
     fontSize: 14,
   },
   termsText: {
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
     flex: 1,
     fontSize: 14,
     color: '#6B7280',
     lineHeight: 20,
   },
   termsLink: {
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
     color: '#6B46C1',
     textDecorationLine: 'underline',
   },
@@ -608,7 +609,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   featureText: {
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
     fontSize: 12,
     color: '#6B7280',
   },
@@ -630,7 +631,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#D1D5DB',
   },
   completeButtonText: {
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
     color: '#FFFFFF',
     fontSize: 18,
     textAlign: 'center',
@@ -639,7 +640,7 @@ const styles = StyleSheet.create({
     color: '#9CA3AF',
   },
   securityNote: {
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
     fontSize: 12,
     color: '#6B7280',
     textAlign: 'center',
@@ -658,12 +659,12 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   tokenTitle: {
-    fontFamily: 'VendSans-Bold',
+    fontFamily: 'Quicksand-Bold',
     fontSize: 22,
     color: '#1F2937',
   },
   tokenSubtitle: {
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
     fontSize: 14,
     color: '#6B7280',
     marginBottom: 16,
@@ -692,19 +693,19 @@ const styles = StyleSheet.create({
     marginRight: 12,
   },
   tokenBulletText: {
-    fontFamily: 'VendSans-Bold',
+    fontFamily: 'Quicksand-Bold',
     color: '#FFFFFF',
     fontSize: 14,
   },
   tokenText: {
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
     fontSize: 15,
     color: '#1F2937',
     lineHeight: 22,
     flex: 1,
   },
   tokenHighlight: {
-    fontFamily: 'VendSans-Bold',
+    fontFamily: 'Quicksand-Bold',
     color: '#6B46C1',
   },
   tokenBenefitBox: {
@@ -721,7 +722,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   tokenBenefitText: {
-    fontFamily: 'VendSans-Medium',
+    fontFamily: 'Quicksand-Medium',
     fontSize: 14,
     color: '#92400E',
     lineHeight: 20,

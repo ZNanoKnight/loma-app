@@ -171,7 +171,7 @@ const styles = StyleSheet.create({
     borderRadius: 2,
   },
   progressText: {
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
     color: '#6B7280',
     fontSize: 12,
     marginTop: 8,
@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   backButtonText: {
-    fontFamily: 'VendSans-Medium',
+    fontFamily: 'Quicksand-Medium',
     color: '#6B46C1',
     fontSize: 16,
   },
@@ -193,13 +193,13 @@ const styles = StyleSheet.create({
     marginBottom: 35,
   },
   sectionTitle: {
-    fontFamily: 'VendSans-Bold',
+    fontFamily: 'Quicksand-Bold',
     fontSize: 26,
     color: '#1F2937',
     marginBottom: 8,
   },
   sectionSubtitle: {
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
     fontSize: 15,
     color: '#6B7280',
     marginBottom: 20,
@@ -230,7 +230,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   optionTitle: {
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
     fontSize: 16,
     color: '#1F2937',
     marginBottom: 2,
@@ -239,7 +239,7 @@ const styles = StyleSheet.create({
     color: '#6B46C1',
   },
   optionDescription: {
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
     fontSize: 13,
     color: '#6B7280',
   },
@@ -265,7 +265,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#D1D5DB',
   },
   continueButtonText: {
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
     color: '#FFFFFF',
     fontSize: 18,
     textAlign: 'center',

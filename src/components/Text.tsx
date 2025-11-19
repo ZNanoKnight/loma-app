@@ -9,22 +9,22 @@ interface CustomTextProps extends TextProps {
 }
 
 export default function Text({ style, bold, semiBold, medium, light, ...props }: CustomTextProps) {
-  let fontFamily = 'VendSans-Regular';
+  let fontFamily = 'Quicksand-Regular';
   
-  if (bold) fontFamily = 'VendSans-Bold';
-  else if (semiBold) fontFamily = 'VendSans-SemiBold';
-  else if (medium) fontFamily = 'VendSans-Medium';
-  else if (light) fontFamily = 'VendSans-Light';
+  if (bold) fontFamily = 'Quicksand-Bold';
+  else if (semiBold) fontFamily = 'Quicksand-SemiBold';
+  else if (medium) fontFamily = 'Quicksand-Medium';
+  else if (light) fontFamily = 'Quicksand-Light';
   
   // Handle fontWeight from styles (simplified)
   if (!bold && !semiBold && !medium && !light && style) {
     const flatStyle = Array.isArray(style) ? Object.assign({}, ...style) : style;
     if (flatStyle && typeof flatStyle === 'object' && 'fontWeight' in flatStyle) {
       const weight = (flatStyle as TextStyle).fontWeight;
-      if (weight === 'bold' || weight === '700') fontFamily = 'VendSans-Bold';
-      else if (weight === '600') fontFamily = 'VendSans-SemiBold';
-      else if (weight === '500') fontFamily = 'VendSans-Medium';
-      else if (weight === '300') fontFamily = 'VendSans-Light';
+      if (weight === 'bold' || weight === '700') fontFamily = 'Quicksand-Bold';
+      else if (weight === '600') fontFamily = 'Quicksand-SemiBold';
+      else if (weight === '500') fontFamily = 'Quicksand-Medium';
+      else if (weight === '300') fontFamily = 'Quicksand-Light';
     }
   }
   

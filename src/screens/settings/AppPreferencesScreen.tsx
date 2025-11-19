@@ -156,12 +156,12 @@ const styles = StyleSheet.create({
   backIcon: {
     color: '#1F2937',
     fontSize: 24,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   headerTitle: {
     fontSize: 18,
     color: '#1F2937',
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
   },
   placeholder: {
     width: 40,
@@ -188,13 +188,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#1F2937',
     marginBottom: 4,
-    fontFamily: 'VendSans-Medium',
+    fontFamily: 'Quicksand-Medium',
   },
   settingDescription: {
     fontSize: 13,
     color: '#9CA3AF',
     lineHeight: 18,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   settingRight: {
     flexDirection: 'row',
@@ -204,11 +204,11 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#9CA3AF',
     marginRight: 8,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   chevron: {
     fontSize: 18,
     color: '#9CA3AF',
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
 });

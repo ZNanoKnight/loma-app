@@ -222,12 +222,12 @@ const styles = StyleSheet.create({
   backIcon: {
     color: '#1F2937',
     fontSize: 24,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   headerTitle: {
     fontSize: 20,
     color: '#000000',
-    fontFamily: 'VendSans-Bold',
+    fontFamily: 'Quicksand-Bold',
   },
   saveButton: {
     backgroundColor: '#6B46C1',
@@ -238,7 +238,7 @@ const styles = StyleSheet.create({
   saveButtonText: {
     color: 'white',
     fontSize: 14,
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
   },
   avatarSection: {
     alignItems: 'center',
@@ -256,7 +256,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     textAlign: 'center',
     lineHeight: 100,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   avatarImage: {
     width: 100,
@@ -277,12 +277,12 @@ const styles = StyleSheet.create({
   },
   editIcon: {
     fontSize: 16,
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   avatarLabel: {
     fontSize: 14,
     color: '#6B46C1',
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
   },
   formContainer: {
     backgroundColor: 'white',
@@ -302,7 +302,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#1F2937',
     marginBottom: 8,
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
   },
   input: {
     backgroundColor: '#F9FAFB',
@@ -312,7 +312,7 @@ const styles = StyleSheet.create({
     color: '#1F2937',
     borderWidth: 1,
     borderColor: '#E5E7EB',
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
   },
   textArea: {
     height: 100,

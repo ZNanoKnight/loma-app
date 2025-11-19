@@ -23,11 +23,12 @@ const { width, height } = Dimensions.get('window');
 
 export default function WelcomeScreen() {
   const navigation = useNavigation<any>();
-  const { updateUserData } = useUser();
+  const { updateUserData, userData } = useUser();
   const [showSignInModal, setShowSignInModal] = useState(false);
   const [signInStep, setSignInStep] = useState<'email' | 'password'>('email');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   const passwordInputRef = useRef<TextInput>(null);
 
   // Video player for bouncing fruits
@@ -67,69 +68,45 @@ export default function WelcomeScreen() {
   }, []);
 
   const handleSignIn = async () => {
-    // TODO: Implement actual authentication with database
-    // Example implementation when backend is ready:
-    /*
+    // Local authentication - validate credentials against stored data
     try {
       // Validate input
       if (!email || !password) {
-        alert('Please enter both email and password');
+        setErrorMessage('Please enter both email and password');
         return;
       }
 
-      // Call authentication API
-      const response = await fetch('YOUR_API_ENDPOINT/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: email.trim().toLowerCase(),
-          password: password,
-        }),
-      });
+      // Check if email matches stored email
+      const storedEmail = userData.email.toLowerCase();
+      const enteredEmail = email.trim().toLowerCase();
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        // Handle authentication errors
-        alert(data.message || 'Invalid email or password');
+      if (enteredEmail !== storedEmail) {
+        setErrorMessage('Email not found. Please check your email or create an account.');
         return;
       }
 
-      // Store authentication token
-      await AsyncStorage.setItem('authToken', data.token);
-      await AsyncStorage.setItem('userId', data.userId);
+      // Check if password matches stored password
+      if (password !== userData.password) {
+        setErrorMessage('Incorrect password. Please try again.');
+        return;
+      }
 
-      // Update user context with authenticated user data
+      // Authentication successful
+      console.log('Sign in successful:', email);
+      Keyboard.dismiss();
+      setShowSignInModal(false);
+      setErrorMessage('');
+
+      // Set user as authenticated
+      // All other data is already stored in userData, we just need to mark them as authenticated
       updateUserData({
-        email: data.user.email,
-        firstName: data.user.firstName,
-        // ... other user data from API
-      });
-
-      // Navigate to main app
-      navigation.reset({
-        index: 0,
-        routes: [{ name: 'MainTabs' }],
+        isAuthenticated: true,
       });
 
     } catch (error) {
       console.error('Login error:', error);
-      alert('An error occurred during sign in. Please try again.');
+      setErrorMessage('An error occurred during sign in. Please try again.');
     }
-    */
-
-    // TEMPORARY: For now, just navigate to main app for testing
-    console.log('Sign in with:', email, password);
-    Keyboard.dismiss();
-    setShowSignInModal(false);
-
-    // Mark onboarding as completed and update user data
-    updateUserData({
-      email: email.trim().toLowerCase(),
-      hasCompletedOnboarding: true,
-    });
   };
 
   const isValidEmail = (email: string) => {
@@ -139,6 +116,7 @@ export default function WelcomeScreen() {
 
   const handleEmailSubmit = () => {
     if (email.trim() && isValidEmail(email)) {
+      setErrorMessage('');
       setSignInStep('password');
     }
   };
@@ -146,6 +124,7 @@ export default function WelcomeScreen() {
   const handleBackToEmail = () => {
     setSignInStep('email');
     setPassword('');
+    setErrorMessage('');
   };
 
   const handleModalClose = () => {
@@ -153,6 +132,7 @@ export default function WelcomeScreen() {
     setSignInStep('email');
     setEmail('');
     setPassword('');
+    setErrorMessage('');
   };
 
   return (
@@ -304,6 +284,12 @@ export default function WelcomeScreen() {
                       />
                     </View>
 
+                    {errorMessage ? (
+                      <View style={styles.errorContainer}>
+                        <Text style={styles.errorText}>{errorMessage}</Text>
+                      </View>
+                    ) : null}
+
                     <TouchableOpacity
                       style={styles.forgotPasswordButton}
                       onPress={() => console.log('Forgot password')}
@@ -372,7 +358,7 @@ const styles = StyleSheet.create({
     borderStyle: 'dashed',
   },
   placeholderText: {
-    fontFamily: 'VendSans-Medium',
+    fontFamily: 'Quicksand-Medium',
     fontSize: 12,
     color: '#6B46C1',
     textAlign: 'center',
@@ -386,7 +372,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   headline: {
-    fontFamily: 'VendSans-Bold',
+    fontFamily: 'Quicksand-Bold',
     fontSize: 36,
     color: '#6B46C1',  // Purple text
     textAlign: 'left',
@@ -397,14 +383,14 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   rotatingText: {
-    fontFamily: 'VendSans-BoldItalic',
+    fontFamily: 'Quicksand-Bold',
     fontSize: 36,
     color: '#FF8C00',  // Orange text for emphasis
     textAlign: 'left',
     lineHeight: 44,
   },
   subheadline: {
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
     fontSize: 18,
     color: '#4B5563',  // Dark gray text
     textAlign: 'left',
@@ -431,7 +417,7 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   buttonText: {
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
     color: '#FFFFFF',  // White text
     fontSize: 18,
     textAlign: 'center',
@@ -441,12 +427,12 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   signInText: {
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
     color: '#6B7280',  // Gray text
     fontSize: 14,
   },
   signInLink: {
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
     color: '#6B46C1',  // Purple link
     fontSize: 14,
     textDecorationLine: 'underline',
@@ -478,14 +464,14 @@ const styles = StyleSheet.create({
     elevation: 10,
   },
   modalTitle: {
-    fontFamily: 'VendSans-Bold',
+    fontFamily: 'Quicksand-Bold',
     fontSize: 28,
     color: 'white',
     textAlign: 'center',
     marginBottom: 8,
   },
   modalSubtitle: {
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
     fontSize: 16,
     color: 'rgba(255, 255, 255, 0.8)',
     textAlign: 'center',
@@ -495,13 +481,13 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   inputLabel: {
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
     fontSize: 14,
     color: 'white',
     marginBottom: 8,
   },
   input: {
-    fontFamily: 'VendSans-Regular',
+    fontFamily: 'Quicksand-Regular',
     backgroundColor: 'rgba(255, 255, 255, 0.15)',
     borderRadius: 12,
     paddingVertical: 14,
@@ -516,7 +502,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   backButtonText: {
-    fontFamily: 'VendSans-Medium',
+    fontFamily: 'Quicksand-Medium',
     color: 'white',
     fontSize: 16,
   },
@@ -540,7 +526,7 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   modalButtonText: {
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
     color: '#6B46C1',
     fontSize: 18,
     textAlign: 'center',
@@ -551,7 +537,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   forgotPasswordText: {
-    fontFamily: 'VendSans-Medium',
+    fontFamily: 'Quicksand-Medium',
     color: 'rgba(255, 255, 255, 0.8)',
     fontSize: 14,
   },
@@ -560,8 +546,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   closeButtonText: {
-    fontFamily: 'VendSans-SemiBold',
+    fontFamily: 'Quicksand-SemiBold',
     color: 'white',
     fontSize: 16,
+  },
+  errorContainer: {
+    backgroundColor: 'rgba(239, 68, 68, 0.2)',
+    borderRadius: 8,
+    padding: 12,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(239, 68, 68, 0.4)',
+  },
+  errorText: {
+    fontFamily: 'Quicksand-Medium',
+    color: '#FEE2E2',
+    fontSize: 14,
+    textAlign: 'center',
   },
 });
