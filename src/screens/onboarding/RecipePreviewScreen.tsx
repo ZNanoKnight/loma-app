@@ -538,8 +538,8 @@ export default function RecipePreviewScreen() {
 
               {/* Recipe Details */}
               <View style={styles.recipeDetails}>
-                <Text style={styles.recipeTitle}>{currentRecipe.title}</Text>
-                <Text style={styles.recipeDescription}>{currentRecipe.description}</Text>
+                <Text style={styles.recipeTitle} numberOfLines={2}>{currentRecipe.title}</Text>
+                <Text style={styles.recipeDescription} numberOfLines={3}>{currentRecipe.description}</Text>
 
                 {/* Quick Stats */}
                 <View style={styles.statsRow}>
@@ -716,6 +716,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.15,
     shadowRadius: 8,
     elevation: 5,
+    minHeight: 400,
   },
   recipeImageContainer: {
     height: 120,
@@ -736,6 +737,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: '#1F2937',
     marginBottom: 8,
+    height: 30,
   },
   recipeDescription: {
     fontFamily: 'VendSans-Regular',
@@ -743,6 +745,7 @@ const styles = StyleSheet.create({
     color: '#6B7280',
     marginBottom: 16,
     lineHeight: 20,
+    height: 45,
   },
   statsRow: {
     flexDirection: 'row',
@@ -787,7 +790,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: 16,
+    marginTop: 3,
   },
   navButton: {
     width: 40,
