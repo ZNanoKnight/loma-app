@@ -41,4 +41,9 @@ yarn-error.*
 /ios
 /android
 
+DEPLOYMENT_GUIDE.md
+DEPLOYMENT_STEPS.md
+QUICK_DEPLOY.md
+deploy-functions.bat
+
 .env.local
