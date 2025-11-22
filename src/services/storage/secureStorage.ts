@@ -125,4 +125,43 @@ export const SecureStorage = {
       return false;
     }
   },
+
+  /**
+   * Generic set item (for testing and verification)
+   */
+  async setItem(key: string, value: string): Promise<void> {
+    try {
+      await SecureStore.setItemAsync(key, value);
+    } catch (error) {
+      throw new LomaError({
+        code: ErrorCode.STORAGE_ERROR,
+        message: `Failed to store ${key}`,
+        userMessage: 'Failed to save data securely',
+        originalError: error,
+      });
+    }
+  },
+
+  /**
+   * Generic get item (for testing and verification)
+   */
+  async getItem(key: string): Promise<string | null> {
+    try {
+      return await SecureStore.getItemAsync(key);
+    } catch (error) {
+      console.error(`Failed to retrieve ${key}:`, error);
+      return null;
+    }
+  },
+
+  /**
+   * Generic remove item (for testing and verification)
+   */
+  async removeItem(key: string): Promise<void> {
+    try {
+      await SecureStore.deleteItemAsync(key);
+    } catch (error) {
+      console.error(`Failed to remove ${key}:`, error);
+    }
+  },
 };

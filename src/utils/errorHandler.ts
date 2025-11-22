@@ -3,7 +3,9 @@
  * Centralized error handling utilities
  */
 
+import * as Sentry from '@sentry/react-native';
 import { LomaError, ErrorCode, ErrorMessages } from '../services/types';
+import { ENV } from '../config/env';
 
 /**
  * Handle and log errors consistently
@@ -92,22 +94,105 @@ export const isAuthError = (error: unknown): boolean => {
 };
 
 /**
- * Log error to monitoring service (Sentry, etc.)
+ * Log error to monitoring service (Sentry)
  * @param error - Error to log
  * @param context - Additional context
- *
- * TODO: Integrate with Sentry when it's set up
  */
 export const logErrorToMonitoring = (error: unknown, context?: Record<string, any>): void => {
-  // For now, just console.error
-  // In production, this will send to Sentry
+  // Always log to console
   console.error('Error logged to monitoring:', {
     error: error instanceof Error ? error.message : String(error),
     context,
     timestamp: new Date().toISOString(),
   });
 
-  // TODO: Sentry.captureException(error, { extra: context });
+  // Send to Sentry if configured
+  if (ENV.SENTRY_DSN) {
+    try {
+      // Set severity level based on error type
+      const level: Sentry.SeverityLevel = isNetworkError(error)
+        ? 'warning'
+        : isAuthError(error)
+        ? 'info'
+        : 'error';
+
+      // Capture exception with context
+      Sentry.captureException(error, {
+        level,
+        extra: {
+          ...context,
+          timestamp: new Date().toISOString(),
+        },
+        tags: {
+          errorType: error instanceof LomaError ? error.code : 'unknown',
+          context: context?.context || 'unknown',
+        },
+        fingerprint: [
+          // Group similar errors together
+          error instanceof LomaError ? error.code : 'unknown',
+          context?.context || 'default',
+        ],
+      });
+    } catch (sentryError) {
+      // Don't let Sentry errors break the app
+      console.error('Failed to log error to Sentry:', sentryError);
+    }
+  }
+};
+
+/**
+ * Set user context for error tracking
+ * Call this after user logs in to associate errors with specific users
+ * @param userId - User's unique ID
+ * @param email - User's email (optional)
+ * @param username - User's username/name (optional)
+ */
+export const setUserContext = (
+  userId: string,
+  email?: string,
+  username?: string
+): void => {
+  if (ENV.SENTRY_DSN) {
+    Sentry.setUser({
+      id: userId,
+      email: email,
+      username: username,
+    });
+  }
+};
+
+/**
+ * Clear user context (call on logout)
+ */
+export const clearUserContext = (): void => {
+  if (ENV.SENTRY_DSN) {
+    Sentry.setUser(null);
+  }
+};
+
+/**
+ * Add breadcrumb for debugging
+ * Breadcrumbs help trace user actions leading to an error
+ * @param message - Breadcrumb message
+ * @param category - Category (navigation, user-action, etc.)
+ * @param level - Severity level
+ * @param data - Additional data
+ */
+export const addBreadcrumb = (
+  message: string,
+  category: string = 'custom',
+  level: Sentry.SeverityLevel = 'info',
+  data?: Record<string, any>
+): void => {
+  if (ENV.SENTRY_DSN) {
+    Sentry.addBreadcrumb({
+      message,
+      category,
+      level,
+      data,
+      timestamp: Date.now() / 1000,
+    });
+  }
 };
 
 /**

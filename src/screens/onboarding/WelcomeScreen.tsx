@@ -178,7 +178,7 @@ export default function WelcomeScreen() {
             >
               <Text style={styles.buttonText}>Get Started</Text>
             </TouchableOpacity>
-            
+
             <View style={styles.signInRow}>
               <Text style={styles.signInText}>Already have an account? </Text>
               <TouchableOpacity onPress={() => setShowSignInModal(true)}>

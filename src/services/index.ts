@@ -22,5 +22,12 @@ export { RecipeService } from './recipes/recipeService';
 // Subscription
 export { SubscriptionService } from './subscription/subscriptionService';
 
+// Migration
+export { DataMigrationService } from './migration';
+export type { LocalUserData, MigrationResult } from './migration';
+
+// Validation
+export * from './validation';
+
 // Types
 export * from './types';

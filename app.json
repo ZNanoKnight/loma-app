@@ -32,7 +32,15 @@
     },
     "plugins": [
       "expo-font",
-      "expo-video"
+      "expo-video",
+      [
+        "@sentry/react-native/expo",
+        {
+          "url": "https://sentry.io/",
+          "project": "react-native",
+          "organization": "lomaai"
+        }
+      ]
     ],
     "extra": {
       "eas": {
