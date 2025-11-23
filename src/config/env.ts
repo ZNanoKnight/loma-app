@@ -20,6 +20,9 @@ export const ENV = {
 
   // Stripe (Phase 2)
   STRIPE_PUBLISHABLE_KEY: extra.stripePublishableKey as string,
+  STRIPE_PRICE_ID_WEEKLY: extra.stripePriceIdWeekly as string,
+  STRIPE_PRICE_ID_MONTHLY: extra.stripePriceIdMonthly as string,
+  STRIPE_PRICE_ID_YEARLY: extra.stripePriceIdYearly as string,
 
   // Sentry
   SENTRY_DSN: extra.sentryDsn as string,

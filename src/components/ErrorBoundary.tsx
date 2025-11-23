@@ -7,7 +7,7 @@ import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { handleError, logErrorToMonitoring } from '../utils/errorHandler';
 import Text from './Text';
-import { colors } from '../utils/colors';
+import { Colors } from '../utils/colors';
 
 interface Props {
   children: ReactNode;
@@ -86,7 +86,7 @@ class ErrorBoundary extends Component<Props, State> {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.cream,
+    backgroundColor: Colors.primary,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
@@ -102,14 +102,14 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontFamily: 'Quicksand-Bold',
-    color: colors.charcoal,
+    color: Colors.gray[900],
     marginBottom: 12,
     textAlign: 'center',
   },
   message: {
     fontSize: 16,
     fontFamily: 'Quicksand-Regular',
-    color: colors.gray,
+    color: Colors.gray[600],
     textAlign: 'center',
     lineHeight: 24,
   },
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
   errorText: {
     fontSize: 12,
     fontFamily: 'Quicksand-Regular',
-    color: colors.charcoal,
+    color: Colors.gray[900],
   },
 });
 

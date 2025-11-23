@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
   Text,
@@ -7,11 +7,170 @@ import {
   SafeAreaView,
   StatusBar,
   ScrollView,
+  ActivityIndicator,
+  Alert,
+  Linking,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { SubscriptionService, Subscription } from '../../services/subscription/subscriptionService';
+import { AuthService } from '../../services/auth/authService';
 
 export default function SubscriptionScreen() {
   const navigation = useNavigation<any>();
+  const [subscription, setSubscription] = useState<Subscription | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [cancelling, setCancelling] = useState(false);
+
+  useEffect(() => {
+    fetchSubscription();
+  }, []);
+
+  const fetchSubscription = async () => {
+    try {
+      setLoading(true);
+      const session = await AuthService.getSession();
+      if (session?.user?.id) {
+        const sub = await SubscriptionService.getSubscription(session.user.id);
+        setSubscription(sub);
+      }
+    } catch (error: any) {
+      console.error('Error fetching subscription:', error);
+      Alert.alert('Error', 'Failed to load subscription details. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleManageSubscription = async () => {
+    try {
+      const session = await AuthService.getSession();
+      if (!session?.user?.id) {
+        throw new Error('No active session');
+      }
+
+      const portalUrl = await SubscriptionService.getCustomerPortalUrl(session.user.id);
+
+      // Open Stripe Customer Portal in browser
+      const supported = await Linking.canOpenURL(portalUrl);
+      if (supported) {
+        await Linking.openURL(portalUrl);
+      } else {
+        Alert.alert('Error', 'Unable to open subscription management.');
+      }
+    } catch (error: any) {
+      console.error('Error opening portal:', error);
+      Alert.alert('Error', error.userMessage || 'Failed to open subscription management.');
+    }
+  };
+
+  const handleCancelSubscription = () => {
+    Alert.alert(
+      'Cancel Subscription?',
+      'Are you sure you want to cancel your subscription? You\'ll keep access until the end of your billing period.',
+      [
+        { text: 'No, Keep It', style: 'cancel' },
+        {
+          text: 'Yes, Cancel',
+          style: 'destructive',
+          onPress: confirmCancellation,
+        },
+      ]
+    );
+  };
+
+  const confirmCancellation = async () => {
+    try {
+      setCancelling(true);
+      const session = await AuthService.getSession();
+      if (!session?.user?.id) {
+        throw new Error('No active session');
+      }
+
+      // For proper cancellation, redirect to Stripe Customer Portal
+      // This ensures the cancellation is handled correctly by Stripe
+      await handleManageSubscription();
+
+      Alert.alert(
+        'Manage Subscription',
+        'Please use the Stripe portal to cancel your subscription. This ensures your cancellation is processed correctly.',
+        [{ text: 'OK' }]
+      );
+    } catch (error: any) {
+      console.error('Error cancelling subscription:', error);
+      Alert.alert('Error', error.userMessage || 'Failed to cancel subscription.');
+    } finally {
+      setCancelling(false);
+    }
+  };
+
+  const getPlanName = (sub: Subscription | null): string => {
+    if (!sub) return 'No Plan';
+
+    // Determine plan based on price ID or tokens
+    if (sub.tokens_total === 5) return 'Weekly Plan';
+    if (sub.tokens_total === 20) return 'Monthly Plan';
+    if (sub.tokens_total === 240) return 'Yearly Plan';
+
+    return 'Subscription';
+  };
+
+  const getPlanPrice = (sub: Subscription | null): string => {
+    if (!sub) return '$0.00';
+
+    if (sub.tokens_total === 5) return '$3.99/week';
+    if (sub.tokens_total === 20) return '$7.99/month';
+    if (sub.tokens_total === 240) return '$48.99/year';
+
+    return 'Custom Plan';
+  };
+
+  const formatDate = (dateString: string | null): string => {
+    if (!dateString) return 'N/A';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
+    });
+  };
+
+  const getStatusColor = (status: string): string => {
+    switch (status) {
+      case 'active':
+      case 'trialing':
+        return '#10B981';
+      case 'past_due':
+        return '#F59E0B';
+      case 'cancelled':
+        return '#EF4444';
+      default:
+        return '#6B7280';
+    }
+  };
+
+  const getStatusLabel = (status: string): string => {
+    switch (status) {
+      case 'active':
+        return 'ACTIVE';
+      case 'trialing':
+        return 'TRIAL';
+      case 'past_due':
+        return 'PAST DUE';
+      case 'cancelled':
+        return 'CANCELLED';
+      default:
+        return status.toUpperCase();
+    }
+  };
+
+  if (loading) {
+    return (
+      <View style={[styles.container, styles.centerContent]}>
+        <ActivityIndicator size="large" color="#6B46C1" />
+        <Text style={styles.loadingText}>Loading subscription...</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -35,13 +194,16 @@ export default function SubscriptionScreen() {
 
             {/* Current Plan */}
             <View style={styles.planCard}>
-              <View style={styles.planBadge}>
-                <Text style={styles.planBadgeText}>PREMIUM</Text>
+              <View style={[styles.planBadge, { backgroundColor: getStatusColor(subscription?.status || 'active') }]}>
+                <Text style={styles.planBadgeText}>{getStatusLabel(subscription?.status || 'active')}</Text>
               </View>
-              <Text style={styles.planTitle}>Premium Monthly</Text>
-              <Text style={styles.planPrice}>$9.99/month</Text>
+              <Text style={styles.planTitle}>{getPlanName(subscription)}</Text>
+              <Text style={styles.planPrice}>{getPlanPrice(subscription)}</Text>
               <Text style={styles.planDescription}>
-                Unlimited recipes, meal planning, and nutrition tracking
+                🍪 {subscription?.tokens_balance || 0} Munchies remaining of {subscription?.tokens_total || 0} total
+              </Text>
+              <Text style={styles.planUsage}>
+                Used {subscription?.tokens_used || 0} Munchies so far
               </Text>
             </View>
 
@@ -52,33 +214,61 @@ export default function SubscriptionScreen() {
               </View>
 
               <View style={styles.settingRow}>
-                <Text style={styles.settingLabel}>Next Billing Date</Text>
-                <Text style={styles.settingValue}>Feb 15, 2024</Text>
+                <Text style={styles.settingLabel}>
+                  {subscription?.status === 'cancelled' ? 'Access Until' : 'Next Billing Date'}
+                </Text>
+                <Text style={styles.settingValue}>
+                  {formatDate(subscription?.current_period_end || null)}
+                </Text>
               </View>
 
               <View style={styles.settingRow}>
-                <Text style={styles.settingLabel}>Payment Method</Text>
-                <View style={styles.settingRight}>
-                  <Text style={styles.settingValue}>•••• 4242</Text>
-                  <Text style={styles.chevron}>›</Text>
-                </View>
+                <Text style={styles.settingLabel}>Subscription Start</Text>
+                <Text style={styles.settingValue}>
+                  {formatDate(subscription?.created_at || null)}
+                </Text>
               </View>
 
-              <TouchableOpacity style={styles.settingRow}>
-                <Text style={styles.settingLabel}>Billing History</Text>
+              {subscription?.cancelled_at && (
+                <View style={styles.settingRow}>
+                  <Text style={styles.settingLabel}>Cancelled On</Text>
+                  <Text style={[styles.settingValue, { color: '#EF4444' }]}>
+                    {formatDate(subscription.cancelled_at)}
+                  </Text>
+                </View>
+              )}
+
+              <TouchableOpacity
+                style={styles.settingRow}
+                onPress={handleManageSubscription}
+              >
+                <Text style={styles.settingLabel}>Manage via Stripe</Text>
                 <Text style={styles.chevron}>›</Text>
               </TouchableOpacity>
             </View>
 
             {/* Actions */}
             <View style={styles.actionsContainer}>
-              <TouchableOpacity style={styles.primaryButton}>
-                <Text style={styles.primaryButtonText}>Change Plan</Text>
+              <TouchableOpacity
+                style={styles.primaryButton}
+                onPress={handleManageSubscription}
+              >
+                <Text style={styles.primaryButtonText}>Manage Subscription</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity style={styles.dangerButton}>
-                <Text style={styles.dangerButtonText}>Cancel Subscription</Text>
-              </TouchableOpacity>
+              {subscription?.status !== 'cancelled' && (
+                <TouchableOpacity
+                  style={styles.dangerButton}
+                  onPress={handleCancelSubscription}
+                  disabled={cancelling}
+                >
+                  {cancelling ? (
+                    <ActivityIndicator color="#EF4444" />
+                  ) : (
+                    <Text style={styles.dangerButtonText}>Cancel Subscription</Text>
+                  )}
+                </TouchableOpacity>
+              )}
             </View>
           </ScrollView>
         </SafeAreaView>
@@ -91,6 +281,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FEFEFE',
+  },
+  centerContent: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    fontFamily: 'Quicksand-Medium',
+    fontSize: 16,
+    color: '#6B7280',
+    marginTop: 12,
   },
   safeArea: {
     flex: 1,
@@ -167,6 +367,13 @@ const styles = StyleSheet.create({
     color: '#6B7280',
     textAlign: 'center',
     lineHeight: 20,
+    fontFamily: 'Quicksand-Regular',
+  },
+  planUsage: {
+    fontSize: 12,
+    color: '#9CA3AF',
+    textAlign: 'center',
+    marginTop: 4,
     fontFamily: 'Quicksand-Regular',
   },
   settingsContainer: {

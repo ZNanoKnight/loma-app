@@ -1,5 +1,7 @@
-import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
+import React, { createContext, useState, useContext, ReactNode, useEffect, useRef } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AuthService } from '../services/auth/authService';
+import { UserService } from '../services/user/userService';
 
 // Define types for our user data
 interface UserData {
@@ -157,7 +159,72 @@ export function UserProvider({ children }: { children: ReactNode }) {
   };
 
   const updateUserData = (updates: Partial<UserData>) => {
-    setUserData(prev => ({ ...prev, ...updates }));
+    setUserData(prev => {
+      const newData = { ...prev, ...updates };
+
+      // Sync to Supabase if authenticated (debounced)
+      if (newData.isAuthenticated && !updates.isAuthenticated) {
+        syncToSupabase(newData);
+      }
+
+      return newData;
+    });
+  };
+
+  // Debounced sync to Supabase
+  const syncTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const syncToSupabase = async (data: UserData) => {
+    // Clear previous timeout
+    if (syncTimeoutRef.current) {
+      clearTimeout(syncTimeoutRef.current);
+    }
+
+    // Debounce by 1 second to avoid too many updates
+    syncTimeoutRef.current = setTimeout(async () => {
+      try {
+        const session = await AuthService.getCurrentSession();
+        if (!session) return;
+
+        // Map UserContext data to UserProfile format
+        await UserService.updateUserProfile(session.user.id, {
+          user_id: session.user.id,
+          first_name: data.firstName,
+          last_name: data.lastName,
+          age: data.age,
+          weight: data.weight,
+          height_feet: data.heightFeet,
+          height_inches: data.heightInches,
+          gender: data.gender,
+          activity_level: data.activityLevel,
+          goals: data.goals,
+          dietary_preferences: data.dietaryPreferences,
+          allergens: data.allergens,
+          equipment: data.equipment,
+          cooking_frequency: data.cookingFrequency,
+          meal_prep_interest: data.mealPrepInterest,
+          target_weight: data.targetWeight,
+          target_protein: data.targetProtein,
+          target_calories: data.targetCalories,
+          target_carbs: data.macroTargets?.carbs,
+          target_fat: data.macroTargets?.fat,
+          disliked_ingredients: data.dislikedIngredients,
+          cuisine_preferences: data.cuisinePreferences,
+          default_serving_size: data.defaultServingSize,
+          profile_image_url: data.profileImageUri,
+          notifications: data.notifications,
+          meal_reminders: data.mealReminders,
+          weekly_report: data.weeklyReport,
+          dark_mode: data.darkMode,
+          metric_units: data.metricUnits,
+          has_completed_onboarding: data.hasCompletedOnboarding,
+        });
+
+        console.log('Profile synced to Supabase');
+      } catch (error) {
+        console.error('Error syncing to Supabase:', error);
+        // Silent fail - local data is still saved
+      }
+    }, 1000);
   };
 
   const clearUserData = async () => {

@@ -9,9 +9,12 @@ import {
   ScrollView,
   Switch,
   Image,
+  Alert,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useUser } from '../../context/UserContext';
+import { AuthService } from '../../services/auth/authService';
+import { LocalStorage } from '../../services/storage/asyncStorage';
 
 type SettingItem = {
   label: string;
@@ -49,8 +52,36 @@ export default function SettingsMainScreen() {
     nextBilling: 'N/A',
   };
 
-  const handleSignOut = () => {
-    signOut();
+  const handleSignOut = async () => {
+    Alert.alert(
+      'Sign Out',
+      'Are you sure you want to sign out?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Sign Out',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              // Sign out from Supabase
+              await AuthService.signOut();
+
+              // Clear local context (auth state listener will handle navigation)
+              signOut();
+            } catch (error) {
+              console.error('Sign out error:', error);
+              Alert.alert(
+                'Error',
+                'Failed to sign out. Please try again.'
+              );
+            }
+          },
+        },
+      ]
+    );
   };
 
   const toggleSection = (section: string) => {

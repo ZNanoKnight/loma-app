@@ -1,32 +1,93 @@
 /**
  * User Service
- * Handles user profile operations
- *
- * NOTE: This is a placeholder service.
- * Full implementation will be completed during Phase 1 after database schema is created.
+ * Handles user profile operations with Supabase backend
  */
 
 import { getSupabaseClient } from '../auth/supabase';
 import { ErrorCode, LomaError } from '../types';
 
+/**
+ * User Profile interface matching database schema
+ */
+export interface UserProfile {
+  id?: string;
+  user_id: string;
+
+  // Personal information
+  first_name: string;
+  last_name: string;
+  age?: string;
+  weight?: string;
+  height_feet?: string;
+  height_inches?: string;
+  gender?: string;
+
+  // Activity and goals
+  activity_level?: string;
+  goals?: string[];
+
+  // Dietary information
+  dietary_preferences?: string[];
+  allergens?: string[];
+  disliked_ingredients?: string[];
+  cuisine_preferences?: string[];
+
+  // Cooking information
+  equipment?: string;
+  cooking_frequency?: string;
+  meal_prep_interest?: string;
+  default_serving_size?: number;
+
+  // Nutrition targets
+  target_weight?: string;
+  target_protein?: string;
+  target_calories?: string;
+  target_carbs?: string;
+  target_fat?: string;
+
+  // Settings
+  notifications?: boolean;
+  meal_reminders?: boolean;
+  weekly_report?: boolean;
+  dark_mode?: boolean;
+  metric_units?: boolean;
+
+  // Profile
+  profile_image_url?: string;
+
+  // Metadata
+  has_completed_onboarding?: boolean;
+  created_at?: string;
+  updated_at?: string;
+}
+
 export const UserService = {
   /**
-   * Get user profile data
-   * @param userId - User ID
+   * Get user profile data from Supabase
+   * @param userId - User ID from auth.users
+   * @returns User profile data or null if not found
    */
-  async getUserProfile(userId: string): Promise<any> {
+  async getUserProfile(userId: string): Promise<UserProfile | null> {
     try {
       const supabase = getSupabaseClient();
 
-      // TODO: Query user_profiles table
-      // const { data, error } = await supabase
-      //   .from('user_profiles')
-      //   .select('*')
-      //   .eq('user_id', userId)
-      //   .single();
+      const { data, error } = await supabase
+        .from('user_profiles')
+        .select('*')
+        .eq('user_id', userId)
+        .single();
 
-      throw new Error('Not implemented - Database schema needs to be created first');
+      if (error) {
+        // If profile doesn't exist, return null (not an error)
+        if (error.code === 'PGRST116') {
+          return null;
+        }
+        throw error;
+      }
+
+      return data as UserProfile;
     } catch (error) {
+      console.error('UserService.getUserProfile error:', error);
       throw new LomaError({
         code: ErrorCode.API_ERROR,
         message: 'Failed to get user profile',
@@ -37,22 +98,29 @@ export const UserService = {
   },
 
   /**
-   * Update user profile
+   * Update user profile in Supabase
    * @param userId - User ID
-   * @param updates - Profile updates
+   * @param updates - Partial profile updates
    */
-  async updateUserProfile(userId: string, updates: any): Promise<void> {
+  async updateUserProfile(userId: string, updates: Partial<UserProfile>): Promise<UserProfile> {
     try {
       const supabase = getSupabaseClient();
 
-      // TODO: Update user_profiles table
-      // const { error } = await supabase
-      //   .from('user_profiles')
-      //   .update(updates)
-      //   .eq('user_id', userId);
+      // Remove fields that shouldn't be updated
+      const { id, user_id, created_at, updated_at, ...updateData } = updates as any;
 
-      throw new Error('Not implemented - Database schema needs to be created first');
+      const { data, error } = await supabase
+        .from('user_profiles')
+        .update(updateData)
+        .eq('user_id', userId)
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      return data as UserProfile;
     } catch (error) {
+      console.error('UserService.updateUserProfile error:', error);
       throw new LomaError({
         code: ErrorCode.API_ERROR,
         message: 'Failed to update user profile',
@@ -63,28 +131,75 @@ export const UserService = {
   },
 
   /**
-   * Create user profile (called after successful registration)
-   * @param userId - User ID
+   * Create user profile after successful registration
+   * @param userId - User ID from auth.users
    * @param profileData - Initial profile data from onboarding
    */
-  async createUserProfile(userId: string, profileData: any): Promise<void> {
+  async createUserProfile(userId: string, profileData: Partial<UserProfile>): Promise<UserProfile> {
     try {
       const supabase = getSupabaseClient();
 
-      // TODO: Insert into user_profiles table
-      // const { error } = await supabase
-      //   .from('user_profiles')
-      //   .insert({
-      //     user_id: userId,
-      //     ...profileData,
-      //   });
+      const { data, error } = await supabase
+        .from('user_profiles')
+        .insert({
+          user_id: userId,
+          first_name: profileData.first_name || '',
+          last_name: profileData.last_name || '',
+          ...profileData,
+        })
+        .select()
+        .single();
 
-      throw new Error('Not implemented - Database schema needs to be created first');
+      if (error) {
+        // Handle duplicate profile error
+        if (error.code === '23505') {
+          throw new LomaError({
+            code: ErrorCode.API_ERROR,
+            message: 'Profile already exists',
+            userMessage: 'A profile already exists for this account.',
+            originalError: error,
+          });
+        }
+        throw error;
+      }
+
+      return data as UserProfile;
     } catch (error) {
+      console.error('UserService.createUserProfile error:', error);
+
+      if (error instanceof LomaError) {
+        throw error;
+      }
+
       throw new LomaError({
         code: ErrorCode.API_ERROR,
         message: 'Failed to create user profile',
         userMessage: 'Failed to create your profile. Please try again.',
+        originalError: error,
+      });
+    }
+  },
+
+  /**
+   * Delete user profile
+   * @param userId - User ID
+   */
+  async deleteUserProfile(userId: string): Promise<void> {
+    try {
+      const supabase = getSupabaseClient();
+
+      const { error } = await supabase
+        .from('user_profiles')
+        .delete()
+        .eq('user_id', userId);
+
+      if (error) throw error;
+    } catch (error) {
+      console.error('UserService.deleteUserProfile error:', error);
+      throw new LomaError({
+        code: ErrorCode.API_ERROR,
+        message: 'Failed to delete user profile',
+        userMessage: 'Failed to delete your profile. Please try again.',
         originalError: error,
       });
     }

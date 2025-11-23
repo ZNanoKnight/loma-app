@@ -9,6 +9,7 @@ import { View, ActivityIndicator } from 'react-native';
 import * as Sentry from '@sentry/react-native';
 import { ENV } from './src/config/env';
 import ErrorBoundary from './src/components/ErrorBoundary';
+import { StripeProvider } from '@stripe/stripe-react-native';
 
 // Initialize Sentry for error tracking
 if (ENV.SENTRY_DSN) {
@@ -108,13 +109,18 @@ export default Sentry.wrap(function App() {
 
   return (
     <ErrorBoundary>
-      <UserProvider>
-        <RecipeProvider>
-          <NavigationContainer>
-            <RootNavigator />
-          </NavigationContainer>
-        </RecipeProvider>
-      </UserProvider>
+      <StripeProvider
+        publishableKey={ENV.STRIPE_PUBLISHABLE_KEY || ''}
+        merchantIdentifier="merchant.com.znanoknight.lomaapp"
+      >
+        <UserProvider>
+          <RecipeProvider>
+            <NavigationContainer>
+              <RootNavigator />
+            </NavigationContainer>
+          </RecipeProvider>
+        </UserProvider>
+      </StripeProvider>
     </ErrorBoundary>
   );
 });

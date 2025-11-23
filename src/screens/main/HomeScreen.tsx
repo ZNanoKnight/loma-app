@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
   Text,
@@ -7,11 +7,15 @@ import {
   SafeAreaView,
   StatusBar,
   ScrollView,
-  TextInput
+  TextInput,
+  ActivityIndicator,
+  Alert
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { useUser } from '../../context/UserContext';
 import { useRecipe } from '../../context/RecipeContext';
+import { SubscriptionService } from '../../services/subscription/subscriptionService';
+import { AuthService } from '../../services/auth/authService';
 
 export default function HomeScreen() {
   const navigation = useNavigation<any>();
@@ -25,19 +29,104 @@ export default function HomeScreen() {
   const [mealType, setMealType] = useState('');
   const [customRequest, setCustomRequest] = useState('');
 
-  const handleGenerateRecipe = () => {
+  // Token balance state
+  const [tokenBalance, setTokenBalance] = useState<number>(0);
+  const [loadingTokens, setLoadingTokens] = useState(true);
+  const [generating, setGenerating] = useState(false);
+
+  // Fetch token balance on mount and when screen is focused
+  useEffect(() => {
+    fetchTokenBalance();
+  }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchTokenBalance();
+    }, [])
+  );
+
+  const fetchTokenBalance = async () => {
+    try {
+      setLoadingTokens(true);
+      const session = await AuthService.getSession();
+      if (session?.user?.id) {
+        const balance = await SubscriptionService.getTokenBalance(session.user.id);
+        setTokenBalance(balance);
+      }
+    } catch (error) {
+      console.error('Error fetching token balance:', error);
+      // Don't show error to user, just use default balance
+    } finally {
+      setLoadingTokens(false);
+    }
+  };
+
+  const handleGenerateRecipe = async () => {
     // Validate that meal type is selected
     if (!mealType) {
       return;
     }
 
-    // In production, this would call the AI API to generate a recipe
-    // For now, we'll use the first mock recipe from RecipeContext
-    const mockRecipe = getRecipeById('1'); // Get the Mediterranean Grilled Chicken Bowl
-    if (mockRecipe) {
-      setCurrentRecipe(mockRecipe);
+    // Check token balance before generating
+    if (tokenBalance === 0) {
+      Alert.alert(
+        "Out of Munchies 🍪",
+        "You don't have any Munchies left to generate a recipe. Your balance will refill when your subscription renews, or you can upgrade your plan.",
+        [
+          { text: "OK", style: "default" },
+          {
+            text: "Manage Subscription",
+            style: "default",
+            onPress: () => navigation.navigate('SettingsMain')
+          }
+        ]
+      );
+      return;
     }
-    navigation.navigate('RecipeGenerated');
+
+    setGenerating(true);
+    try {
+      // Validate token usage with server
+      const session = await AuthService.getSession();
+      if (!session?.user?.id) {
+        throw new Error('No active session');
+      }
+
+      const validation = await SubscriptionService.validateTokenUsage(session.user.id);
+
+      if (!validation.hasTokens) {
+        Alert.alert(
+          "Cannot Generate Recipe",
+          validation.message || "You don't have enough Munchies available.",
+          [{ text: "OK" }]
+        );
+        await fetchTokenBalance(); // Refresh balance
+        return;
+      }
+
+      // In Phase 3, this will call the AI API to generate a recipe
+      // For now, we'll use a mock recipe from RecipeContext
+      const mockRecipe = getRecipeById('1'); // Get the Mediterranean Grilled Chicken Bowl
+      if (mockRecipe) {
+        setCurrentRecipe(mockRecipe);
+      }
+
+      // Note: In Phase 3, token deduction will happen after successful recipe generation
+      // For now, we'll navigate without deducting tokens
+      navigation.navigate('RecipeGenerated');
+
+      // Refresh token balance after generation
+      await fetchTokenBalance();
+    } catch (error: any) {
+      console.error('Error generating recipe:', error);
+      Alert.alert(
+        'Error',
+        error.userMessage || 'Failed to generate recipe. Please try again.',
+        [{ text: 'OK' }]
+      );
+    } finally {
+      setGenerating(false);
+    }
   };
 
   // Check if form is valid for button enable/disable
@@ -61,10 +150,26 @@ export default function HomeScreen() {
 
             {/* Munchies Callout Box */}
             <View style={styles.munchiesCallout}>
-              <Text style={styles.munchiesTitle}>🍪 You have 8 Munchies!</Text>
-              <Text style={styles.munchiesSubtext}>
-                Each recipe costs <Text style={styles.boldText}>1 Munchie</Text>.{'\n'}You can generate <Text style={styles.boldText}>8 meals</Text> total.
-              </Text>
+              {loadingTokens ? (
+                <View style={styles.munchiesLoading}>
+                  <ActivityIndicator size="small" color="#6B46C1" />
+                  <Text style={styles.munchiesLoadingText}>Loading Munchies...</Text>
+                </View>
+              ) : (
+                <>
+                  <Text style={styles.munchiesTitle}>
+                    🍪 You have {tokenBalance} Munchies!
+                  </Text>
+                  <Text style={styles.munchiesSubtext}>
+                    Each recipe costs <Text style={styles.boldText}>1 Munchie</Text>.{'\n'}
+                    {tokenBalance > 0 ? (
+                      <>You can generate <Text style={styles.boldText}>{tokenBalance} meals</Text> total.</>
+                    ) : (
+                      <Text style={styles.outOfTokensText}>Your balance will refill when your subscription renews.</Text>
+                    )}
+                  </Text>
+                </>
+              )}
             </View>
 
             {/* Recipe Generator Card */}
@@ -118,18 +223,22 @@ export default function HomeScreen() {
               <TouchableOpacity
                 style={[
                   styles.generateButton,
-                  !isFormValid && styles.generateButtonDisabled
+                  (!isFormValid || generating || tokenBalance === 0) && styles.generateButtonDisabled
                 ]}
                 onPress={handleGenerateRecipe}
-                disabled={!isFormValid}
+                disabled={!isFormValid || generating || tokenBalance === 0}
                 activeOpacity={0.8}
               >
-                <Text style={[
-                  styles.generateButtonText,
-                  !isFormValid && styles.generateButtonTextDisabled
-                ]}>
-                  ✨ Generate Recipe
-                </Text>
+                {generating ? (
+                  <ActivityIndicator color="#FFFFFF" />
+                ) : (
+                  <Text style={[
+                    styles.generateButtonText,
+                    (!isFormValid || tokenBalance === 0) && styles.generateButtonTextDisabled
+                  ]}>
+                    ✨ Generate Recipe {tokenBalance > 0 && `(${tokenBalance} left)`}
+                  </Text>
+                )}
               </TouchableOpacity>
             </View>
           </ScrollView>
@@ -191,6 +300,22 @@ const styles = StyleSheet.create({
   boldText: {
     fontFamily: 'Quicksand-Bold',
     color: '#6B46C1',
+  },
+  munchiesLoading: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 8,
+  },
+  munchiesLoadingText: {
+    fontFamily: 'Quicksand-Medium',
+    fontSize: 14,
+    color: '#6B46C1',
+    marginLeft: 8,
+  },
+  outOfTokensText: {
+    fontFamily: 'Quicksand-Medium',
+    color: '#DC2626',
   },
   notificationButton: {
     width: 40,

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
   Text,
@@ -7,21 +7,32 @@ import {
   SafeAreaView,
   StatusBar,
   ScrollView,
-  TextInput
+  TextInput,
+  ActivityIndicator,
+  Alert,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useUser } from '../../context/UserContext';
+import { AuthService } from '../../services/auth/authService';
+import { UserService } from '../../services/user/userService';
+import { LomaError } from '../../services/types';
+import { useStripe } from '@stripe/stripe-react-native';
+import { supabase } from '../../config/supabase';
+import { ENV } from '../../config/env';
 
 type PlanType = 'weekly' | 'monthly' | 'yearly';
 
 export default function PaywallScreen() {
   const navigation = useNavigation<any>();
   const { userData, updateUserData } = useUser();
+  const { initPaymentSheet, presentPaymentSheet } = useStripe();
   const [selectedPlan, setSelectedPlan] = useState<PlanType>('yearly');
   const [email, setEmail] = useState(userData.email || '');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [agreeToTerms, setAgreeToTerms] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [paymentSheetReady, setPaymentSheetReady] = useState(false);
 
   const isValidEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -29,7 +40,7 @@ export default function PaywallScreen() {
   };
 
   const isFormValid = isValidEmail(email) &&
-                     password.length >= 6 &&
+                     password.length >= 8 &&
                      password === confirmPassword &&
                      agreeToTerms;
 
@@ -97,17 +108,167 @@ export default function PaywallScreen() {
     }
   ];
 
-  const handleComplete = () => {
-    if (isFormValid) {
-      // Mark onboarding as complete and authenticate user
-      // The RootNavigator will automatically re-render and show MainApp
-      updateUserData({
-        email,
-        selectedPlan,
+  // Helper to get price ID based on selected plan
+  const getPriceId = (plan: PlanType): string => {
+    switch (plan) {
+      case 'weekly':
+        return ENV.STRIPE_PRICE_ID_WEEKLY;
+      case 'monthly':
+        return ENV.STRIPE_PRICE_ID_MONTHLY;
+      case 'yearly':
+        return ENV.STRIPE_PRICE_ID_YEARLY;
+      default:
+        return ENV.STRIPE_PRICE_ID_MONTHLY;
+    }
+  };
+
+  const handleComplete = async () => {
+    if (!isFormValid) return;
+
+    setLoading(true);
+    try {
+      // Step 1: Create Supabase auth account
+      const authSession = await AuthService.signUp({
+        email: email.trim().toLowerCase(),
         password,
-        hasCompletedOnboarding: true,
-        isAuthenticated: true
       });
+
+      // Step 2: Create user profile in database with onboarding data
+      await UserService.createUserProfile(authSession.user.id, {
+        user_id: authSession.user.id,
+        first_name: userData.firstName || '',
+        last_name: userData.lastName || '',
+        age: userData.age,
+        weight: userData.weight,
+        height_feet: userData.heightFeet,
+        height_inches: userData.heightInches,
+        gender: userData.gender,
+        activity_level: userData.activityLevel,
+        goals: userData.goals,
+        dietary_preferences: userData.dietaryPreferences,
+        allergens: userData.allergens,
+        equipment: userData.equipment,
+        cooking_frequency: userData.cookingFrequency,
+        meal_prep_interest: userData.mealPrepInterest,
+        target_weight: userData.targetWeight,
+        target_protein: userData.targetProtein,
+        target_calories: userData.targetCalories,
+        disliked_ingredients: userData.dislikedIngredients,
+        cuisine_preferences: userData.cuisinePreferences,
+        default_serving_size: userData.defaultServingSize || 1,
+        notifications: true,
+        meal_reminders: true,
+        weekly_report: true,
+        dark_mode: false,
+        metric_units: false,
+        has_completed_onboarding: true,
+      });
+
+      // Step 3: Call Edge Function to create payment intent
+      const priceId = getPriceId(selectedPlan);
+
+      const { data: { session } } = await supabase.auth.getSession();
+
+      if (!session) {
+        throw new Error('No active session');
+      }
+
+      const { data: paymentData, error: paymentError } = await supabase.functions.invoke(
+        'create-payment-intent',
+        {
+          body: {
+            planType: selectedPlan,
+            priceId: priceId,
+          },
+          headers: {
+            Authorization: `Bearer ${session.access_token}`,
+          },
+        }
+      );
+
+      if (paymentError || !paymentData) {
+        throw new Error(paymentError?.message || 'Failed to create payment intent');
+      }
+
+      // Step 4: Initialize payment sheet
+      const { error: initError } = await initPaymentSheet({
+        merchantDisplayName: 'LOMA',
+        paymentIntentClientSecret: paymentData.clientSecret,
+        defaultBillingDetails: {
+          email: email.trim().toLowerCase(),
+        },
+        returnURL: 'lomaapp://payment-complete',
+      });
+
+      if (initError) {
+        throw new Error(initError.message);
+      }
+
+      // Step 5: Present payment sheet
+      const { error: presentError } = await presentPaymentSheet();
+
+      if (presentError) {
+        if (presentError.code === 'Canceled') {
+          Alert.alert(
+            'Payment Cancelled',
+            'You cancelled the payment. You can try again when ready.',
+            [{ text: 'OK' }]
+          );
+          return;
+        }
+        throw new Error(presentError.message);
+      }
+
+      // Step 6: Payment successful! Update UserContext
+      updateUserData({
+        email: authSession.user.email || email,
+        selectedPlan,
+        hasCompletedOnboarding: true,
+        isAuthenticated: true,
+      });
+
+      Alert.alert(
+        'Welcome to LOMA! 🎉',
+        'Your subscription is now active. Let\'s start creating amazing recipes!',
+        [
+          {
+            text: 'Get Started',
+            onPress: () => {
+              // Navigation will automatically switch to MainTab due to isAuthenticated
+            },
+          },
+        ]
+      );
+
+      // Note: Tokens will be allocated via webhook when Stripe confirms the subscription
+    } catch (error) {
+      console.error('Signup/Payment error:', error);
+
+      let errorMessage = 'Failed to complete signup. Please try again.';
+
+      if (error instanceof LomaError) {
+        errorMessage = error.userMessage || errorMessage;
+      } else if (error instanceof Error) {
+        if (error.message.includes('already registered')) {
+          errorMessage =
+            'This email is already registered. Please use the login screen.';
+        } else if (error.message.includes('Password should be at least')) {
+          errorMessage = 'Password must be at least 8 characters long.';
+        } else if (error.message.includes('payment')) {
+          errorMessage = 'Payment failed. ' + error.message;
+        } else {
+          errorMessage = error.message;
+        }
+      }
+
+      Alert.alert('Error', errorMessage, [
+        {
+          text: 'Try Again',
+          style: 'default',
+        },
+      ]);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -346,18 +507,22 @@ export default function PaywallScreen() {
             <TouchableOpacity
               style={[
                 styles.completeButton,
-                !isFormValid && styles.completeButtonDisabled
+                (!isFormValid || loading) && styles.completeButtonDisabled
               ]}
               onPress={handleComplete}
-              disabled={!isFormValid}
+              disabled={!isFormValid || loading}
               activeOpacity={0.8}
             >
-              <Text style={[
-                styles.completeButtonText,
-                !isFormValid && styles.completeButtonTextDisabled
-              ]}>
-                Start Free Trial
-              </Text>
+              {loading ? (
+                <ActivityIndicator color="#FFFFFF" />
+              ) : (
+                <Text style={[
+                  styles.completeButtonText,
+                  !isFormValid && styles.completeButtonTextDisabled
+                ]}>
+                  Start Free Trial
+                </Text>
+              )}
             </TouchableOpacity>
 
             {/* Security Note */}
