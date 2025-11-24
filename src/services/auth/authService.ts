@@ -14,9 +14,12 @@ export const AuthService = {
    */
   async signUp(request: SignUpRequest): Promise<AuthSession> {
     try {
+      console.log('[AuthService] signUp called with email:', request.email);
       const supabase = getSupabaseClient();
+      console.log('[AuthService] Supabase client obtained');
 
       // Create user account with Supabase Auth
+      console.log('[AuthService] Calling supabase.auth.signUp...');
       const { data, error } = await supabase.auth.signUp({
         email: request.email,
         password: request.password,
@@ -28,7 +31,17 @@ export const AuthService = {
         },
       });
 
+      console.log('[AuthService] Supabase signUp response:', {
+        data: !!data,
+        error: !!error,
+        hasUser: !!data?.user,
+        hasSession: !!data?.session,
+        user: data?.user,
+        session: data?.session,
+      });
+
       if (error) {
+        console.error('[AuthService] Supabase error:', error);
         // Handle specific Supabase errors
         if (error.message.includes('already registered')) {
           throw new LomaError({
@@ -56,12 +69,34 @@ export const AuthService = {
         });
       }
 
-      if (!data.user || !data.session) {
+      if (!data.user) {
         throw new LomaError({
           code: ErrorCode.API_ERROR,
-          message: 'No user or session returned',
+          message: 'No user returned',
           userMessage: 'Failed to create account. Please try again.',
         });
+      }
+
+      // If email confirmation is enabled, session will be null
+      // In this case, we still return the user info but with empty tokens
+      if (!data.session) {
+        console.log('[AuthService] No session returned - email confirmation may be required');
+
+        // Return user without session (email confirmation required)
+        return {
+          user: {
+            id: data.user.id,
+            email: data.user.email!,
+            emailVerified: !!data.user.email_confirmed_at,
+            createdAt: data.user.created_at,
+            updatedAt: data.user.updated_at || data.user.created_at,
+          },
+          tokens: {
+            accessToken: '',
+            refreshToken: '',
+            expiresAt: 0,
+          },
+        };
       }
 
       // Store tokens securely

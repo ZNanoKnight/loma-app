@@ -57,26 +57,32 @@ serve(async (req) => {
           break
         }
 
-        // Determine token allocation based on price ID
+        // Determine token allocation and plan type based on price ID
         const priceId = subscription.items.data[0].price.id
         let tokensToAdd = 0
+        let planType = 'monthly' // default
 
         // You'll need to replace these with your actual Stripe price IDs
         if (priceId.includes('weekly') || subscription.items.data[0].price.recurring?.interval === 'week') {
           tokensToAdd = 5
+          planType = 'weekly'
         } else if (priceId.includes('monthly') || subscription.items.data[0].price.recurring?.interval === 'month') {
           tokensToAdd = 20
+          planType = 'monthly'
         } else if (priceId.includes('yearly') || subscription.items.data[0].price.recurring?.interval === 'year') {
           tokensToAdd = 240
+          planType = 'yearly'
         }
 
         // Update subscription record
+        // For subscription.created/updated, we SET the token balance (replaces initial 8 free tokens)
         const { error } = await supabaseAdmin
           .from('subscriptions')
           .update({
             stripe_subscription_id: subscription.id,
             stripe_customer_id: customerId,
             stripe_price_id: priceId,
+            plan: planType,
             status: subscription.status,
             current_period_start: new Date(subscription.current_period_start * 1000).toISOString(),
             current_period_end: new Date(subscription.current_period_end * 1000).toISOString(),
@@ -142,16 +148,20 @@ serve(async (req) => {
           break
         }
 
-        // Determine token allocation
+        // Determine token allocation and plan type
         const priceId = subscription.items.data[0].price.id
         let tokensToAdd = 0
+        let planType = 'monthly' // default
 
         if (priceId.includes('weekly') || subscription.items.data[0].price.recurring?.interval === 'week') {
           tokensToAdd = 5
+          planType = 'weekly'
         } else if (priceId.includes('monthly') || subscription.items.data[0].price.recurring?.interval === 'month') {
           tokensToAdd = 20
+          planType = 'monthly'
         } else if (priceId.includes('yearly') || subscription.items.data[0].price.recurring?.interval === 'year') {
           tokensToAdd = 240
+          planType = 'yearly'
         }
 
         // Add tokens on renewal (only if not first payment)
@@ -168,13 +178,14 @@ serve(async (req) => {
               .update({
                 tokens_balance: currentSub.tokens_balance + tokensToAdd,
                 tokens_total: currentSub.tokens_total + tokensToAdd,
+                plan: planType,
                 status: 'active',
                 current_period_end: new Date(subscription.current_period_end * 1000).toISOString(),
                 updated_at: new Date().toISOString(),
               })
               .eq('user_id', userId)
 
-            console.log(`Added ${tokensToAdd} tokens to user ${userId}`)
+            console.log(`Added ${tokensToAdd} tokens to user ${userId} on renewal`)
           }
         }
         break

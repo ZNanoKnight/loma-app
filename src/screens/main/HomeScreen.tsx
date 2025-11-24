@@ -64,6 +64,11 @@ export default function HomeScreen() {
   const handleGenerateRecipe = async () => {
     // Validate that meal type is selected
     if (!mealType) {
+      Alert.alert(
+        'Meal Type Required',
+        'Please select a meal type (Breakfast, Lunch, Dinner, or Snack) before generating.',
+        [{ text: 'OK' }]
+      );
       return;
     }
 
@@ -85,13 +90,16 @@ export default function HomeScreen() {
     }
 
     setGenerating(true);
+    let generatedRecipes: any[] = [];
+
     try {
-      // Validate token usage with server
+      // Step 1: Validate token usage with server
       const session = await AuthService.getSession();
       if (!session?.user?.id) {
         throw new Error('No active session');
       }
 
+      console.log('[HomeScreen] Validating token usage...');
       const validation = await SubscriptionService.validateTokenUsage(session.user.id);
 
       if (!validation.hasTokens) {
@@ -104,26 +112,52 @@ export default function HomeScreen() {
         return;
       }
 
-      // In Phase 3, this will call the AI API to generate a recipe
-      // For now, we'll use a mock recipe from RecipeContext
-      const mockRecipe = getRecipeById('1'); // Get the Mediterranean Grilled Chicken Bowl
-      if (mockRecipe) {
-        setCurrentRecipe(mockRecipe);
-      }
+      console.log('[HomeScreen] Token validation successful, generating 4 recipes via AI...');
 
-      // Note: In Phase 3, token deduction will happen after successful recipe generation
-      // For now, we'll navigate without deducting tokens
-      navigation.navigate('RecipeGenerated');
+      // Step 2: Generate 4 recipes via AI
+      generatedRecipes = await RecipeService.generateRecipe({
+        mealType: mealType as 'breakfast' | 'lunch' | 'dinner' | 'snack',
+        customRequest: customRequest || undefined,
+      });
 
-      // Refresh token balance after generation
-      await fetchTokenBalance();
+      console.log(`[HomeScreen] Successfully generated ${generatedRecipes.length} recipes`);
+
+      // Step 3: Deduct token AFTER successful generation
+      console.log('[HomeScreen] Deducting 1 token...');
+      const deductResult = await SubscriptionService.deductTokens(session.user.id, 1);
+
+      // Step 4: Update local token balance
+      setTokenBalance(deductResult.balance);
+      console.log(`[HomeScreen] Token deducted. New balance: ${deductResult.balance}`);
+
+      // Step 5: Navigate with generated recipes
+      navigation.navigate('RecipeGenerated', {
+        recipes: generatedRecipes,
+        selectedMealType: mealType,
+      });
+
+      // Reset custom request field after successful generation
+      setCustomRequest('');
     } catch (error: any) {
-      console.error('Error generating recipe:', error);
+      console.error('[HomeScreen] Error generating recipe:', error);
+
+      // CRITICAL: If error occurred, token was NOT deducted
+      // Show error with free retry option
       Alert.alert(
-        'Error',
-        error.userMessage || 'Failed to generate recipe. Please try again.',
-        [{ text: 'OK' }]
+        'Generation Failed',
+        error.userMessage || 'Failed to generate recipes. Please try again.',
+        [
+          { text: 'Cancel', style: 'cancel' },
+          {
+            text: 'Retry',
+            style: 'default',
+            onPress: () => handleGenerateRecipe(), // Free retry
+          },
+        ]
       );
+
+      // Refresh token balance to ensure UI is in sync
+      await fetchTokenBalance();
     } finally {
       setGenerating(false);
     }
@@ -230,13 +264,18 @@ export default function HomeScreen() {
                 activeOpacity={0.8}
               >
                 {generating ? (
-                  <ActivityIndicator color="#FFFFFF" />
+                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+                    <ActivityIndicator color="#FFFFFF" />
+                    <Text style={styles.generateButtonText}>
+                      Generating 4 personalized recipes...
+                    </Text>
+                  </View>
                 ) : (
                   <Text style={[
                     styles.generateButtonText,
                     (!isFormValid || tokenBalance === 0) && styles.generateButtonTextDisabled
                   ]}>
-                    ✨ Generate Recipe {tokenBalance > 0 && `(${tokenBalance} left)`}
+                    ✨ Generate 4 Recipes {tokenBalance > 0 && `(${tokenBalance} Munchies left)`}
                   </Text>
                 )}
               </TouchableOpacity>

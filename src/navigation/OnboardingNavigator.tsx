@@ -23,7 +23,7 @@ export default function OnboardingNavigator() {
         headerShown: false,
         cardStyle: { backgroundColor: '#4F46E5' }
       }}
-      initialRouteName="Login"
+      initialRouteName="Welcome"
     >
       {/* Auth Screens */}
       <Stack.Screen name="Login" component={LoginScreen} />

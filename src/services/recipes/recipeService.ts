@@ -59,24 +59,85 @@ export interface UserRecipe {
 
 export const RecipeService = {
   /**
-   * Generate a new recipe using AI
-   * @param preferences - User preferences and meal type
-   *
-   * TODO: Implement in Phase 3
+   * Generate 4 new recipes using AI
+   * @param request - Generation request with meal type and optional custom request
+   * @returns Array of 4 generated recipes
    */
-  async generateRecipe(preferences: any): Promise<Recipe> {
+  async generateRecipe(request: {
+    mealType: 'breakfast' | 'lunch' | 'dinner' | 'snack';
+    customRequest?: string;
+  }): Promise<Recipe[]> {
     try {
-      // TODO: Call Supabase Edge Function that calls OpenAI API
-      // const { data, error } = await supabase.functions.invoke('generate-recipe', {
-      //   body: { preferences },
-      // });
+      const supabase = getSupabaseClient();
 
-      throw new Error('Not implemented - AI integration planned for Phase 3');
+      console.log('[RecipeService] Generating recipes via AI:', request);
+
+      // Call generate-recipe Edge Function
+      const { data, error } = await supabase.functions.invoke('generate-recipe', {
+        body: {
+          meal_type: request.mealType,
+          custom_request: request.customRequest,
+        },
+      });
+
+      if (error) {
+        console.error('[RecipeService] Edge Function error:', error);
+        throw new LomaError({
+          code: ErrorCode.API_ERROR,
+          message: 'Recipe generation failed',
+          userMessage: 'Unable to generate recipes. Please try again.',
+          originalError: error,
+        });
+      }
+
+      if (!data || !data.success) {
+        console.error('[RecipeService] Edge Function returned unsuccessful response:', data);
+        throw new LomaError({
+          code: ErrorCode.API_ERROR,
+          message: 'Recipe generation failed',
+          userMessage: data?.error || 'Unable to generate recipes. Please try again.',
+        });
+      }
+
+      if (!data.recipes || !Array.isArray(data.recipes) || data.recipes.length !== 4) {
+        console.error('[RecipeService] Invalid recipe count:', data.recipes?.length);
+        throw new LomaError({
+          code: ErrorCode.API_ERROR,
+          message: 'Invalid recipe response',
+          userMessage: 'Received invalid recipes. Please try again.',
+        });
+      }
+
+      console.log(
+        `[RecipeService] Successfully generated ${data.recipes.length} recipes`,
+        `Tokens: ${data.metadata?.tokens_used}, Cost: $${data.metadata?.estimated_cost}`
+      );
+
+      // Transform database recipes to client format
+      const { dbRecipeToClientRecipe } = await import('./recipeTransformers');
+      const recipes = data.recipes.map((dbRecipe: any) =>
+        dbRecipeToClientRecipe(dbRecipe, {
+          is_favorite: false,
+          cooked_count: 0,
+        })
+      );
+
+      console.log('[RecipeService] Recipes transformed to client format');
+
+      return recipes;
     } catch (error) {
+      console.error('[RecipeService] generateRecipe error:', error);
+
+      // If it's already a LomaError, rethrow it
+      if (error instanceof LomaError) {
+        throw error;
+      }
+
+      // Otherwise, wrap it
       throw new LomaError({
         code: ErrorCode.RECIPE_GENERATION_FAILED,
-        message: 'Failed to generate recipe',
-        userMessage: 'Failed to generate recipe. Please try again.',
+        message: 'Failed to generate recipes',
+        userMessage: 'Failed to generate recipes. Please try again.',
         originalError: error,
       });
     }

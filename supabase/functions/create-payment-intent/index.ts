@@ -48,17 +48,6 @@ serve(async (req) => {
       throw new Error('planType and priceId are required')
     }
 
-    // Get user profile for email
-    const { data: profile, error: profileError } = await supabaseClient
-      .from('user_profiles')
-      .select('email')
-      .eq('user_id', user.id)
-      .single()
-
-    if (profileError || !profile) {
-      throw new Error('User profile not found')
-    }
-
     // Check if user already has a Stripe customer ID
     const { data: subscription } = await supabaseClient
       .from('subscriptions')
@@ -71,7 +60,7 @@ serve(async (req) => {
     // Create Stripe customer if doesn't exist
     if (!customerId) {
       const customer = await stripe.customers.create({
-        email: profile.email || user.email,
+        email: user.email,
         metadata: {
           supabase_user_id: user.id,
         },

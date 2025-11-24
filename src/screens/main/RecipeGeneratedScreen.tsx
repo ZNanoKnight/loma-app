@@ -7,58 +7,61 @@ import {
   SafeAreaView,
   StatusBar,
   ScrollView,
-  Dimensions
+  Dimensions,
+  Alert,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { useUser } from '../../context/UserContext';
+import { useRecipe } from '../../context/RecipeContext';
 
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = (width - 60) / 2; // Account for padding and gap
 
+type RecipeGeneratedScreenRouteProp = RouteProp<
+  {
+    RecipeGenerated: {
+      recipes: any[];
+      selectedMealType: string;
+    };
+  },
+  'RecipeGenerated'
+>;
+
 export default function RecipeGeneratedScreen() {
   const navigation = useNavigation<any>();
+  const route = useRoute<RecipeGeneratedScreenRouteProp>();
   const { userData } = useUser();
+  const { setCurrentRecipe } = useRecipe();
   const [selectedMealId, setSelectedMealId] = useState<string | null>(null);
 
-  // Mock meal options - in production, these would come from AI generation
-  const mealOptions = [
-    {
-      id: '1',
-      title: 'Mediterranean Chicken Bowl',
-      emoji: '🥗',
-      calories: 485,
-      protein: 42,
-      carbs: 38,
-      fats: 18,
-    },
-    {
-      id: '2',
-      title: 'Teriyaki Salmon Rice',
-      emoji: '🍣',
-      calories: 520,
-      protein: 38,
-      carbs: 45,
-      fats: 20,
-    },
-    {
-      id: '3',
-      title: 'Veggie Stir-Fry Bowl',
-      emoji: '🥘',
-      calories: 380,
-      protein: 15,
-      carbs: 52,
-      fats: 14,
-    },
-    {
-      id: '4',
-      title: 'Grilled Steak Plate',
-      emoji: '🥩',
-      calories: 550,
-      protein: 48,
-      carbs: 32,
-      fats: 24,
-    },
-  ];
+  // Get AI-generated recipes from navigation params
+  const { recipes = [], selectedMealType = '' } = route.params || {};
+
+  // Validate we have recipes
+  if (!recipes || recipes.length === 0) {
+    Alert.alert(
+      'No Recipes',
+      'No recipes were generated. Please try again.',
+      [
+        {
+          text: 'Go Back',
+          onPress: () => navigation.goBack(),
+        },
+      ]
+    );
+  }
+
+  // Transform recipes to display format
+  const mealOptions = recipes.map((recipe) => ({
+    id: recipe.id,
+    title: recipe.title,
+    emoji: recipe.emoji || '🍽️',
+    calories: Math.round(recipe.calories || 0),
+    protein: Math.round(recipe.protein || 0),
+    carbs: Math.round(recipe.carbs || 0),
+    fats: Math.round(recipe.fats || 0),
+    fullRecipe: recipe, // Store full recipe for selection
+  }));
 
   const handleMealSelect = (mealId: string) => {
     setSelectedMealId(mealId);
@@ -66,9 +69,33 @@ export default function RecipeGeneratedScreen() {
 
   const handleSelectMeal = () => {
     if (selectedMealId) {
-      // Navigate to the Recipe Review screen
-      navigation.navigate('RecipeReview');
+      // Find the selected recipe
+      const selected = mealOptions.find((meal) => meal.id === selectedMealId);
+      if (selected && selected.fullRecipe) {
+        // Set current recipe in context
+        setCurrentRecipe(selected.fullRecipe);
+
+        // Navigate to the Recipe Review screen
+        navigation.navigate('RecipeReview', {
+          recipe: selected.fullRecipe,
+        });
+      }
     }
+  };
+
+  const handleRegenerate = () => {
+    Alert.alert(
+      'Regenerate Recipes?',
+      'This will cost 1 Munchie to generate 4 new recipes. Continue?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Generate',
+          style: 'default',
+          onPress: () => navigation.goBack(), // Go back to HomeScreen to regenerate
+        },
+      ]
+    );
   };
 
   return (
@@ -161,6 +188,17 @@ export default function RecipeGeneratedScreen() {
               !selectedMealId && styles.selectButtonTextDisabled
             ]}>
               Select Meal
+            </Text>
+          </TouchableOpacity>
+
+          {/* Regenerate Button */}
+          <TouchableOpacity
+            style={styles.regenerateButton}
+            onPress={handleRegenerate}
+            activeOpacity={0.8}
+          >
+            <Text style={styles.regenerateButtonText}>
+              🔄 Generate Different Options
             </Text>
           </TouchableOpacity>
         </ScrollView>
@@ -321,5 +359,19 @@ const styles = StyleSheet.create({
   },
   selectButtonTextDisabled: {
     color: '#9CA3AF',
+  },
+  regenerateButton: {
+    backgroundColor: '#F3F4F6',
+    paddingVertical: 16,
+    borderRadius: 12,
+    alignItems: 'center',
+    marginTop: 16,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+  },
+  regenerateButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#6B46C1',
   },
 });

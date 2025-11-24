@@ -41,4 +41,7 @@ yarn-error.*
 /ios
 /android
 
+# Supabase local files
+supabase/.temp/
+
 .env.local
