@@ -273,6 +273,7 @@ export const AuthService = {
    */
   async getCurrentSession(): Promise<AuthSession | null> {
     try {
+      console.log('[AuthService] getCurrentSession called');
       const supabase = getSupabaseClient();
 
       const {
@@ -280,7 +281,15 @@ export const AuthService = {
         error,
       } = await supabase.auth.getSession();
 
+      console.log('[AuthService] getSession result:', {
+        hasSession: !!session,
+        hasError: !!error,
+        errorMessage: error?.message,
+        userId: session?.user?.id,
+      });
+
       if (error || !session) {
+        console.log('[AuthService] No session found or error occurred');
         return null;
       }
 

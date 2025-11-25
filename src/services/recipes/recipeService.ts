@@ -5,6 +5,8 @@
 
 import { getSupabaseClient } from '../auth/supabase';
 import { ErrorCode, LomaError } from '../types';
+import { validateRecipeGeneration } from '../../validation/recipeValidation';
+import { logger } from '../../utils/logger';
 
 /**
  * Recipe interface matching database schema
@@ -68,20 +70,23 @@ export const RecipeService = {
     customRequest?: string;
   }): Promise<Recipe[]> {
     try {
+      // Validate and sanitize input
+      const validatedInput = validateRecipeGeneration(request);
+
       const supabase = getSupabaseClient();
 
-      console.log('[RecipeService] Generating recipes via AI:', request);
+      logger.log('[RecipeService] Generating recipes via AI:', validatedInput);
 
       // Call generate-recipe Edge Function
       const { data, error } = await supabase.functions.invoke('generate-recipe', {
         body: {
-          meal_type: request.mealType,
-          custom_request: request.customRequest,
+          meal_type: validatedInput.mealType,
+          custom_request: validatedInput.customRequest,
         },
       });
 
       if (error) {
-        console.error('[RecipeService] Edge Function error:', error);
+        logger.error('[RecipeService] Edge Function error:', error);
         throw new LomaError({
           code: ErrorCode.API_ERROR,
           message: 'Recipe generation failed',
@@ -91,7 +96,7 @@ export const RecipeService = {
       }
 
       if (!data || !data.success) {
-        console.error('[RecipeService] Edge Function returned unsuccessful response:', data);
+        logger.error('[RecipeService] Edge Function returned unsuccessful response:', data);
         throw new LomaError({
           code: ErrorCode.API_ERROR,
           message: 'Recipe generation failed',
@@ -100,7 +105,7 @@ export const RecipeService = {
       }
 
       if (!data.recipes || !Array.isArray(data.recipes) || data.recipes.length !== 4) {
-        console.error('[RecipeService] Invalid recipe count:', data.recipes?.length);
+        logger.error('[RecipeService] Invalid recipe count:', data.recipes?.length);
         throw new LomaError({
           code: ErrorCode.API_ERROR,
           message: 'Invalid recipe response',
@@ -108,7 +113,7 @@ export const RecipeService = {
         });
       }
 
-      console.log(
+      logger.log(
         `[RecipeService] Successfully generated ${data.recipes.length} recipes`,
         `Tokens: ${data.metadata?.tokens_used}, Cost: $${data.metadata?.estimated_cost}`
       );

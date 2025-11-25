@@ -22,7 +22,6 @@ interface UserData {
   cookingFrequency: string;
   mealPrepInterest: string;
   selectedPlan: string;
-  password: string;
 
   // App data
   currentStreak: number;
@@ -87,7 +86,6 @@ const initialUserData: UserData = {
   cookingFrequency: '',
   mealPrepInterest: '',
   selectedPlan: '',
-  password: '',
 
   // App data
   currentStreak: 0,
@@ -163,7 +161,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
       const newData = { ...prev, ...updates };
 
       // Sync to Supabase if authenticated (debounced)
-      if (newData.isAuthenticated && !updates.isAuthenticated) {
+      if (newData.isAuthenticated) {
         syncToSupabase(newData);
       }
 
@@ -183,7 +181,22 @@ export function UserProvider({ children }: { children: ReactNode }) {
     syncTimeoutRef.current = setTimeout(async () => {
       try {
         const session = await AuthService.getCurrentSession();
-        if (!session) return;
+        if (!session) {
+          console.log('[UserContext] No session - skipping sync');
+          return;
+        }
+
+        // Only sync if user has completed onboarding AND is authenticated
+        // This prevents syncing during onboarding before profile is created
+        if (!data.hasCompletedOnboarding || !data.isAuthenticated) {
+          console.log('[UserContext] Skipping sync - onboarding not complete or not authenticated', {
+            hasCompletedOnboarding: data.hasCompletedOnboarding,
+            isAuthenticated: data.isAuthenticated,
+          });
+          return;
+        }
+
+        console.log('[UserContext] Syncing profile to Supabase for user:', session.user.id);
 
         // Map UserContext data to UserProfile format
         await UserService.updateUserProfile(session.user.id, {

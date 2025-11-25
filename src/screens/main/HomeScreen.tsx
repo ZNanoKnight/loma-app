@@ -16,6 +16,9 @@ import { useUser } from '../../context/UserContext';
 import { useRecipe } from '../../context/RecipeContext';
 import { SubscriptionService } from '../../services/subscription/subscriptionService';
 import { AuthService } from '../../services/auth/authService';
+import { RecipeService } from '../../services/recipes/recipeService';
+import { ENV } from '../../config/env';
+import { logger } from '../../utils/logger';
 
 export default function HomeScreen() {
   const navigation = useNavigation<any>();
@@ -34,6 +37,10 @@ export default function HomeScreen() {
   const [loadingTokens, setLoadingTokens] = useState(true);
   const [generating, setGenerating] = useState(false);
 
+  // Rate limiting state
+  const [lastGenerationTime, setLastGenerationTime] = useState<number>(0);
+  const RATE_LIMIT_MS = 10000; // 10 seconds between generations
+
   // Fetch token balance on mount and when screen is focused
   useEffect(() => {
     fetchTokenBalance();
@@ -48,13 +55,13 @@ export default function HomeScreen() {
   const fetchTokenBalance = async () => {
     try {
       setLoadingTokens(true);
-      const session = await AuthService.getSession();
+      const session = await AuthService.getCurrentSession();
       if (session?.user?.id) {
         const balance = await SubscriptionService.getTokenBalance(session.user.id);
         setTokenBalance(balance);
       }
     } catch (error) {
-      console.error('Error fetching token balance:', error);
+      logger.error('Error fetching token balance:', error);
       // Don't show error to user, just use default balance
     } finally {
       setLoadingTokens(false);
@@ -62,6 +69,19 @@ export default function HomeScreen() {
   };
 
   const handleGenerateRecipe = async () => {
+    // Rate limiting check
+    const now = Date.now();
+    const timeSinceLastGeneration = now - lastGenerationTime;
+    if (timeSinceLastGeneration < RATE_LIMIT_MS) {
+      const remainingSeconds = Math.ceil((RATE_LIMIT_MS - timeSinceLastGeneration) / 1000);
+      Alert.alert(
+        'Please Wait',
+        `To ensure the best quality recipes, please wait ${remainingSeconds} more seconds before generating again.`,
+        [{ text: 'OK' }]
+      );
+      return;
+    }
+
     // Validate that meal type is selected
     if (!mealType) {
       Alert.alert(
@@ -94,12 +114,12 @@ export default function HomeScreen() {
 
     try {
       // Step 1: Validate token usage with server
-      const session = await AuthService.getSession();
+      const session = await AuthService.getCurrentSession();
       if (!session?.user?.id) {
         throw new Error('No active session');
       }
 
-      console.log('[HomeScreen] Validating token usage...');
+      logger.log('[HomeScreen] Validating token usage...');
       const validation = await SubscriptionService.validateTokenUsage(session.user.id);
 
       if (!validation.hasTokens) {
@@ -112,7 +132,7 @@ export default function HomeScreen() {
         return;
       }
 
-      console.log('[HomeScreen] Token validation successful, generating 4 recipes via AI...');
+      logger.log('[HomeScreen] Token validation successful, generating 4 recipes via AI...');
 
       // Step 2: Generate 4 recipes via AI
       generatedRecipes = await RecipeService.generateRecipe({
@@ -120,15 +140,16 @@ export default function HomeScreen() {
         customRequest: customRequest || undefined,
       });
 
-      console.log(`[HomeScreen] Successfully generated ${generatedRecipes.length} recipes`);
+      logger.log(`[HomeScreen] Successfully generated ${generatedRecipes.length} recipes`);
 
       // Step 3: Deduct token AFTER successful generation
-      console.log('[HomeScreen] Deducting 1 token...');
+      logger.log('[HomeScreen] Deducting 1 token...');
       const deductResult = await SubscriptionService.deductTokens(session.user.id, 1);
 
-      // Step 4: Update local token balance
+      // Step 4: Update local token balance and rate limit timestamp
       setTokenBalance(deductResult.balance);
-      console.log(`[HomeScreen] Token deducted. New balance: ${deductResult.balance}`);
+      setLastGenerationTime(Date.now());
+      logger.log(`[HomeScreen] Token deducted. New balance: ${deductResult.balance}`);
 
       // Step 5: Navigate with generated recipes
       navigation.navigate('RecipeGenerated', {
@@ -139,7 +160,7 @@ export default function HomeScreen() {
       // Reset custom request field after successful generation
       setCustomRequest('');
     } catch (error: any) {
-      console.error('[HomeScreen] Error generating recipe:', error);
+      logger.error('[HomeScreen] Error generating recipe:', error);
 
       // CRITICAL: If error occurred, token was NOT deducted
       // Show error with free retry option

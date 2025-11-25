@@ -11,23 +11,30 @@ import CookingFrequencyScreen from '../screens/onboarding/CookingFrequencyScreen
 import RecipePreviewScreen from '../screens/onboarding/RecipePreviewScreen';
 import AppFeaturesScreen from '../screens/onboarding/AppFeaturesScreen';
 import PaymentScreen from '../screens/onboarding/PaymentScreen';
+import PaymentCollectionScreen from '../screens/onboarding/PaymentCollectionScreen';
 import LoginScreen from '../screens/auth/LoginScreen';
 import ForgotPasswordScreen from '../screens/auth/ForgotPasswordScreen';
+import EmailConfirmationScreen from '../screens/auth/EmailConfirmationScreen';
 
 const Stack = createStackNavigator();
 
-export default function OnboardingNavigator() {
+export default function OnboardingNavigator({ route }: any) {
+  // Check if we should start at PaymentCollection (after email verification)
+  const initialRoute = route?.params?.screen || 'Welcome';
+
   return (
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
         cardStyle: { backgroundColor: '#4F46E5' }
       }}
-      initialRouteName="Welcome"
+      initialRouteName={initialRoute}
     >
       {/* Auth Screens */}
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
+      <Stack.Screen name="EmailConfirmation" component={EmailConfirmationScreen} />
+      <Stack.Screen name="PaymentCollection" component={PaymentCollectionScreen} />
 
       {/* Onboarding Screens */}
       <Stack.Screen name="Welcome" component={WelcomeScreen} />

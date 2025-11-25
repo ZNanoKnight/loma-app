@@ -128,10 +128,37 @@ export const SecureStorage = {
 
   /**
    * Generic set item (for testing and verification)
+   * Handles values larger than 2048 bytes by chunking
    */
   async setItem(key: string, value: string): Promise<void> {
     try {
-      await SecureStore.setItemAsync(key, value);
+      const CHUNK_SIZE = 2048; // SecureStore limit
+
+      // If value is small enough, store directly
+      if (value.length <= CHUNK_SIZE) {
+        await SecureStore.setItemAsync(key, value);
+        // Clean up any existing chunks
+        await SecureStore.deleteItemAsync(`${key}_chunks`).catch(() => {});
+        return;
+      }
+
+      // Split into chunks for large values
+      const chunks: string[] = [];
+      for (let i = 0; i < value.length; i += CHUNK_SIZE) {
+        chunks.push(value.substring(i, i + CHUNK_SIZE));
+      }
+
+      // Store each chunk
+      await Promise.all(
+        chunks.map((chunk, index) =>
+          SecureStore.setItemAsync(`${key}_chunk_${index}`, chunk)
+        )
+      );
+
+      // Store metadata about chunks
+      await SecureStore.setItemAsync(`${key}_chunks`, chunks.length.toString());
+
+      console.log(`[SecureStorage] Stored large value in ${chunks.length} chunks for key: ${key}`);
     } catch (error) {
       throw new LomaError({
         code: ErrorCode.STORAGE_ERROR,
@@ -144,9 +171,34 @@ export const SecureStorage = {
 
   /**
    * Generic get item (for testing and verification)
+   * Handles chunked values
    */
   async getItem(key: string): Promise<string | null> {
     try {
+      // Try to get chunks metadata first
+      const chunksCount = await SecureStore.getItemAsync(`${key}_chunks`);
+
+      if (chunksCount) {
+        // Retrieve and reassemble chunks
+        const count = parseInt(chunksCount, 10);
+        const chunks = await Promise.all(
+          Array.from({ length: count }, (_, i) =>
+            SecureStore.getItemAsync(`${key}_chunk_${i}`)
+          )
+        );
+
+        // Check if all chunks were retrieved
+        if (chunks.some(chunk => chunk === null)) {
+          console.error(`[SecureStorage] Some chunks missing for key: ${key}`);
+          return null;
+        }
+
+        const value = chunks.join('');
+        console.log(`[SecureStorage] Retrieved large value from ${count} chunks for key: ${key}`);
+        return value;
+      }
+
+      // No chunks, try direct retrieval
       return await SecureStore.getItemAsync(key);
     } catch (error) {
       console.error(`Failed to retrieve ${key}:`, error);
@@ -156,9 +208,27 @@ export const SecureStorage = {
 
   /**
    * Generic remove item (for testing and verification)
+   * Handles chunked values
    */
   async removeItem(key: string): Promise<void> {
     try {
+      // Check if this is a chunked value
+      const chunksCount = await SecureStore.getItemAsync(`${key}_chunks`);
+
+      if (chunksCount) {
+        const count = parseInt(chunksCount, 10);
+        // Delete all chunks
+        await Promise.all(
+          Array.from({ length: count }, (_, i) =>
+            SecureStore.deleteItemAsync(`${key}_chunk_${i}`).catch(() => {})
+          )
+        );
+        // Delete chunks metadata
+        await SecureStore.deleteItemAsync(`${key}_chunks`).catch(() => {});
+        console.log(`[SecureStorage] Removed chunked value for key: ${key}`);
+      }
+
+      // Delete the main key
       await SecureStore.deleteItemAsync(key);
     } catch (error) {
       console.error(`Failed to remove ${key}:`, error);

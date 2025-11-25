@@ -15,9 +15,11 @@ module.exports = {
       resizeMode: 'contain',
       backgroundColor: '#ffffff',
     },
+    scheme: 'lomaapp',
     ios: {
       supportsTablet: true,
       bundleIdentifier: 'com.znanoknight.lomaapp',
+      associatedDomains: ['applinks:yourdomain.com', 'applinks:www.yourdomain.com'],
       infoPlist: {
         ITSAppUsesNonExemptEncryption: false,
       },
@@ -27,6 +29,35 @@ module.exports = {
         foregroundImage: './assets/adaptive-icon.png',
         backgroundColor: '#ffffff',
       },
+      intentFilters: [
+        {
+          action: 'VIEW',
+          autoVerify: true,
+          data: [
+            {
+              scheme: 'lomaapp',
+            },
+          ],
+          category: ['BROWSABLE', 'DEFAULT'],
+        },
+        {
+          action: 'VIEW',
+          autoVerify: true,
+          data: [
+            {
+              scheme: 'https',
+              host: 'yourdomain.com',
+              pathPrefix: '/auth',
+            },
+            {
+              scheme: 'https',
+              host: 'www.yourdomain.com',
+              pathPrefix: '/auth',
+            },
+          ],
+          category: ['BROWSABLE', 'DEFAULT'],
+        },
+      ],
       edgeToEdgeEnabled: true,
       predictiveBackGestureEnabled: false,
     },

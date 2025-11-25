@@ -229,6 +229,7 @@ serve(async (req) => {
         user_id: user.id,
         recipe_id: insertedRecipe.id,
         is_favorite: false,
+        is_saved: true,
       });
 
       if (linkError) {

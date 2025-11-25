@@ -22,19 +22,28 @@ const createSupabaseClient = (): SupabaseClient | null => {
       // Use secure storage for session persistence
       storage: {
         getItem: async (key: string) => {
-          if (key === 'supabase.auth.token') {
-            return await SecureStorage.getAccessToken();
+          console.log('[Supabase Storage] getItem called with key:', key);
+          // Supabase uses keys like 'sb-{project-ref}-auth-token'
+          if (key.includes('auth-token')) {
+            const session = await SecureStorage.getItem(key);
+            console.log('[Supabase Storage] Retrieved session:', session ? 'present' : 'null');
+            return session;
           }
           return null;
         },
         setItem: async (key: string, value: string) => {
-          if (key === 'supabase.auth.token') {
-            await SecureStorage.setAccessToken(value);
+          console.log('[Supabase Storage] setItem called with key:', key);
+          console.log('[Supabase Storage] Value length:', value?.length || 0);
+          // Store the full session object
+          if (key.includes('auth-token')) {
+            await SecureStorage.setItem(key, value);
+            console.log('[Supabase Storage] Session stored successfully');
           }
         },
         removeItem: async (key: string) => {
-          if (key === 'supabase.auth.token') {
-            await SecureStorage.clearAll();
+          console.log('[Supabase Storage] removeItem called with key:', key);
+          if (key.includes('auth-token')) {
+            await SecureStorage.removeItem(key);
           }
         },
       },

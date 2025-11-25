@@ -15,10 +15,12 @@ import { useNavigation } from '@react-navigation/native';
 import { useUser } from '../../context/UserContext';
 import { AuthService } from '../../services/auth/authService';
 import { UserService } from '../../services/user/userService';
+import { SubscriptionService } from '../../services/subscription/subscriptionService';
 import { LomaError } from '../../services/types';
 import { useStripe } from '@stripe/stripe-react-native';
 import { supabase } from '../../services/auth/supabase';
 import { ENV } from '../../config/env';
+import { logger } from '../../utils/logger';
 
 type PlanType = 'weekly' | 'monthly' | 'yearly';
 
@@ -128,9 +130,9 @@ export default function PaywallScreen() {
     setLoading(true);
     try {
       // Debug: Log environment and user data
-      console.log('[PaymentScreen] Starting signup process...');
-      console.log('[PaymentScreen] Email:', email);
-      console.log('[PaymentScreen] User data available:', {
+      logger.log('[PaymentScreen] Starting signup process...');
+      logger.log('[PaymentScreen] Email:', email);
+      logger.log('[PaymentScreen] User data available:', {
         hasFirstName: !!userData.firstName,
         hasLastName: !!userData.lastName,
         hasAge: !!userData.age,
@@ -138,7 +140,7 @@ export default function PaywallScreen() {
       });
 
       // Step 1: Create Supabase auth account
-      console.log('[PaymentScreen] Creating Supabase auth account...');
+      logger.log('[PaymentScreen] Creating Supabase auth account...');
       const authSession = await AuthService.signUp({
         email: email.trim().toLowerCase(),
         password,
@@ -160,17 +162,28 @@ export default function PaywallScreen() {
         },
       });
 
-      console.log('[PaymentScreen] Auth session created:', {
+      logger.log('[PaymentScreen] Auth session created:', {
         userId: authSession.user.id,
         email: authSession.user.email,
         hasToken: !!authSession.tokens.accessToken,
       });
 
+      // Save selected plan to UserContext BEFORE email confirmation
+      // This ensures we remember the plan when user returns after verifying email
+      updateUserData({
+        selectedPlan,
+        email: email.trim().toLowerCase(),
+      });
+
       // Check if email confirmation is required (no session/token returned)
       const requiresEmailConfirmation = !authSession.tokens.accessToken;
 
+      // Small delay to ensure auth.users record is committed in database
+      // This prevents race condition where profile function checks before user exists
+      await new Promise(resolve => setTimeout(resolve, 500));
+
       // Step 2: Create user profile in database with onboarding data
-      console.log('[PaymentScreen] Creating user profile...');
+      logger.log('[PaymentScreen] Creating user profile...');
       await UserService.createUserProfile(authSession.user.id, {
         user_id: authSession.user.id,
         first_name: userData.firstName || '',
@@ -200,30 +213,19 @@ export default function PaywallScreen() {
         metric_units: false,
         has_completed_onboarding: false, // Will be set to true after payment/confirmation
       });
-      console.log('[PaymentScreen] User profile created successfully');
+      logger.log('[PaymentScreen] User profile created successfully');
 
-      // If email confirmation is required, show message and exit
+      // If email confirmation is required, navigate to confirmation screen
       if (requiresEmailConfirmation) {
-        console.log('[PaymentScreen] Email confirmation required - skipping payment');
+        logger.log('[PaymentScreen] Email confirmation required - navigating to confirmation screen');
 
-        Alert.alert(
-          'Verify Your Email',
-          `We've sent a confirmation email to ${email}.\n\nPlease check your inbox and click the verification link to complete your account setup. After verifying, you can sign in and complete your subscription.`,
-          [
-            {
-              text: 'OK',
-              onPress: () => {
-                // Navigate back to login screen
-                navigation.navigate('Login');
-              },
-            },
-          ]
-        );
+        // Navigate to email confirmation screen instead of showing alert
+        navigation.navigate('EmailConfirmation', { email: email.trim().toLowerCase() });
         return;
       }
 
       // Step 3: Call Edge Function to create payment intent
-      console.log('[PaymentScreen] Creating payment intent...');
+      logger.log('[PaymentScreen] Creating payment intent...');
       const priceId = getPriceId(selectedPlan);
 
       const { data: { session } } = await supabase.auth.getSession();
@@ -247,6 +249,11 @@ export default function PaywallScreen() {
 
       if (paymentError || !paymentData) {
         throw new Error(paymentError?.message || 'Failed to create payment intent');
+      }
+
+      // Validate clientSecret is present
+      if (!paymentData.clientSecret) {
+        throw new Error('Payment intent created but no client secret returned');
       }
 
       // Step 4: Initialize payment sheet
@@ -286,6 +293,19 @@ export default function PaywallScreen() {
         isAuthenticated: true,
       });
 
+      // Step 7: Wait for webhook to allocate tokens, then fetch balance
+      // Webhook typically processes within 2-3 seconds
+      logger.log('[PaymentScreen] Waiting for token allocation...');
+      await new Promise(resolve => setTimeout(resolve, 3000));
+
+      try {
+        const tokenBalance = await SubscriptionService.getTokenBalance(authSession.user.id);
+        logger.log('[PaymentScreen] Token balance after payment:', tokenBalance);
+      } catch (error) {
+        logger.error('[PaymentScreen] Error fetching token balance:', error);
+        // Non-fatal - user can refresh on home screen
+      }
+
       Alert.alert(
         'Welcome to LOMA! 🎉',
         'Your subscription is now active. Let\'s start creating amazing recipes!',
@@ -301,11 +321,11 @@ export default function PaywallScreen() {
 
       // Note: Tokens will be allocated via webhook when Stripe confirms the subscription
     } catch (error) {
-      console.error('Signup/Payment error:', error);
+      logger.error('Signup/Payment error:', error);
 
       // Log detailed error information for debugging
       if (error instanceof LomaError) {
-        console.error('LomaError details:', {
+        logger.error('LomaError details:', {
           code: error.code,
           message: error.message,
           userMessage: error.userMessage,

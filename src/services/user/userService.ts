@@ -132,6 +132,7 @@ export const UserService = {
 
   /**
    * Create user profile after successful registration
+   * Uses secure Postgres function to bypass RLS during email confirmation flow
    * @param userId - User ID from auth.users
    * @param profileData - Initial profile data from onboarding
    */
@@ -139,20 +140,16 @@ export const UserService = {
     try {
       const supabase = getSupabaseClient();
 
-      const { data, error } = await supabase
-        .from('user_profiles')
-        .insert({
-          user_id: userId,
-          first_name: profileData.first_name || '',
-          last_name: profileData.last_name || '',
-          ...profileData,
-        })
-        .select()
-        .single();
+      // Call the secure function instead of direct INSERT
+      // This bypasses RLS policy which blocks inserts during email confirmation flow
+      const { data, error } = await supabase.rpc('create_user_profile', {
+        p_user_id: userId,
+        p_profile_data: profileData,
+      });
 
       if (error) {
         // Handle duplicate profile error
-        if (error.code === '23505') {
+        if (error.message?.includes('Profile already exists')) {
           throw new LomaError({
             code: ErrorCode.API_ERROR,
             message: 'Profile already exists',
