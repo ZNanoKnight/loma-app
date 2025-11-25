@@ -102,11 +102,30 @@ export const SecureStorage = {
    */
   async clearAll(): Promise<void> {
     try {
+      console.log('[SecureStorage] Clearing all secure storage...');
+
+      // Clear legacy tokens
       await Promise.all([
-        SecureStore.deleteItemAsync(STORAGE_KEYS.ACCESS_TOKEN),
-        SecureStore.deleteItemAsync(STORAGE_KEYS.REFRESH_TOKEN),
-        SecureStore.deleteItemAsync(STORAGE_KEYS.USER_ID),
+        SecureStore.deleteItemAsync(STORAGE_KEYS.ACCESS_TOKEN).catch(() => {}),
+        SecureStore.deleteItemAsync(STORAGE_KEYS.REFRESH_TOKEN).catch(() => {}),
+        SecureStore.deleteItemAsync(STORAGE_KEYS.USER_ID).catch(() => {}),
       ]);
+
+      // Clear Supabase session (including chunked storage)
+      // The Supabase storage key format is: sb-{project-ref}-auth-token
+      const supabaseKeys = [
+        'sb-rxiaamsmhezlmdbwzmgx-auth-token',
+        'sb-rxiaamsmhezlmdbwzmgx-auth-token_chunks',
+        'sb-rxiaamsmhezlmdbwzmgx-auth-token_chunk_0',
+        'sb-rxiaamsmhezlmdbwzmgx-auth-token_chunk_1',
+        'sb-rxiaamsmhezlmdbwzmgx-auth-token_chunk_2',
+      ];
+
+      await Promise.all(
+        supabaseKeys.map(key => SecureStore.deleteItemAsync(key).catch(() => {}))
+      );
+
+      console.log('[SecureStorage] All secure storage cleared');
     } catch (error) {
       console.error('Failed to clear secure storage:', error);
       // Don't throw here - clearing should be best effort

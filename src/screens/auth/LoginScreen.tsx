@@ -19,11 +19,14 @@ import { UserService } from '../../services/user/userService';
 import { useUser } from '../../context/UserContext';
 import { LomaError } from '../../services/types';
 
-export default function LoginScreen() {
+export default function LoginScreen({ route }: any) {
   const navigation = useNavigation<any>();
   const { updateUserData } = useUser();
 
-  const [email, setEmail] = useState('');
+  // Pre-fill email if passed from navigation params (e.g., from PaymentScreen)
+  const prefillEmail = route?.params?.email || '';
+
+  const [email, setEmail] = useState(prefillEmail);
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);

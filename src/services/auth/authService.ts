@@ -77,6 +77,20 @@ export const AuthService = {
         });
       }
 
+      // IMPORTANT: Check if email already exists
+      // Supabase doesn't throw an error for existing emails - instead it returns a user
+      // with empty identities array. We need to detect this case.
+      // Signs of existing email: identities is empty, role is empty, or recovery_sent_at is set
+      const identities = data.user.identities || [];
+      if (identities.length === 0) {
+        console.log('[AuthService] Email already exists - identities array is empty');
+        throw new LomaError({
+          code: ErrorCode.AUTH_EMAIL_ALREADY_EXISTS,
+          message: 'Email already exists',
+          userMessage: 'An account with this email already exists.',
+        });
+      }
+
       // If email confirmation is enabled, session will be null
       // In this case, we still return the user info but with empty tokens
       if (!data.session) {
@@ -99,17 +113,8 @@ export const AuthService = {
         };
       }
 
-      // Store tokens securely
-      if (data.session.access_token) {
-        await SecureStorage.setAccessToken(data.session.access_token);
-      }
-      if (data.session.refresh_token) {
-        await SecureStorage.setRefreshToken(data.session.refresh_token);
-      }
-      await SecureStorage.setUserId(data.user.id);
-
-      // TODO: Create user profile in database with onboarding data
-      // This will be implemented when we create the database schema
+      // Session is automatically stored by Supabase client's custom storage adapter
+      // No need to manually store tokens - the Supabase client handles this
 
       return {
         user: {
@@ -178,10 +183,8 @@ export const AuthService = {
         });
       }
 
-      // Store tokens securely
-      await SecureStorage.setAccessToken(data.session.access_token);
-      await SecureStorage.setRefreshToken(data.session.refresh_token);
-      await SecureStorage.setUserId(data.user.id);
+      // Session is automatically stored by Supabase client's custom storage adapter
+      // No need to manually store tokens - the Supabase client handles this
 
       return {
         user: {
@@ -337,9 +340,8 @@ export const AuthService = {
         return null;
       }
 
-      // Update stored tokens
-      await SecureStorage.setAccessToken(session.access_token);
-      await SecureStorage.setRefreshToken(session.refresh_token);
+      // Session is automatically stored by Supabase client's custom storage adapter
+      // No need to manually store tokens - the Supabase client handles this
 
       return {
         user: {

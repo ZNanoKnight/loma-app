@@ -2,5 +2,5 @@
  * Storage Services Index
  */
 
-export { SecureStorage } from './SecureStorage';
+export { SecureStorage } from './secureStorage';
 export { LocalStorage } from './asyncStorage';

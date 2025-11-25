@@ -16,7 +16,7 @@ import { useUser } from '../../context/UserContext';
 import { AuthService } from '../../services/auth/authService';
 import { UserService } from '../../services/user/userService';
 import { SubscriptionService } from '../../services/subscription/subscriptionService';
-import { LomaError } from '../../services/types';
+import { LomaError, ErrorCode } from '../../services/types';
 import { useStripe } from '@stripe/stripe-react-native';
 import { supabase } from '../../services/auth/supabase';
 import { ENV } from '../../config/env';
@@ -140,6 +140,8 @@ export default function PaywallScreen() {
       });
 
       // Step 1: Create Supabase auth account
+      // Note: We don't pre-check if email exists - we let the signup fail naturally
+      // and catch the "already registered" error. This avoids sending unnecessary emails.
       logger.log('[PaymentScreen] Creating Supabase auth account...');
       const authSession = await AuthService.signUp({
         email: email.trim().toLowerCase(),
@@ -321,27 +323,39 @@ export default function PaywallScreen() {
 
       // Note: Tokens will be allocated via webhook when Stripe confirms the subscription
     } catch (error) {
-      logger.error('Signup/Payment error:', error);
-
-      // Log detailed error information for debugging
-      if (error instanceof LomaError) {
-        logger.error('LomaError details:', {
-          code: error.code,
-          message: error.message,
-          userMessage: error.userMessage,
-          originalError: error.originalError,
-        });
-      }
-
       let errorMessage = 'Failed to complete signup. Please try again.';
+      let isEmailExists = false;
 
+      // Check for email already exists error first
       if (error instanceof LomaError) {
+        isEmailExists = error.code === ErrorCode.AUTH_EMAIL_ALREADY_EXISTS;
         errorMessage = error.userMessage || errorMessage;
       } else if (error instanceof Error) {
-        if (error.message.includes('already registered')) {
-          errorMessage =
-            'This email is already registered. Please use the login screen.';
-        } else if (error.message.includes('Password should be at least')) {
+        if (error.message.includes('already registered') ||
+            error.message.includes('User already registered')) {
+          isEmailExists = true;
+          errorMessage = 'This email is already registered.';
+        }
+      }
+
+      // Only log errors that are NOT expected (email exists is expected/handled gracefully)
+      if (!isEmailExists) {
+        logger.error('Signup/Payment error:', error);
+        if (error instanceof LomaError) {
+          logger.error('LomaError details:', {
+            code: error.code,
+            message: error.message,
+            userMessage: error.userMessage,
+            originalError: error.originalError,
+          });
+        }
+      } else {
+        logger.log('[PaymentScreen] Email already exists - showing login prompt');
+      }
+
+      // Handle remaining error types
+      if (!isEmailExists && error instanceof Error) {
+        if (error.message.includes('Password should be at least')) {
           errorMessage = 'Password must be at least 8 characters long.';
         } else if (error.message.includes('payment')) {
           errorMessage = 'Payment failed. ' + error.message;
@@ -350,12 +364,40 @@ export default function PaywallScreen() {
         }
       }
 
-      Alert.alert('Error', errorMessage, [
-        {
-          text: 'Try Again',
-          style: 'default',
-        },
-      ]);
+      // Special handling for existing email - offer to navigate to login
+      if (isEmailExists) {
+        const userEmail = email.trim().toLowerCase();
+        Alert.alert(
+          'Account Already Exists',
+          `An account with ${userEmail} already exists. Would you like to sign in instead?`,
+          [
+            {
+              text: 'Cancel',
+              style: 'cancel',
+            },
+            {
+              text: 'Sign In',
+              style: 'default',
+              onPress: () => {
+                logger.log('[PaymentScreen] Navigating to Login with email:', userEmail);
+                // Use reset to ensure clean navigation to Login screen
+                navigation.reset({
+                  index: 0,
+                  routes: [{ name: 'Login', params: { email: userEmail } }],
+                });
+              },
+            },
+          ]
+        );
+        return; // Exit early - don't show additional error alerts
+      } else {
+        Alert.alert('Error', errorMessage, [
+          {
+            text: 'Try Again',
+            style: 'default',
+          },
+        ]);
+      }
     } finally {
       setLoading(false);
     }
