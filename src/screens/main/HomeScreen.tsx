@@ -14,6 +14,9 @@ import {
   Modal,
   Animated,
   Easing,
+  KeyboardAvoidingView,
+  Platform,
+  Keyboard,
 } from 'react-native';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { useUser } from '../../context/UserContext';
@@ -50,6 +53,12 @@ export default function HomeScreen() {
   const [showLoadingModal, setShowLoadingModal] = useState(false);
   const [loadingMessageIndex, setLoadingMessageIndex] = useState(0);
   const spinValue = useRef(new Animated.Value(0)).current;
+
+  // Out of Munchies modal state
+  const [showOutOfMunchiesModal, setShowOutOfMunchiesModal] = useState(false);
+
+  // Ref for ScrollView to scroll to input when focused
+  const scrollViewRef = useRef<ScrollView>(null);
 
   // Fun loading messages to cycle through
   const loadingMessages = [
@@ -153,18 +162,7 @@ export default function HomeScreen() {
 
     // Check token balance before generating
     if (tokenBalance === 0) {
-      Alert.alert(
-        "Out of Munchies 🍪",
-        "You don't have any Munchies left to generate a recipe. Your balance will refill when your subscription renews, or you can upgrade your plan.",
-        [
-          { text: "OK", style: "default" },
-          {
-            text: "Manage Subscription",
-            style: "default",
-            onPress: () => navigation.navigate('SettingsMain')
-          }
-        ]
-      );
+      setShowOutOfMunchiesModal(true);
       return;
     }
 
@@ -254,10 +252,17 @@ export default function HomeScreen() {
   return (
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" />
+      <KeyboardAvoidingView
+        style={styles.keyboardAvoidingView}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
+      >
         <SafeAreaView style={styles.safeArea}>
           <ScrollView
+            ref={scrollViewRef}
             contentContainerStyle={styles.scrollContent}
             showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled"
             refreshControl={
               <RefreshControl
                 refreshing={refreshing}
@@ -343,6 +348,12 @@ export default function HomeScreen() {
                   placeholder="e.g., 'Extra spicy' or 'Use chicken thighs'"
                   placeholderTextColor="#9CA3AF"
                   multiline
+                  onFocus={() => {
+                    // Scroll to make the input visible above the keyboard
+                    setTimeout(() => {
+                      scrollViewRef.current?.scrollToEnd({ animated: true });
+                    }, 100);
+                  }}
                 />
               </View>
 
@@ -373,6 +384,7 @@ export default function HomeScreen() {
             </View>
           </ScrollView>
         </SafeAreaView>
+      </KeyboardAvoidingView>
 
         {/* Loading Modal */}
         <Modal
@@ -419,6 +431,67 @@ export default function HomeScreen() {
             </View>
           </View>
         </Modal>
+
+        {/* Out of Munchies Modal */}
+        <Modal
+          visible={showOutOfMunchiesModal}
+          transparent={true}
+          animationType="fade"
+          statusBarTranslucent={true}
+          onRequestClose={() => setShowOutOfMunchiesModal(false)}
+        >
+          <View style={styles.modalOverlay}>
+            <View style={styles.outOfMunchiesModalContent}>
+              {/* Cookie Emoji */}
+              <Text style={styles.outOfMunchiesEmoji}>🍪</Text>
+
+              {/* Title */}
+              <Text style={styles.outOfMunchiesTitle}>Out of Munchies!</Text>
+
+              {/* Message */}
+              <Text style={styles.outOfMunchiesMessage}>
+                You've used all your Munchies for this period. But don't worry - you have options!
+              </Text>
+
+              {/* Info Box */}
+              <View style={styles.outOfMunchiesInfoBox}>
+                <Text style={styles.outOfMunchiesInfoTitle}>How to get more Munchies:</Text>
+                <View style={styles.outOfMunchiesInfoItem}>
+                  <Text style={styles.outOfMunchiesInfoBullet}>1</Text>
+                  <Text style={styles.outOfMunchiesInfoText}>
+                    <Text style={styles.outOfMunchiesInfoBold}>Wait for renewal</Text> - Your balance refills automatically when your subscription renews
+                  </Text>
+                </View>
+                <View style={styles.outOfMunchiesInfoItem}>
+                  <Text style={styles.outOfMunchiesInfoBullet}>2</Text>
+                  <Text style={styles.outOfMunchiesInfoText}>
+                    <Text style={styles.outOfMunchiesInfoBold}>Upgrade your plan</Text> - Higher tiers include more Munchies per period
+                  </Text>
+                </View>
+              </View>
+
+              {/* Buttons */}
+              <TouchableOpacity
+                style={styles.outOfMunchiesPrimaryButton}
+                onPress={() => {
+                  setShowOutOfMunchiesModal(false);
+                  navigation.navigate('Subscription');
+                }}
+                activeOpacity={0.8}
+              >
+                <Text style={styles.outOfMunchiesPrimaryButtonText}>Manage Subscription</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.outOfMunchiesSecondaryButton}
+                onPress={() => setShowOutOfMunchiesModal(false)}
+                activeOpacity={0.8}
+              >
+                <Text style={styles.outOfMunchiesSecondaryButtonText}>Maybe Later</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
     </View>
   );
 }
@@ -427,6 +500,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FEFEFE',
+  },
+  keyboardAvoidingView: {
+    flex: 1,
   },
   safeArea: {
     flex: 1,
@@ -710,5 +786,118 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: '#713F12',
     lineHeight: 18,
+  },
+  // Out of Munchies Modal Styles
+  outOfMunchiesModalContent: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 24,
+    padding: 28,
+    alignItems: 'center',
+    width: '100%',
+    maxWidth: 340,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 8,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 16,
+    elevation: 10,
+  },
+  outOfMunchiesEmoji: {
+    fontSize: 72,
+    marginBottom: 16,
+  },
+  outOfMunchiesTitle: {
+    fontFamily: 'Quicksand-Bold',
+    fontSize: 26,
+    color: '#1F2937',
+    marginBottom: 12,
+    textAlign: 'center',
+  },
+  outOfMunchiesMessage: {
+    fontFamily: 'Quicksand-Regular',
+    fontSize: 15,
+    color: '#6B7280',
+    textAlign: 'center',
+    marginBottom: 20,
+    lineHeight: 22,
+  },
+  outOfMunchiesInfoBox: {
+    backgroundColor: '#F3F0FF',
+    borderRadius: 16,
+    padding: 16,
+    width: '100%',
+    marginBottom: 20,
+    borderWidth: 1,
+    borderColor: '#E9D5FF',
+  },
+  outOfMunchiesInfoTitle: {
+    fontFamily: 'Quicksand-SemiBold',
+    fontSize: 14,
+    color: '#6B46C1',
+    marginBottom: 12,
+  },
+  outOfMunchiesInfoItem: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginBottom: 10,
+  },
+  outOfMunchiesInfoBullet: {
+    fontFamily: 'Quicksand-Bold',
+    fontSize: 12,
+    color: '#FFFFFF',
+    backgroundColor: '#6B46C1',
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    textAlign: 'center',
+    lineHeight: 20,
+    marginRight: 10,
+    marginTop: 2,
+  },
+  outOfMunchiesInfoText: {
+    fontFamily: 'Quicksand-Regular',
+    fontSize: 13,
+    color: '#4B5563',
+    flex: 1,
+    lineHeight: 18,
+  },
+  outOfMunchiesInfoBold: {
+    fontFamily: 'Quicksand-SemiBold',
+    color: '#1F2937',
+  },
+  outOfMunchiesPrimaryButton: {
+    backgroundColor: '#6B46C1',
+    paddingVertical: 14,
+    paddingHorizontal: 24,
+    borderRadius: 12,
+    width: '100%',
+    alignItems: 'center',
+    marginBottom: 10,
+    shadowColor: '#6B46C1',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 5,
+  },
+  outOfMunchiesPrimaryButtonText: {
+    fontFamily: 'Quicksand-SemiBold',
+    fontSize: 16,
+    color: '#FFFFFF',
+  },
+  outOfMunchiesSecondaryButton: {
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    width: '100%',
+    alignItems: 'center',
+  },
+  outOfMunchiesSecondaryButtonText: {
+    fontFamily: 'Quicksand-Medium',
+    fontSize: 14,
+    color: '#6B7280',
   },
 });

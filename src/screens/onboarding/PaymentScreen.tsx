@@ -10,6 +10,8 @@ import {
   TextInput,
   ActivityIndicator,
   Alert,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useUser } from '../../context/UserContext';
@@ -28,7 +30,8 @@ export default function PaywallScreen() {
   const navigation = useNavigation<any>();
   const { userData, updateUserData } = useUser();
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
-  const [selectedPlan, setSelectedPlan] = useState<PlanType>('yearly');
+  // Default to monthly plan (most popular) - cards are now informational only
+  const selectedPlan: PlanType = 'monthly';
   const [email, setEmail] = useState(userData.email || '');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -52,8 +55,7 @@ export default function PaywallScreen() {
       name: 'Weekly',
       price: '$3.99',
       period: 'per week',
-      savings: null,
-      trial: '3 days free',
+      costPerRecipe: '~$0.80 per recipe',
       munchies: '5 Munchies per week'
     },
     {
@@ -61,8 +63,7 @@ export default function PaywallScreen() {
       name: 'Monthly',
       price: '$7.99',
       period: 'per month',
-      savings: 'Save 50%',
-      trial: '7 days free',
+      costPerRecipe: '~$0.40 per recipe',
       popular: true,
       munchies: '20 Munchies per month'
     },
@@ -71,8 +72,7 @@ export default function PaywallScreen() {
       name: 'Yearly',
       price: '$48.99',
       period: 'per year',
-      savings: 'Save 70%',
-      trial: '14 days free',
+      costPerRecipe: '~$0.20 per recipe',
       munchies: '240 Munchies per year'
     }
   ];
@@ -396,10 +396,15 @@ export default function PaywallScreen() {
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" />
       <SafeAreaView style={styles.safeArea}>
-        <ScrollView 
-          contentContainerStyle={styles.scrollContent}
-          showsVerticalScrollIndicator={false}
+        <KeyboardAvoidingView
+          style={styles.keyboardView}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         >
+          <ScrollView
+            contentContainerStyle={styles.scrollContent}
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled"
+          >
           {/* Progress Bar */}
           <View style={styles.progressContainer}>
             <View style={styles.progressBar}>
@@ -471,17 +476,13 @@ export default function PaywallScreen() {
               </View>
             </View>
 
-            {/* Plan Selection */}
+            {/* Subscription Tiers */}
             <View style={styles.plansContainer}>
+              <Text style={styles.plansSectionTitle}>Subscription tiers</Text>
               {plans.map((plan) => (
-                <TouchableOpacity
+                <View
                   key={plan.id}
-                  style={[
-                    styles.planCard,
-                    selectedPlan === plan.id && styles.planCardActive
-                  ]}
-                  onPress={() => setSelectedPlan(plan.id as PlanType)}
-                  activeOpacity={0.8}
+                  style={styles.planCard}
                 >
                   {plan.popular && (
                     <View style={styles.popularBadge}>
@@ -489,38 +490,21 @@ export default function PaywallScreen() {
                     </View>
                   )}
                   <View style={styles.planContent}>
-                    <Text style={[
-                      styles.planName,
-                      selectedPlan === plan.id && styles.planNameActive
-                    ]}>
+                    <Text style={styles.planName}>
                       {plan.name}
                     </Text>
                     <View style={styles.priceContainer}>
-                      <Text style={[
-                        styles.planPrice,
-                        selectedPlan === plan.id && styles.planPriceActive
-                      ]}>
+                      <Text style={styles.planPrice}>
                         {plan.price}
                       </Text>
-                      <Text style={[
-                        styles.planPeriod,
-                        selectedPlan === plan.id && styles.planPeriodActive
-                      ]}>
+                      <Text style={styles.planPeriod}>
                         {plan.period}
                       </Text>
                     </View>
-                    {plan.savings && (
-                      <Text style={[
-                        styles.planSavings,
-                        selectedPlan === plan.id && styles.planSavingsActive
-                      ]}>
-                        {plan.savings}
-                      </Text>
-                    )}
-                    <Text style={[
-                      styles.planMunchies,
-                      selectedPlan === plan.id && styles.planMunchiesActive
-                    ]}>
+                    <Text style={styles.planCostPerRecipe}>
+                      {plan.costPerRecipe}
+                    </Text>
+                    <Text style={styles.planMunchies}>
                       {plan.munchies.split(' ').map((word, index) =>
                         word === 'Munchies' ? (
                           <Text key={index} style={styles.planMunchiesHighlight}>{word} </Text>
@@ -530,12 +514,7 @@ export default function PaywallScreen() {
                       )}
                     </Text>
                   </View>
-                  {selectedPlan === plan.id && (
-                    <View style={styles.checkmark}>
-                      <Text style={styles.checkmarkText}>✓</Text>
-                    </View>
-                  )}
-                </TouchableOpacity>
+                </View>
               ))}
             </View>
 
@@ -650,7 +629,8 @@ export default function PaywallScreen() {
               🔒 Secured by Stripe. We never store your payment details.
             </Text>
           </View>
-        </ScrollView>
+          </ScrollView>
+        </KeyboardAvoidingView>
       </SafeAreaView>
     </View>
   );
@@ -662,6 +642,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#FEFEFE',
   },
   safeArea: {
+    flex: 1,
+  },
+  keyboardView: {
     flex: 1,
   },
   scrollContent: {
@@ -718,6 +701,12 @@ const styles = StyleSheet.create({
   plansContainer: {
     marginBottom: 30,
   },
+  plansSectionTitle: {
+    fontFamily: 'Quicksand-SemiBold',
+    fontSize: 18,
+    color: '#1F2937',
+    marginBottom: 12,
+  },
   planCard: {
     backgroundColor: '#FFFFFF',
     borderWidth: 1,
@@ -728,11 +717,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     position: 'relative',
-  },
-  planCardActive: {
-    backgroundColor: '#F3F0FF',
-    borderColor: '#6B46C1',
-    borderWidth: 2,
   },
   popularBadge: {
     position: 'absolute',
@@ -757,9 +741,6 @@ const styles = StyleSheet.create({
     color: '#1F2937',
     marginBottom: 4,
   },
-  planNameActive: {
-    color: '#6B46C1',
-  },
   priceContainer: {
     flexDirection: 'row',
     alignItems: 'baseline',
@@ -769,26 +750,17 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: '#1F2937',
   },
-  planPriceActive: {
-    color: '#6B46C1',
-  },
   planPeriod: {
     fontFamily: 'Quicksand-Regular',
     fontSize: 14,
     color: '#6B7280',
     marginLeft: 4,
   },
-  planPeriodActive: {
-    color: '#6B46C1',
-  },
-  planSavings: {
+  planCostPerRecipe: {
     fontFamily: 'Quicksand-SemiBold',
     fontSize: 12,
     color: '#10B981',
     marginTop: 4,
-  },
-  planSavingsActive: {
-    color: '#10B981',
   },
   planMunchies: {
     fontFamily: 'Quicksand-Regular',
@@ -796,25 +768,9 @@ const styles = StyleSheet.create({
     color: '#6B7280',
     marginTop: 4,
   },
-  planMunchiesActive: {
-    color: '#6B46C1',
-  },
   planMunchiesHighlight: {
     fontFamily: 'Quicksand-SemiBold',
     color: '#6B46C1',
-  },
-  checkmark: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    backgroundColor: '#6B46C1',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  checkmarkText: {
-    fontFamily: 'Quicksand-Bold',
-    color: 'white',
-    fontSize: 14,
   },
   accountSection: {
     marginBottom: 25,

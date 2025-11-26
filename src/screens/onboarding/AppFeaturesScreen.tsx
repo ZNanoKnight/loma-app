@@ -13,24 +13,6 @@ import { useNavigation } from '@react-navigation/native';
 export default function AppFeaturesScreen() {
   const navigation = useNavigation<any>();
 
-  const features = [
-    {
-      emoji: '🤖',
-      title: 'AI-Powered Recipe Book',
-      description: 'Get personalized recipes tailored to your goals and save them forever'
-    },
-    {
-      emoji: '👨‍🍳',
-      title: 'Step-by-Step Cooking',
-      description: 'Easy-to-follow instructions with timers and cooking guidance'
-    },
-    {
-      emoji: '📊',
-      title: 'Macro & Progress Tracking',
-      description: 'Track your nutrition, calories, and progress toward your goals'
-    }
-  ];
-
   const handleContinue = () => {
     navigation.navigate('NameEmail');
   };
@@ -65,69 +47,208 @@ export default function AppFeaturesScreen() {
               Welcome to <Text style={styles.titleHighlight}>Loma</Text>
             </Text>
             <Text style={styles.subtitle}>
-              Your AI-powered cooking companion for achieving your health goals
+              Your AI-powered cooking companion. Here's how it works:
             </Text>
 
-            {/* Features List */}
-            <View style={styles.featuresContainer}>
-              {features.map((feature, index) => (
-                <View key={index} style={styles.featureCard}>
-                  <View style={styles.featureIconContainer}>
-                    <Text style={styles.featureEmoji}>{feature.emoji}</Text>
+            {/* Section 1: Recipe Generation */}
+            <View style={styles.featureSection}>
+              <View style={styles.sectionHeader}>
+                <View style={styles.sectionIconContainer}>
+                  <Text style={styles.sectionIcon}>✨</Text>
+                </View>
+                <Text style={styles.sectionTitle}>Recipe Generation</Text>
+              </View>
+
+              <View style={styles.featureCard}>
+                {/* Step 1: Munchies */}
+                <View style={styles.stepItem}>
+                  <View style={styles.stepNumber}>
+                    <Text style={styles.stepNumberText}>1</Text>
                   </View>
-                  <View style={styles.featureContent}>
-                    <Text style={styles.featureTitle}>{feature.title}</Text>
-                    <Text style={styles.featureDescription}>{feature.description}</Text>
+                  <View style={styles.stepContent}>
+                    <Text style={styles.stepTitle}>Use Your Munchies</Text>
+                    <Text style={styles.stepDescription}>
+                      Each recipe generation costs one <Text style={styles.highlight}>Munchie</Text> - our in-app currency. You receive Munchies based on your subscription plan.
+                    </Text>
                   </View>
                 </View>
-              ))}
+
+                {/* Step 2: Customize */}
+                <View style={styles.stepItem}>
+                  <View style={styles.stepNumber}>
+                    <Text style={styles.stepNumberText}>2</Text>
+                  </View>
+                  <View style={styles.stepContent}>
+                    <Text style={styles.stepTitle}>Tell Us What You Want</Text>
+                    <Text style={styles.stepDescription}>
+                      Select your meal type (breakfast, lunch, dinner, or snack) and add any special requests - from "extra spicy" to "use chicken thighs".
+                    </Text>
+                  </View>
+                </View>
+
+                {/* Step 3: Choose */}
+                <View style={styles.stepItem}>
+                  <View style={styles.stepNumber}>
+                    <Text style={styles.stepNumberText}>3</Text>
+                  </View>
+                  <View style={styles.stepContent}>
+                    <Text style={styles.stepTitle}>Pick Your Favorite</Text>
+                    <Text style={styles.stepDescription}>
+                      Our AI generates <Text style={styles.highlight}>4 unique recipes</Text> tailored to your preferences. Preview each one and choose your favorite.
+                    </Text>
+                  </View>
+                </View>
+
+                {/* Step 4: Refine */}
+                <View style={styles.stepItem}>
+                  <View style={styles.stepNumber}>
+                    <Text style={styles.stepNumberText}>4</Text>
+                  </View>
+                  <View style={styles.stepContent}>
+                    <Text style={styles.stepTitle}>Refine If You'd Like</Text>
+                    <Text style={styles.stepDescription}>
+                      Not quite perfect? You get one free refinement to tweak the recipe before saving it to your book.
+                    </Text>
+                  </View>
+                </View>
+              </View>
             </View>
 
-            {/* Munchies System Explanation */}
-            <View style={styles.tokenSection}>
-              <View style={styles.tokenHeader}>
-                <Text style={styles.tokenEmoji}>🍪</Text>
-                <Text style={styles.tokenTitle}>How Munchies Work</Text>
+            {/* Munchies Explanation Card */}
+            <View style={styles.munchiesCard}>
+              <View style={styles.munchiesHeader}>
+                <Text style={styles.munchiesEmoji}>🍪</Text>
+                <View style={styles.munchiesHeaderText}>
+                  <Text style={styles.munchiesTitle}>How Munchies Work</Text>
+                  <Text style={styles.munchiesSubtitle}>Your recipe generation currency</Text>
+                </View>
               </View>
-
-              <Text style={styles.tokenSubtitle}>
-                Munchies are the currency you use on Loma to generate personalized recipes
-              </Text>
-
-              <View style={styles.tokenCard}>
-                <View style={styles.tokenItem}>
-                  <View style={styles.tokenBullet}>
-                    <Text style={styles.tokenBulletText}>1</Text>
-                  </View>
-                  <Text style={styles.tokenText}>
-                    Each <Text style={styles.tokenHighlight}>munchie</Text> allows you to generate one personalized recipe
+              <View style={styles.munchiesDivider} />
+              <View style={styles.munchiesInfo}>
+                <View style={styles.munchiesInfoItem}>
+                  <Text style={styles.munchiesBullet}>•</Text>
+                  <Text style={styles.munchiesInfoText}>
+                    <Text style={styles.munchiesBold}>1 Munchie = 1 Recipe Generation</Text>
                   </Text>
                 </View>
-
-                <View style={styles.tokenItem}>
-                  <View style={styles.tokenBullet}>
-                    <Text style={styles.tokenBulletText}>2</Text>
-                  </View>
-                  <Text style={styles.tokenText}>
-                    Munchies are added to your account based on your plan
+                <View style={styles.munchiesInfoItem}>
+                  <Text style={styles.munchiesBullet}>•</Text>
+                  <Text style={styles.munchiesInfoText}>
+                    Munchies refresh with each subscription renewal
                   </Text>
                 </View>
-
-                <View style={styles.tokenItem}>
-                  <View style={styles.tokenBullet}>
-                    <Text style={styles.tokenBulletText}>3</Text>
-                  </View>
-                  <Text style={styles.tokenText}>
-                    All generated recipes are saved to your Recipe Book permanently
+                <View style={styles.munchiesInfoItem}>
+                  <Text style={styles.munchiesBullet}>•</Text>
+                  <Text style={styles.munchiesInfoText}>
+                    Higher tiers = more Munchies per period
                   </Text>
                 </View>
               </View>
+            </View>
 
-              <View style={styles.tokenBenefitBox}>
-                <Text style={styles.tokenBenefitIcon}>✨</Text>
-                <Text style={styles.tokenBenefitText}>
-                  Higher tier plans include more munchies and additional premium features
+            {/* Section 2: Recipe Book */}
+            <View style={styles.featureSection}>
+              <View style={styles.sectionHeader}>
+                <View style={styles.sectionIconContainer}>
+                  <Text style={styles.sectionIcon}>📖</Text>
+                </View>
+                <Text style={styles.sectionTitle}>Recipe Book</Text>
+              </View>
+
+              <View style={styles.featureCard}>
+                <Text style={styles.featureDescription}>
+                  All your generated recipes are saved permanently to your personal recipe book. Each recipe includes:
                 </Text>
+
+                <View style={styles.recipeFeaturesList}>
+                  <View style={styles.recipeFeatureItem}>
+                    <View style={styles.recipeFeatureIcon}>
+                      <Text style={styles.recipeFeatureEmoji}>🍳</Text>
+                    </View>
+                    <View style={styles.recipeFeatureContent}>
+                      <Text style={styles.recipeFeatureTitle}>Equipment Checklist</Text>
+                      <Text style={styles.recipeFeatureText}>Know exactly what tools you'll need before you start</Text>
+                    </View>
+                  </View>
+
+                  <View style={styles.recipeFeatureItem}>
+                    <View style={styles.recipeFeatureIcon}>
+                      <Text style={styles.recipeFeatureEmoji}>🥕</Text>
+                    </View>
+                    <View style={styles.recipeFeatureContent}>
+                      <Text style={styles.recipeFeatureTitle}>Ingredient List</Text>
+                      <Text style={styles.recipeFeatureText}>Complete shopping list with precise quantities</Text>
+                    </View>
+                  </View>
+
+                  <View style={styles.recipeFeatureItem}>
+                    <View style={styles.recipeFeatureIcon}>
+                      <Text style={styles.recipeFeatureEmoji}>👨‍🍳</Text>
+                    </View>
+                    <View style={styles.recipeFeatureContent}>
+                      <Text style={styles.recipeFeatureTitle}>Step-by-Step Instructions</Text>
+                      <Text style={styles.recipeFeatureText}>Easy-to-follow cooking guidance from start to finish</Text>
+                    </View>
+                  </View>
+                </View>
+              </View>
+            </View>
+
+            {/* Section 3: Achievements */}
+            <View style={styles.featureSection}>
+              <View style={styles.sectionHeader}>
+                <View style={styles.sectionIconContainer}>
+                  <Text style={styles.sectionIcon}>🏆</Text>
+                </View>
+                <Text style={styles.sectionTitle}>Achievements</Text>
+              </View>
+
+              <View style={styles.featureCard}>
+                <Text style={styles.featureDescription}>
+                  Track your cooking journey and celebrate milestones! Earn achievements as you:
+                </Text>
+
+                <View style={styles.achievementsList}>
+                  <View style={styles.achievementItem}>
+                    <View style={styles.achievementIcon}>
+                      <Text style={styles.achievementEmoji}>🎯</Text>
+                    </View>
+                    <View style={styles.achievementContent}>
+                      <Text style={styles.achievementTitle}>First Steps</Text>
+                      <Text style={styles.achievementText}>Generate your first recipes</Text>
+                    </View>
+                  </View>
+
+                  <View style={styles.achievementItem}>
+                    <View style={styles.achievementIcon}>
+                      <Text style={styles.achievementEmoji}>📚</Text>
+                    </View>
+                    <View style={styles.achievementContent}>
+                      <Text style={styles.achievementTitle}>Recipe Collector</Text>
+                      <Text style={styles.achievementText}>Build your recipe collection</Text>
+                    </View>
+                  </View>
+
+                  <View style={styles.achievementItem}>
+                    <View style={styles.achievementIcon}>
+                      <Text style={styles.achievementEmoji}>⭐</Text>
+                    </View>
+                    <View style={styles.achievementContent}>
+                      <Text style={styles.achievementTitle}>Variety Seeker</Text>
+                      <Text style={styles.achievementText}>Explore different meal types</Text>
+                    </View>
+                  </View>
+
+                  <View style={styles.achievementItem}>
+                    <View style={styles.achievementIcon}>
+                      <Text style={styles.achievementEmoji}>🔥</Text>
+                    </View>
+                    <View style={styles.achievementContent}>
+                      <Text style={styles.achievementTitle}>On Fire</Text>
+                      <Text style={styles.achievementText}>Maintain cooking streaks</Text>
+                    </View>
+                  </View>
+                </View>
               </View>
             </View>
 
@@ -138,7 +259,7 @@ export default function AppFeaturesScreen() {
               activeOpacity={0.8}
             >
               <Text style={styles.continueButtonText}>
-                Continue
+                Let's Get Started
               </Text>
             </TouchableOpacity>
           </View>
@@ -184,7 +305,7 @@ const styles = StyleSheet.create({
   },
   backButton: {
     alignSelf: 'flex-start',
-    marginBottom: 30,
+    marginBottom: 20,
   },
   backButtonText: {
     fontFamily: 'Quicksand-Medium',
@@ -198,7 +319,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Quicksand-Bold',
     fontSize: 32,
     color: '#1F2937',
-    marginBottom: 10,
+    marginBottom: 8,
   },
   titleHighlight: {
     color: '#6B46C1',
@@ -207,20 +328,41 @@ const styles = StyleSheet.create({
     fontFamily: 'Quicksand-Regular',
     fontSize: 16,
     color: '#6B7280',
-    marginBottom: 25,
+    marginBottom: 24,
     lineHeight: 22,
   },
-  featuresContainer: {
-    marginBottom: 30,
+  // Feature Section Styles
+  featureSection: {
+    marginBottom: 20,
+  },
+  sectionHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  sectionIconContainer: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: '#F3F0FF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 10,
+  },
+  sectionIcon: {
+    fontSize: 18,
+  },
+  sectionTitle: {
+    fontFamily: 'Quicksand-Bold',
+    fontSize: 20,
+    color: '#1F2937',
   },
   featureCard: {
-    flexDirection: 'row',
     backgroundColor: '#FFFFFF',
     borderWidth: 1,
     borderColor: '#E5E7EB',
     borderRadius: 16,
     padding: 16,
-    marginBottom: 12,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -230,116 +372,185 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
     elevation: 1,
   },
-  featureIconContainer: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    backgroundColor: '#F3F0FF',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 14,
-  },
-  featureEmoji: {
-    fontSize: 24,
-  },
-  featureContent: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  featureTitle: {
-    fontFamily: 'Quicksand-SemiBold',
-    fontSize: 16,
-    color: '#1F2937',
-    marginBottom: 4,
-  },
   featureDescription: {
     fontFamily: 'Quicksand-Regular',
     fontSize: 14,
     color: '#6B7280',
-    lineHeight: 18,
-  },
-  tokenSection: {
-    marginBottom: 30,
-  },
-  tokenHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  tokenEmoji: {
-    fontSize: 28,
-    marginRight: 10,
-  },
-  tokenTitle: {
-    fontFamily: 'Quicksand-Bold',
-    fontSize: 22,
-    color: '#1F2937',
-  },
-  tokenSubtitle: {
-    fontFamily: 'Quicksand-Regular',
-    fontSize: 14,
-    color: '#6B7280',
-    marginBottom: 16,
     lineHeight: 20,
-  },
-  tokenCard: {
-    backgroundColor: '#F3F0FF',
-    borderRadius: 16,
-    padding: 20,
     marginBottom: 16,
-    borderWidth: 1,
-    borderColor: '#6B46C1',
   },
-  tokenItem: {
+  // Step Items (for Recipe Generation)
+  stepItem: {
     flexDirection: 'row',
-    alignItems: 'center',
     marginBottom: 16,
   },
-  tokenBullet: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
+  stepNumber: {
+    width: 26,
+    height: 26,
+    borderRadius: 13,
     backgroundColor: '#6B46C1',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
+    marginTop: 2,
   },
-  tokenBulletText: {
+  stepNumberText: {
     fontFamily: 'Quicksand-Bold',
     color: '#FFFFFF',
-    fontSize: 14,
+    fontSize: 13,
   },
-  tokenText: {
-    fontFamily: 'Quicksand-Regular',
-    fontSize: 15,
-    color: '#1F2937',
-    lineHeight: 22,
+  stepContent: {
     flex: 1,
   },
-  tokenHighlight: {
-    fontFamily: 'Quicksand-Bold',
+  stepTitle: {
+    fontFamily: 'Quicksand-SemiBold',
+    fontSize: 15,
+    color: '#1F2937',
+    marginBottom: 4,
+  },
+  stepDescription: {
+    fontFamily: 'Quicksand-Regular',
+    fontSize: 13,
+    color: '#6B7280',
+    lineHeight: 18,
+  },
+  highlight: {
+    fontFamily: 'Quicksand-SemiBold',
     color: '#6B46C1',
   },
-  tokenBenefitBox: {
-    flexDirection: 'row',
-    alignItems: 'center',
+  // Munchies Card
+  munchiesCard: {
     backgroundColor: '#FEF3C7',
-    borderRadius: 12,
-    padding: 14,
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 20,
     borderWidth: 1,
     borderColor: '#F59E0B',
   },
-  tokenBenefitIcon: {
-    fontSize: 20,
-    marginRight: 10,
+  munchiesHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
-  tokenBenefitText: {
-    fontFamily: 'Quicksand-Medium',
-    fontSize: 14,
-    color: '#92400E',
-    lineHeight: 20,
+  munchiesEmoji: {
+    fontSize: 32,
+    marginRight: 12,
+  },
+  munchiesHeaderText: {
     flex: 1,
   },
+  munchiesTitle: {
+    fontFamily: 'Quicksand-Bold',
+    fontSize: 16,
+    color: '#92400E',
+  },
+  munchiesSubtitle: {
+    fontFamily: 'Quicksand-Regular',
+    fontSize: 12,
+    color: '#B45309',
+  },
+  munchiesDivider: {
+    height: 1,
+    backgroundColor: '#F59E0B',
+    marginVertical: 12,
+    opacity: 0.4,
+  },
+  munchiesInfo: {
+    gap: 8,
+  },
+  munchiesInfoItem: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+  },
+  munchiesBullet: {
+    fontFamily: 'Quicksand-Bold',
+    fontSize: 14,
+    color: '#92400E',
+    marginRight: 8,
+    marginTop: -1,
+  },
+  munchiesInfoText: {
+    fontFamily: 'Quicksand-Regular',
+    fontSize: 13,
+    color: '#92400E',
+    flex: 1,
+    lineHeight: 18,
+  },
+  munchiesBold: {
+    fontFamily: 'Quicksand-SemiBold',
+  },
+  // Recipe Book Features
+  recipeFeaturesList: {
+    gap: 12,
+  },
+  recipeFeatureItem: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+  },
+  recipeFeatureIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#F3F0FF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  recipeFeatureEmoji: {
+    fontSize: 18,
+  },
+  recipeFeatureContent: {
+    flex: 1,
+    paddingTop: 2,
+  },
+  recipeFeatureTitle: {
+    fontFamily: 'Quicksand-SemiBold',
+    fontSize: 14,
+    color: '#1F2937',
+    marginBottom: 2,
+  },
+  recipeFeatureText: {
+    fontFamily: 'Quicksand-Regular',
+    fontSize: 12,
+    color: '#6B7280',
+    lineHeight: 16,
+  },
+  // Achievements
+  achievementsList: {
+    gap: 12,
+  },
+  achievementItem: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+  },
+  achievementIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#F3F0FF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  achievementEmoji: {
+    fontSize: 18,
+  },
+  achievementContent: {
+    flex: 1,
+    paddingTop: 2,
+  },
+  achievementTitle: {
+    fontFamily: 'Quicksand-SemiBold',
+    fontSize: 14,
+    color: '#1F2937',
+    marginBottom: 2,
+  },
+  achievementText: {
+    fontFamily: 'Quicksand-Regular',
+    fontSize: 12,
+    color: '#6B7280',
+    lineHeight: 16,
+  },
+  // Continue Button
   continueButton: {
     backgroundColor: '#6B46C1',
     paddingVertical: 16,
@@ -352,6 +563,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 3,
     elevation: 3,
+    marginTop: 8,
     marginBottom: 30,
   },
   continueButtonText: {

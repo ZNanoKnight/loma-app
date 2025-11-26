@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   StyleSheet,
   Text,
@@ -9,7 +9,9 @@ import {
   ScrollView,
   TextInput,
   Alert,
-  ActivityIndicator
+  ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useUser } from '../../context/UserContext';
@@ -24,6 +26,7 @@ export default function RecipeReviewScreen() {
   const [refinementRequest, setRefinementRequest] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [isRefining, setIsRefining] = useState(false);
+  const scrollViewRef = useRef<ScrollView>(null);
 
   // Use recipe from context (set by RecipeGeneratedScreen)
   const recipe = currentRecipe || {
@@ -171,10 +174,16 @@ export default function RecipeReviewScreen() {
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" />
       <SafeAreaView style={styles.safeArea}>
-        <ScrollView
-          contentContainerStyle={styles.scrollContent}
-          showsVerticalScrollIndicator={false}
+        <KeyboardAvoidingView
+          style={styles.keyboardView}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         >
+          <ScrollView
+            ref={scrollViewRef}
+            contentContainerStyle={styles.scrollContent}
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled"
+          >
           {/* Header */}
           <View style={styles.header}>
             <TouchableOpacity
@@ -286,6 +295,12 @@ export default function RecipeReviewScreen() {
                 maxLength={500}
                 textAlignVertical="top"
                 editable={!isRefining}
+                onFocus={() => {
+                  // Scroll to make the input visible above the keyboard
+                  setTimeout(() => {
+                    scrollViewRef.current?.scrollToEnd({ animated: true });
+                  }, 100);
+                }}
               />
               <Text style={styles.characterCount}>
                 {refinementRequest.length}/500 characters
@@ -326,7 +341,8 @@ export default function RecipeReviewScreen() {
               <Text style={styles.saveButtonText}>Save to Recipe Book</Text>
             )}
           </TouchableOpacity>
-        </ScrollView>
+          </ScrollView>
+        </KeyboardAvoidingView>
       </SafeAreaView>
     </View>
   );
@@ -338,6 +354,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#FEFEFE',
   },
   safeArea: {
+    flex: 1,
+  },
+  keyboardView: {
     flex: 1,
   },
   scrollContent: {

@@ -19,7 +19,6 @@ export default function SubscriptionScreen() {
   const navigation = useNavigation<any>();
   const [subscription, setSubscription] = useState<Subscription | null>(null);
   const [loading, setLoading] = useState(true);
-  const [cancelling, setCancelling] = useState(false);
 
   useEffect(() => {
     fetchSubscription();
@@ -60,46 +59,6 @@ export default function SubscriptionScreen() {
     } catch (error: any) {
       console.error('Error opening portal:', error);
       Alert.alert('Error', error.userMessage || 'Failed to open subscription management.');
-    }
-  };
-
-  const handleCancelSubscription = () => {
-    Alert.alert(
-      'Cancel Subscription?',
-      'Are you sure you want to cancel your subscription? You\'ll keep access until the end of your billing period.',
-      [
-        { text: 'No, Keep It', style: 'cancel' },
-        {
-          text: 'Yes, Cancel',
-          style: 'destructive',
-          onPress: confirmCancellation,
-        },
-      ]
-    );
-  };
-
-  const confirmCancellation = async () => {
-    try {
-      setCancelling(true);
-      const session = await AuthService.getCurrentSession();
-      if (!session?.user?.id) {
-        throw new Error('No active session');
-      }
-
-      // For proper cancellation, redirect to Stripe Customer Portal
-      // This ensures the cancellation is handled correctly by Stripe
-      await handleManageSubscription();
-
-      Alert.alert(
-        'Manage Subscription',
-        'Please use the Stripe portal to cancel your subscription. This ensures your cancellation is processed correctly.',
-        [{ text: 'OK' }]
-      );
-    } catch (error: any) {
-      console.error('Error cancelling subscription:', error);
-      Alert.alert('Error', error.userMessage || 'Failed to cancel subscription.');
-    } finally {
-      setCancelling(false);
     }
   };
 
@@ -290,20 +249,6 @@ export default function SubscriptionScreen() {
               >
                 <Text style={styles.primaryButtonText}>Manage Subscription</Text>
               </TouchableOpacity>
-
-              {subscription?.status !== 'cancelled' && (
-                <TouchableOpacity
-                  style={styles.dangerButton}
-                  onPress={handleCancelSubscription}
-                  disabled={cancelling}
-                >
-                  {cancelling ? (
-                    <ActivityIndicator color="#EF4444" />
-                  ) : (
-                    <Text style={styles.dangerButtonText}>Cancel Subscription</Text>
-                  )}
-                </TouchableOpacity>
-              )}
             </View>
           </ScrollView>
         </SafeAreaView>
@@ -468,19 +413,6 @@ const styles = StyleSheet.create({
   },
   primaryButtonText: {
     color: 'white',
-    fontSize: 16,
-    fontFamily: 'Quicksand-SemiBold',
-  },
-  dangerButton: {
-    backgroundColor: 'rgba(239, 68, 68, 0.1)',
-    paddingVertical: 14,
-    borderRadius: 12,
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#EF4444',
-  },
-  dangerButtonText: {
-    color: '#EF4444',
     fontSize: 16,
     fontFamily: 'Quicksand-SemiBold',
   },
