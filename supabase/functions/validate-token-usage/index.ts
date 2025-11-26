@@ -13,35 +13,52 @@ serve(async (req) => {
   }
 
   try {
-    // Initialize Supabase client
-    const supabaseClient = createClient(
+    console.log('[validate-token-usage] Starting validation...')
+
+    // Check for Authorization header
+    const authHeader = req.headers.get('Authorization')
+    console.log('[validate-token-usage] Auth header present:', !!authHeader)
+
+    if (!authHeader) {
+      console.log('[validate-token-usage] No Authorization header provided')
+      throw new Error('Missing authorization header')
+    }
+
+    // Extract the JWT token from the Authorization header
+    const token = authHeader.replace('Bearer ', '')
+
+    // Initialize Supabase admin client with service role for querying subscriptions (bypasses RLS)
+    const supabaseAdmin = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
-      {
-        global: {
-          headers: { Authorization: req.headers.get('Authorization')! },
-        },
-      }
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     )
 
-    // Get the user from the JWT
+    // Get the user from the JWT token using the admin client
     const {
       data: { user },
       error: authError,
-    } = await supabaseClient.auth.getUser()
+    } = await supabaseAdmin.auth.getUser(token)
 
     if (authError || !user) {
-      throw new Error('Unauthorized')
+      console.log('[validate-token-usage] Auth error:', authError?.message || 'No user found')
+      throw new Error('Unauthorized: ' + (authError?.message || 'Invalid token'))
     }
 
-    // Get subscription data
-    const { data: subscription, error: subError } = await supabaseClient
+    console.log('[validate-token-usage] User authenticated:', user.id)
+
+    // Get subscription data using admin client (bypasses RLS)
+    const { data: subscription, error: subError } = await supabaseAdmin
       .from('subscriptions')
       .select('tokens_balance, status, current_period_end')
       .eq('user_id', user.id)
       .single()
 
+    if (subError) {
+      console.log('[validate-token-usage] Subscription query error:', subError.message, subError.code)
+    }
+
     if (subError || !subscription) {
+      console.log('[validate-token-usage] No subscription found for user:', user.id)
       return new Response(
         JSON.stringify({
           hasTokens: false,
@@ -55,6 +72,8 @@ serve(async (req) => {
         }
       )
     }
+
+    console.log('[validate-token-usage] Subscription found:', { status: subscription.status, balance: subscription.tokens_balance })
 
     // Check if subscription is active
     const isActive = subscription.status === 'active' || subscription.status === 'trialing'

@@ -16,16 +16,14 @@ export default function AppPreferencesScreen() {
   const navigation = useNavigation<any>();
   const { userData, updateUserData } = useUser();
 
-  const [darkMode, setDarkMode] = useState(userData.darkMode);
   const [metricUnits, setMetricUnits] = useState(userData.metricUnits);
 
   // Update global state when settings change
   useEffect(() => {
     updateUserData({
-      darkMode,
       metricUnits,
     });
-  }, [darkMode, metricUnits]);
+  }, [metricUnits]);
 
   return (
     <View style={styles.container}>
@@ -49,21 +47,6 @@ export default function AppPreferencesScreen() {
 
             {/* Settings Content */}
             <View style={styles.settingsContainer}>
-              <View style={styles.settingRow}>
-                <View style={styles.settingInfo}>
-                  <Text style={styles.settingLabel}>Dark Mode</Text>
-                  <Text style={styles.settingDescription}>
-                    Enable dark theme throughout the app
-                  </Text>
-                </View>
-                <Switch
-                  value={darkMode}
-                  onValueChange={setDarkMode}
-                  trackColor={{ false: '#E5E7EB', true: '#6B46C1' }}
-                  thumbColor="white"
-                />
-              </View>
-
               <View style={styles.settingRow}>
                 <View style={styles.settingInfo}>
                   <Text style={styles.settingLabel}>Metric Units</Text>

@@ -14,7 +14,7 @@ serve(async (req) => {
   }
 
   try {
-    console.log('[Edge Function] create-payment-intent invoked - VERSION 3.0')
+    console.log('[Edge Function] create-payment-intent invoked - VERSION 4.0 (with 7-day trial)')
     console.log('[Edge Function] Request method:', req.method)
 
     // Get the JWT token from the Authorization header
@@ -139,45 +139,82 @@ serve(async (req) => {
       console.log('[Edge Function] Using existing Stripe customer:', customerId)
     }
 
-    // Create subscription
-    console.log('[Edge Function] Creating Stripe subscription...')
+    // Create subscription with 7-day free trial
+    // Trial allows users to try the app before being charged
+    const TRIAL_PERIOD_DAYS = 7
+    const TRIAL_MUNCHIES = 2 // Munchies given during trial period
+
+    console.log('[Edge Function] Creating Stripe subscription with 7-day trial...')
     const stripeSubscription = await stripe.subscriptions.create({
       customer: customerId,
       items: [{ price: priceId }],
+      trial_period_days: TRIAL_PERIOD_DAYS,
       payment_behavior: 'default_incomplete',
       payment_settings: {
         save_default_payment_method: 'on_subscription',
       },
-      expand: ['latest_invoice.payment_intent'],
+      expand: ['latest_invoice.payment_intent', 'pending_setup_intent'],
     })
     console.log('[Edge Function] Stripe subscription created:', stripeSubscription.id)
+    console.log('[Edge Function] Subscription status:', stripeSubscription.status)
+    console.log('[Edge Function] Trial end:', stripeSubscription.trial_end ? new Date(stripeSubscription.trial_end * 1000).toISOString() : 'none')
 
+    // With trials, there's no immediate payment - we get a SetupIntent instead of PaymentIntent
+    // The SetupIntent collects payment details to charge after the trial ends
     const invoice = stripeSubscription.latest_invoice as Stripe.Invoice
-    const paymentIntent = invoice.payment_intent as Stripe.PaymentIntent
-    console.log('[Edge Function] Payment intent created:', paymentIntent.id)
+    let clientSecret: string | null = null
 
-    // Update subscription record with subscription ID
+    if (stripeSubscription.pending_setup_intent) {
+      // Trial subscription - use SetupIntent to collect payment method
+      const setupIntent = stripeSubscription.pending_setup_intent as Stripe.SetupIntent
+      clientSecret = setupIntent.client_secret
+      console.log('[Edge Function] Using SetupIntent for trial:', setupIntent.id)
+    } else if (invoice?.payment_intent) {
+      // No trial (fallback) - use PaymentIntent
+      const paymentIntent = invoice.payment_intent as Stripe.PaymentIntent
+      clientSecret = paymentIntent.client_secret
+      console.log('[Edge Function] Using PaymentIntent:', paymentIntent.id)
+    }
+
+    if (!clientSecret) {
+      throw new Error('Failed to get client secret from Stripe subscription')
+    }
+
+    // Calculate trial end date
+    const trialEndDate = stripeSubscription.trial_end
+      ? new Date(stripeSubscription.trial_end * 1000).toISOString()
+      : null
+
+    // Update subscription record with trial info
+    // Status is 'trialing' during the trial period
     const { error: updateError2 } = await supabaseClient
       .from('subscriptions')
       .update({
+        plan: planType,
+        status: 'trialing',
         stripe_subscription_id: stripeSubscription.id,
         stripe_price_id: priceId,
+        tokens_balance: TRIAL_MUNCHIES,
+        tokens_total: TRIAL_MUNCHIES,
+        current_period_end: trialEndDate,
       })
       .eq('user_id', user.id)
 
     if (updateError2) {
-      console.error('[Edge Function] Failed to update subscription with subscription ID:', updateError2)
-      throw new Error(`Failed to save Stripe subscription ID: ${updateError2.message}`)
+      console.error('[Edge Function] Failed to update subscription:', updateError2)
+      throw new Error(`Failed to save subscription: ${updateError2.message}`)
     }
 
-    console.log('[Edge Function] Subscription updated with Stripe subscription ID')
+    console.log('[Edge Function] Subscription updated - status: trialing, munchies:', TRIAL_MUNCHIES)
     console.log('[Edge Function] Success! Returning client secret')
 
     return new Response(
       JSON.stringify({
-        clientSecret: paymentIntent.client_secret,
+        clientSecret: clientSecret,
         subscriptionId: stripeSubscription.id,
         customerId: customerId,
+        trialEnd: trialEndDate,
+        trialMunchies: TRIAL_MUNCHIES,
       }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },

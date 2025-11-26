@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   StyleSheet,
   Text,
@@ -9,11 +9,16 @@ import {
   ScrollView,
   TextInput,
   FlatList,
-  ActivityIndicator
+  ActivityIndicator,
+  RefreshControl
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { useUser } from '../../context/UserContext';
 import { useRecipe } from '../../context/RecipeContext';
+import { AuthService } from '../../services/auth/authService';
+import { RecipeService } from '../../services/recipes/recipeService';
+import { dbRecipeToClientRecipe, ClientRecipe } from '../../services/recipes/recipeTransformers';
+import { Recipe } from '../../context/RecipeContext';
 
 type FilterType = 'all' | 'breakfast' | 'lunch' | 'dinner' | 'snack';
 type SortType = 'recent' | 'favorite' | 'quickest' | 'protein';
@@ -21,14 +26,77 @@ type SortType = 'recent' | 'favorite' | 'quickest' | 'protein';
 export default function RecipeBookScreen() {
   const navigation = useNavigation<any>();
   const { userData } = useUser();
-  const { recipes: contextRecipes, updateRecipe, setCurrentRecipe, isLoading } = useRecipe();
+  const { setCurrentRecipe } = useRecipe();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilter, setSelectedFilter] = useState<FilterType>('all');
   const [selectedSort, setSelectedSort] = useState<SortType>('recent');
   const [showSortOptions, setShowSortOptions] = useState(false);
 
-  // Use recipes from context (RecipeContext already provides mock data if empty)
-  const recipes = contextRecipes;
+  // State for Supabase recipes
+  const [recipes, setRecipes] = useState<ClientRecipe[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  // Fetch recipes from Supabase
+  const fetchRecipes = useCallback(async (showRefreshIndicator = false) => {
+    try {
+      if (showRefreshIndicator) {
+        setIsRefreshing(true);
+      } else {
+        setIsLoading(true);
+      }
+      setError(null);
+
+      // Get current session to get user ID
+      const session = await AuthService.getCurrentSession();
+      if (!session) {
+        console.log('[RecipeBookScreen] No session - showing empty state');
+        setRecipes([]);
+        return;
+      }
+
+      // Fetch user's saved recipes from Supabase
+      const userRecipes = await RecipeService.getUserRecipes(session.user.id);
+
+      // Transform to client format
+      const clientRecipes = userRecipes.map(userRecipe => {
+        // The userRecipe contains the joined recipe data
+        const dbRecipe = userRecipe.recipes;
+        if (!dbRecipe) return null;
+
+        return dbRecipeToClientRecipe(dbRecipe, {
+          is_favorite: userRecipe.is_favorite,
+          rating: userRecipe.rating,
+          notes: userRecipe.notes,
+          cooked_count: userRecipe.cooked_count,
+          last_cooked: userRecipe.last_cooked_at,
+        });
+      }).filter((r): r is ClientRecipe => r !== null);
+
+      console.log(`[RecipeBookScreen] Loaded ${clientRecipes.length} recipes from Supabase`);
+      setRecipes(clientRecipes);
+    } catch (err) {
+      console.error('[RecipeBookScreen] Error fetching recipes:', err);
+      setError('Failed to load recipes. Pull to refresh.');
+      setRecipes([]);
+    } finally {
+      setIsLoading(false);
+      setIsRefreshing(false);
+    }
+  }, []);
+
+  // Fetch recipes when screen comes into focus
+  useFocusEffect(
+    useCallback(() => {
+      fetchRecipes();
+    }, [fetchRecipes])
+  );
+
+  // Handle pull-to-refresh
+  const handleRefresh = () => {
+    fetchRecipes(true);
+  };
 
   const filters = [
     { id: 'all', label: 'All', emoji: '📚' },
@@ -45,11 +113,30 @@ export default function RecipeBookScreen() {
     { id: 'protein', label: 'High Protein', icon: '💪' }
   ];
 
-  // Toggle favorite status
-  const toggleFavorite = (recipeId: string) => {
+  // Toggle favorite status (syncs with Supabase)
+  const toggleFavorite = async (recipeId: string) => {
     const recipe = recipes.find(r => r.id === recipeId);
-    if (recipe) {
-      updateRecipe(recipeId, { isFavorite: !recipe.isFavorite });
+    if (!recipe) return;
+
+    const newFavoriteStatus = !recipe.isFavorite;
+
+    // Optimistically update UI
+    setRecipes(prev => prev.map(r =>
+      r.id === recipeId ? { ...r, isFavorite: newFavoriteStatus } : r
+    ));
+
+    try {
+      // Sync with Supabase
+      const session = await AuthService.getCurrentSession();
+      if (session) {
+        await RecipeService.toggleFavorite(session.user.id, recipeId, newFavoriteStatus);
+      }
+    } catch (err) {
+      console.error('[RecipeBookScreen] Error toggling favorite:', err);
+      // Revert optimistic update on error
+      setRecipes(prev => prev.map(r =>
+        r.id === recipeId ? { ...r, isFavorite: !newFavoriteStatus } : r
+      ));
     }
   };
 
@@ -77,7 +164,8 @@ export default function RecipeBookScreen() {
     <TouchableOpacity
       style={styles.recipeCard}
       onPress={() => {
-        setCurrentRecipe(item);
+        // Cast ClientRecipe to Recipe (compatible structures, different TS interfaces)
+        setCurrentRecipe(item as unknown as Recipe);
         navigation.navigate('RecipeDetail', { recipeId: item.id });
       }}
       activeOpacity={0.8}
@@ -243,15 +331,35 @@ export default function RecipeBookScreen() {
         columnWrapperStyle={styles.recipeRow}
         contentContainerStyle={styles.recipeList}
         showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefreshing}
+            onRefresh={handleRefresh}
+            tintColor="#6B46C1"
+            colors={['#6B46C1']}
+          />
+        }
         ListEmptyComponent={
           <View style={styles.emptyState}>
-            <Text style={styles.emptyEmoji}>📭</Text>
-            <Text style={styles.emptyTitle}>No recipes found</Text>
-            <Text style={styles.emptySubtitle}>
-              {searchQuery
-                ? 'Try adjusting your search'
-                : 'Generate your first recipe to get started'}
+            <Text style={styles.emptyEmoji}>{error ? '⚠️' : '📭'}</Text>
+            <Text style={styles.emptyTitle}>
+              {error ? 'Error loading recipes' : 'No recipes yet'}
             </Text>
+            <Text style={styles.emptySubtitle}>
+              {error
+                ? error
+                : searchQuery
+                  ? 'Try adjusting your search'
+                  : 'Generate your first recipe to get started!'}
+            </Text>
+            {!error && !searchQuery && (
+              <TouchableOpacity
+                style={styles.generateButton}
+                onPress={() => navigation.navigate('Home')}
+              >
+                <Text style={styles.generateButtonText}>Generate Recipe</Text>
+              </TouchableOpacity>
+            )}
           </View>
         }
       />
@@ -513,5 +621,18 @@ const styles = StyleSheet.create({
     color: '#6B7280',
     textAlign: 'center',
     fontFamily: 'Quicksand-Regular',
+    paddingHorizontal: 40,
+  },
+  generateButton: {
+    backgroundColor: '#6B46C1',
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderRadius: 12,
+    marginTop: 20,
+  },
+  generateButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontFamily: 'Quicksand-SemiBold',
   },
 });

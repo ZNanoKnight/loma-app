@@ -30,7 +30,6 @@ export interface LocalUserData {
   allergens: string[];
   equipment: string;
   cookingFrequency: string;
-  mealPrepInterest: string;
   selectedPlan: string;
   currentStreak: number;
   totalRecipes: number;
@@ -39,17 +38,7 @@ export interface LocalUserData {
   weeklyProgress: boolean[];
   hoursSaved: number;
   moneySaved: number;
-  notifications: boolean;
-  mealReminders: boolean;
-  weeklyReport: boolean;
-  darkMode: boolean;
   metricUnits: boolean;
-  targetWeight: string;
-  targetProtein: string;
-  targetCalories: string;
-  macroTargets?: { carbs: string; fat: string };
-  dislikedIngredients?: string[];
-  cuisinePreferences?: string[];
   defaultServingSize?: number;
   profileImageUri?: string;
   hasCompletedOnboarding: boolean;
@@ -117,21 +106,9 @@ export const DataMigrationService = {
         goals: localData.goals,
         dietary_preferences: localData.dietaryPreferences,
         allergens: localData.allergens,
-        disliked_ingredients: localData.dislikedIngredients || [],
-        cuisine_preferences: localData.cuisinePreferences || [],
         equipment: localData.equipment,
         cooking_frequency: localData.cookingFrequency,
-        meal_prep_interest: localData.mealPrepInterest,
         default_serving_size: localData.defaultServingSize || 1,
-        target_weight: localData.targetWeight,
-        target_protein: localData.targetProtein,
-        target_calories: localData.targetCalories,
-        target_carbs: localData.macroTargets?.carbs || '',
-        target_fat: localData.macroTargets?.fat || '',
-        notifications: localData.notifications,
-        meal_reminders: localData.mealReminders,
-        weekly_report: localData.weeklyReport,
-        dark_mode: localData.darkMode,
         metric_units: localData.metricUnits,
         profile_image_url: localData.profileImageUri,
         has_completed_onboarding: localData.hasCompletedOnboarding,

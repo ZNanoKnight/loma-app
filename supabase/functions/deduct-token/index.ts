@@ -13,31 +13,29 @@ serve(async (req) => {
   }
 
   try {
+    // Check for Authorization header
+    const authHeader = req.headers.get('Authorization')
+    if (!authHeader) {
+      throw new Error('Missing authorization header')
+    }
+
+    // Extract the JWT token from the Authorization header
+    const token = authHeader.replace('Bearer ', '')
+
     // Initialize Supabase client with service role for transaction
     const supabaseAdmin = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     )
 
-    // Initialize client for auth
-    const supabaseClient = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
-      {
-        global: {
-          headers: { Authorization: req.headers.get('Authorization')! },
-        },
-      }
-    )
-
-    // Get the user from the JWT
+    // Get the user from the JWT token using the admin client
     const {
       data: { user },
       error: authError,
-    } = await supabaseClient.auth.getUser()
+    } = await supabaseAdmin.auth.getUser(token)
 
     if (authError || !user) {
-      throw new Error('Unauthorized')
+      throw new Error('Unauthorized: ' + (authError?.message || 'Invalid token'))
     }
 
     // Parse request body

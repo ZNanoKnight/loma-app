@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   StyleSheet,
   Text,
@@ -9,7 +9,11 @@ import {
   ScrollView,
   TextInput,
   ActivityIndicator,
-  Alert
+  Alert,
+  RefreshControl,
+  Modal,
+  Animated,
+  Easing,
 } from 'react-native';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { useUser } from '../../context/UserContext';
@@ -36,10 +40,58 @@ export default function HomeScreen() {
   const [tokenBalance, setTokenBalance] = useState<number>(0);
   const [loadingTokens, setLoadingTokens] = useState(true);
   const [generating, setGenerating] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   // Rate limiting state
   const [lastGenerationTime, setLastGenerationTime] = useState<number>(0);
   const RATE_LIMIT_MS = 10000; // 10 seconds between generations
+
+  // Loading modal state
+  const [showLoadingModal, setShowLoadingModal] = useState(false);
+  const [loadingMessageIndex, setLoadingMessageIndex] = useState(0);
+  const spinValue = useRef(new Animated.Value(0)).current;
+
+  // Fun loading messages to cycle through
+  const loadingMessages = [
+    { emoji: '👨‍🍳', text: 'Our AI chef is getting creative...' },
+    { emoji: '📖', text: 'Browsing through thousands of recipes...' },
+    { emoji: '🥗', text: 'Balancing your macros perfectly...' },
+    { emoji: '✨', text: 'Adding a sprinkle of magic...' },
+    { emoji: '🔥', text: 'Heating up some delicious ideas...' },
+    { emoji: '🎯', text: 'Matching your preferences...' },
+    { emoji: '🍳', text: 'Almost ready to serve...' },
+  ];
+
+  // Rotate animation for the emoji
+  useEffect(() => {
+    if (showLoadingModal) {
+      const spin = Animated.loop(
+        Animated.timing(spinValue, {
+          toValue: 1,
+          duration: 3000,
+          easing: Easing.linear,
+          useNativeDriver: true,
+        })
+      );
+      spin.start();
+
+      // Cycle through messages every 8 seconds
+      const messageInterval = setInterval(() => {
+        setLoadingMessageIndex((prev) => (prev + 1) % loadingMessages.length);
+      }, 8000);
+
+      return () => {
+        spin.stop();
+        clearInterval(messageInterval);
+        spinValue.setValue(0);
+      };
+    }
+  }, [showLoadingModal]);
+
+  const spinInterpolate = spinValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '360deg'],
+  });
 
   // Fetch token balance on mount and when screen is focused
   useEffect(() => {
@@ -51,6 +103,13 @@ export default function HomeScreen() {
       fetchTokenBalance();
     }, [])
   );
+
+  // Pull-to-refresh handler
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await fetchTokenBalance();
+    setRefreshing(false);
+  };
 
   const fetchTokenBalance = async () => {
     try {
@@ -110,6 +169,8 @@ export default function HomeScreen() {
     }
 
     setGenerating(true);
+    setShowLoadingModal(true);
+    setLoadingMessageIndex(0);
     let generatedRecipes: any[] = [];
 
     try {
@@ -123,6 +184,7 @@ export default function HomeScreen() {
       const validation = await SubscriptionService.validateTokenUsage(session.user.id);
 
       if (!validation.hasTokens) {
+        setShowLoadingModal(false);
         Alert.alert(
           "Cannot Generate Recipe",
           validation.message || "You don't have enough Munchies available.",
@@ -151,7 +213,8 @@ export default function HomeScreen() {
       setLastGenerationTime(Date.now());
       logger.log(`[HomeScreen] Token deducted. New balance: ${deductResult.balance}`);
 
-      // Step 5: Navigate with generated recipes
+      // Step 5: Close modal and navigate with generated recipes
+      setShowLoadingModal(false);
       navigation.navigate('RecipeGenerated', {
         recipes: generatedRecipes,
         selectedMealType: mealType,
@@ -161,6 +224,7 @@ export default function HomeScreen() {
       setCustomRequest('');
     } catch (error: any) {
       logger.error('[HomeScreen] Error generating recipe:', error);
+      setShowLoadingModal(false);
 
       // CRITICAL: If error occurred, token was NOT deducted
       // Show error with free retry option
@@ -191,9 +255,17 @@ export default function HomeScreen() {
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" />
         <SafeAreaView style={styles.safeArea}>
-          <ScrollView 
+          <ScrollView
             contentContainerStyle={styles.scrollContent}
             showsVerticalScrollIndicator={false}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+                tintColor="#6B46C1"
+                colors={['#6B46C1']}
+              />
+            }
           >
             {/* Header */}
             <View style={styles.header}>
@@ -287,22 +359,66 @@ export default function HomeScreen() {
                 {generating ? (
                   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
                     <ActivityIndicator color="#FFFFFF" />
-                    <Text style={styles.generateButtonText}>
-                      Generating 4 personalized recipes...
-                    </Text>
+                    <Text style={styles.generateButtonText}>Generating...</Text>
                   </View>
                 ) : (
                   <Text style={[
                     styles.generateButtonText,
                     (!isFormValid || tokenBalance === 0) && styles.generateButtonTextDisabled
                   ]}>
-                    ✨ Generate 4 Recipes {tokenBalance > 0 && `(${tokenBalance} Munchies left)`}
+                    ✨ Generate Recipe
                   </Text>
                 )}
               </TouchableOpacity>
             </View>
           </ScrollView>
         </SafeAreaView>
+
+        {/* Loading Modal */}
+        <Modal
+          visible={showLoadingModal}
+          transparent={true}
+          animationType="fade"
+          statusBarTranslucent={true}
+        >
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContent}>
+              {/* Animated Emoji */}
+              <Animated.Text
+                style={[
+                  styles.modalEmoji,
+                  { transform: [{ rotate: spinInterpolate }] },
+                ]}
+              >
+                {loadingMessages[loadingMessageIndex].emoji}
+              </Animated.Text>
+
+              {/* Title */}
+              <Text style={styles.modalTitle}>Creating Your Recipes</Text>
+
+              {/* Dynamic Message */}
+              <Text style={styles.modalMessage}>
+                {loadingMessages[loadingMessageIndex].text}
+              </Text>
+
+              {/* Progress Indicator */}
+              <View style={styles.modalProgressContainer}>
+                <ActivityIndicator size="small" color="#6B46C1" />
+                <Text style={styles.modalProgressText}>
+                  This usually takes about 60 seconds
+                </Text>
+              </View>
+
+              {/* Fun Tip */}
+              <View style={styles.modalTipContainer}>
+                <Text style={styles.modalTipLabel}>Did you know?</Text>
+                <Text style={styles.modalTipText}>
+                  Our AI considers your dietary preferences, skill level, and available equipment to craft the perfect recipes just for you!
+                </Text>
+              </View>
+            </View>
+          </View>
+        </Modal>
     </View>
   );
 }
@@ -516,5 +632,83 @@ const styles = StyleSheet.create({
     fontFamily: 'Quicksand-Medium',
     fontSize: 12,
     color: '#1F2937',
+  },
+  // Modal Styles
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 24,
+  },
+  modalContent: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 24,
+    padding: 32,
+    alignItems: 'center',
+    width: '100%',
+    maxWidth: 340,
+    shadowColor: '#6B46C1',
+    shadowOffset: {
+      width: 0,
+      height: 8,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 16,
+    elevation: 10,
+  },
+  modalEmoji: {
+    fontSize: 64,
+    marginBottom: 20,
+  },
+  modalTitle: {
+    fontFamily: 'Quicksand-Bold',
+    fontSize: 24,
+    color: '#1F2937',
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  modalMessage: {
+    fontFamily: 'Quicksand-Medium',
+    fontSize: 16,
+    color: '#6B46C1',
+    textAlign: 'center',
+    marginBottom: 24,
+    minHeight: 24,
+  },
+  modalProgressContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F3F0FF',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 12,
+    marginBottom: 24,
+  },
+  modalProgressText: {
+    fontFamily: 'Quicksand-Regular',
+    fontSize: 14,
+    color: '#6B7280',
+    marginLeft: 12,
+  },
+  modalTipContainer: {
+    backgroundColor: '#FEFCE8',
+    borderRadius: 12,
+    padding: 16,
+    width: '100%',
+    borderWidth: 1,
+    borderColor: '#FEF08A',
+  },
+  modalTipLabel: {
+    fontFamily: 'Quicksand-Bold',
+    fontSize: 12,
+    color: '#CA8A04',
+    marginBottom: 4,
+  },
+  modalTipText: {
+    fontFamily: 'Quicksand-Regular',
+    fontSize: 13,
+    color: '#713F12',
+    lineHeight: 18,
   },
 });

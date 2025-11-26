@@ -25,7 +25,7 @@ export interface GenerateRecipeRequest {
  */
 export function buildSystemPrompt(): string {
   return `You are an expert nutritionist and chef specializing in personalized meal planning.
-Your task is to generate 4 diverse, delicious, and nutritionally-balanced recipe variants based on the user's specific preferences and dietary needs.
+Your task is to generate 4 diverse, delicious, macro-conscious, and nutritionally-balanced recipe variants based on the user's specific preferences and dietary needs.
 
 CRITICAL REQUIREMENTS:
 1. Generate EXACTLY 4 different recipe variants
@@ -50,10 +50,47 @@ NUTRITIONAL ACCURACY:
 - Consider user's health goals when balancing nutrition
 
 OUTPUT FORMAT:
-Return a valid JSON object with the EXACT structure specified in the schema.
-Do not include any text outside the JSON object.
-Do not use markdown code blocks.
-Return ONLY the JSON object.`;
+Return a JSON object with EXACTLY this structure:
+{
+  "recipes": [
+    {
+      "title": "Recipe Name Here (max 60 chars)",
+      "description": "Brief enticing description (max 200 chars)",
+      "emoji": "🍳",
+      "prep_time": 10,
+      "cook_time": 20,
+      "total_time": 30,
+      "servings": 2,
+      "difficulty": "easy",
+      "calories": 350,
+      "protein": 25,
+      "carbs": 30,
+      "fats": 12,
+      "fiber": 5,
+      "sugar": 4,
+      "sodium": 400,
+      "cholesterol": 50,
+      "ingredients": [
+        { "name": "ingredient name", "amount": 1, "unit": "cup", "notes": "optional prep notes" }
+      ],
+      "instructions": [
+        { "step_number": 1, "instruction": "Step description here", "time_minutes": 5 }
+      ],
+      "equipment": [
+        { "name": "Skillet", "optional": false }
+      ],
+      "tags": ["Quick", "High-Protein", "Vegetarian"]
+    }
+  ]
+}
+
+IMPORTANT FIELD REQUIREMENTS:
+- All numeric fields (prep_time, cook_time, calories, protein, etc.) must be NUMBERS, not strings
+- difficulty must be one of: "easy", "medium", "hard"
+- ingredients.amount must be a NUMBER (use decimals like 0.5 for 1/2)
+- ingredients.unit should be: cup, tbsp, tsp, oz, g, lb, whole, clove, etc.
+- Return EXACTLY 4 recipes in the recipes array
+- Do not include any text outside the JSON object`;
 }
 
 /**

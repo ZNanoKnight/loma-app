@@ -38,11 +38,7 @@ export default function SettingsMainScreen() {
   const { userData: globalUserData, signOut } = useUser();
 
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
-  const [notifications, setNotifications] = useState(false);
-  const [mealReminders, setMealReminders] = useState(false);
-  const [weeklyReport, setWeeklyReport] = useState(false);
-  const [darkMode, setDarkMode] = useState(false);
-  const [metricUnits, setMetricUnits] = useState(false);
+  const [metricUnits, setMetricUnits] = useState(globalUserData.metricUnits ?? false);
 
   const userData = {
     name: globalUserData.firstName || 'User',
@@ -110,14 +106,6 @@ export default function SettingsMainScreen() {
         { label: 'Current Plan', value: userData.plan },
         { label: 'Next Billing', value: userData.nextBilling },
         { label: 'Manage Subscription', screen: 'Subscription', isPrimary: true },
-      ],
-    },
-    {
-      id: 'notifications',
-      icon: '🔔',
-      title: 'Notifications',
-      items: [
-        { label: 'Push Notifications', type: 'switch', value: notifications, onChange: setNotifications },
       ],
     },
     {

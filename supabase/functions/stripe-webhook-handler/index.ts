@@ -9,6 +9,13 @@ const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY') || '', {
 
 const cryptoProvider = Stripe.createSubtleCryptoProvider()
 
+// Token allocation by plan
+const TOKEN_ALLOCATION = {
+  weekly: 5,
+  monthly: 20,
+  yearly: 240,
+}
+
 serve(async (req) => {
   const signature = req.headers.get('Stripe-Signature')
 
@@ -39,7 +46,7 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     )
 
-    console.log(`Processing event: ${event.type}`)
+    console.log(`[Webhook] Processing event: ${event.type}`)
 
     // Handle different event types
     switch (event.type) {
@@ -48,54 +55,74 @@ serve(async (req) => {
         const subscription = event.data.object as Stripe.Subscription
         const customerId = subscription.customer as string
 
+        console.log(`[Webhook] Subscription ${subscription.id} - status: ${subscription.status}`)
+
         // Get user ID from customer metadata
         const customer = await stripe.customers.retrieve(customerId)
         const userId = (customer as Stripe.Customer).metadata?.supabase_user_id
 
         if (!userId) {
-          console.error('No user ID found in customer metadata')
+          console.error('[Webhook] No user ID found in customer metadata')
           break
         }
 
-        // Determine token allocation and plan type based on price ID
+        // Determine plan type based on price interval
         const priceId = subscription.items.data[0].price.id
-        let tokensToAdd = 0
-        let planType = 'monthly' // default
+        const interval = subscription.items.data[0].price.recurring?.interval
+        let planType: 'weekly' | 'monthly' | 'yearly' = 'monthly'
 
-        // You'll need to replace these with your actual Stripe price IDs
-        if (priceId.includes('weekly') || subscription.items.data[0].price.recurring?.interval === 'week') {
-          tokensToAdd = 5
+        if (interval === 'week') {
           planType = 'weekly'
-        } else if (priceId.includes('monthly') || subscription.items.data[0].price.recurring?.interval === 'month') {
-          tokensToAdd = 20
+        } else if (interval === 'month') {
           planType = 'monthly'
-        } else if (priceId.includes('yearly') || subscription.items.data[0].price.recurring?.interval === 'year') {
-          tokensToAdd = 240
+        } else if (interval === 'year') {
           planType = 'yearly'
         }
 
-        // Update subscription record
-        // For subscription.created/updated, we SET the token balance (replaces initial 8 free tokens)
+        // Determine status - map Stripe status to our status
+        let dbStatus = subscription.status
+        if (subscription.status === 'trialing') {
+          dbStatus = 'trialing'
+        } else if (subscription.status === 'active') {
+          dbStatus = 'active'
+        } else if (subscription.status === 'past_due') {
+          dbStatus = 'past_due'
+        } else if (subscription.status === 'canceled' || subscription.status === 'cancelled') {
+          dbStatus = 'cancelled'
+        }
+
+        // For trial subscriptions, don't overwrite tokens (already set by create-payment-intent)
+        // For active subscriptions after trial, set full token allocation
+        const isTrialing = subscription.status === 'trialing'
+        const tokensToSet = isTrialing ? undefined : TOKEN_ALLOCATION[planType]
+
+        // Build update object
+        const updateData: Record<string, any> = {
+          stripe_subscription_id: subscription.id,
+          stripe_customer_id: customerId,
+          stripe_price_id: priceId,
+          plan: planType,
+          status: dbStatus,
+          current_period_start: new Date(subscription.current_period_start * 1000).toISOString(),
+          current_period_end: new Date(subscription.current_period_end * 1000).toISOString(),
+          updated_at: new Date().toISOString(),
+        }
+
+        // Only update tokens if not trialing (to not overwrite trial tokens)
+        if (!isTrialing && tokensToSet !== undefined) {
+          updateData.tokens_balance = tokensToSet
+          updateData.tokens_total = tokensToSet
+        }
+
         const { error } = await supabaseAdmin
           .from('subscriptions')
-          .update({
-            stripe_subscription_id: subscription.id,
-            stripe_customer_id: customerId,
-            stripe_price_id: priceId,
-            plan: planType,
-            status: subscription.status,
-            current_period_start: new Date(subscription.current_period_start * 1000).toISOString(),
-            current_period_end: new Date(subscription.current_period_end * 1000).toISOString(),
-            tokens_balance: tokensToAdd,
-            tokens_total: tokensToAdd,
-            updated_at: new Date().toISOString(),
-          })
+          .update(updateData)
           .eq('user_id', userId)
 
         if (error) {
-          console.error('Error updating subscription:', error)
+          console.error('[Webhook] Error updating subscription:', error)
         } else {
-          console.log(`Subscription ${subscription.id} updated for user ${userId}`)
+          console.log(`[Webhook] Subscription ${subscription.id} updated for user ${userId} - status: ${dbStatus}, plan: ${planType}`)
         }
         break
       }
@@ -133,7 +160,10 @@ serve(async (req) => {
       case 'invoice.payment_succeeded': {
         const invoice = event.data.object as Stripe.Invoice
 
+        console.log(`[Webhook] Invoice payment succeeded - billing_reason: ${invoice.billing_reason}`)
+
         if (!invoice.subscription) {
+          console.log('[Webhook] No subscription on invoice, skipping')
           break
         }
 
@@ -144,49 +174,79 @@ serve(async (req) => {
         const userId = (customer as Stripe.Customer).metadata?.supabase_user_id
 
         if (!userId) {
-          console.error('No user ID found in customer metadata')
+          console.error('[Webhook] No user ID found in customer metadata')
           break
         }
 
-        // Determine token allocation and plan type
-        const priceId = subscription.items.data[0].price.id
-        let tokensToAdd = 0
-        let planType = 'monthly' // default
+        // Determine plan type based on price interval
+        const interval = subscription.items.data[0].price.recurring?.interval
+        let planType: 'weekly' | 'monthly' | 'yearly' = 'monthly'
 
-        if (priceId.includes('weekly') || subscription.items.data[0].price.recurring?.interval === 'week') {
-          tokensToAdd = 5
+        if (interval === 'week') {
           planType = 'weekly'
-        } else if (priceId.includes('monthly') || subscription.items.data[0].price.recurring?.interval === 'month') {
-          tokensToAdd = 20
+        } else if (interval === 'month') {
           planType = 'monthly'
-        } else if (priceId.includes('yearly') || subscription.items.data[0].price.recurring?.interval === 'year') {
-          tokensToAdd = 240
+        } else if (interval === 'year') {
           planType = 'yearly'
         }
 
-        // Add tokens on renewal (only if not first payment)
-        if (invoice.billing_reason === 'subscription_cycle') {
-          const { data: currentSub } = await supabaseAdmin
+        const tokensToAdd = TOKEN_ALLOCATION[planType]
+
+        // Get current subscription data
+        const { data: currentSub } = await supabaseAdmin
+          .from('subscriptions')
+          .select('tokens_balance, tokens_total, status')
+          .eq('user_id', userId)
+          .single()
+
+        if (!currentSub) {
+          console.error('[Webhook] No subscription found for user:', userId)
+          break
+        }
+
+        // Handle different billing reasons:
+        // - 'subscription_create': First payment (after trial or immediate)
+        // - 'subscription_cycle': Renewal payment
+        // - 'subscription_update': Plan change
+        if (invoice.billing_reason === 'subscription_create') {
+          // First payment after trial ends - give full token allocation
+          // This replaces the trial tokens with the full plan allocation
+          console.log(`[Webhook] First payment after trial for user ${userId} - setting ${tokensToAdd} tokens`)
+
+          await supabaseAdmin
             .from('subscriptions')
-            .select('tokens_balance, tokens_total')
+            .update({
+              tokens_balance: tokensToAdd,
+              tokens_total: tokensToAdd,
+              plan: planType,
+              status: 'active',
+              current_period_start: new Date(subscription.current_period_start * 1000).toISOString(),
+              current_period_end: new Date(subscription.current_period_end * 1000).toISOString(),
+              updated_at: new Date().toISOString(),
+            })
             .eq('user_id', userId)
-            .single()
 
-          if (currentSub) {
-            await supabaseAdmin
-              .from('subscriptions')
-              .update({
-                tokens_balance: currentSub.tokens_balance + tokensToAdd,
-                tokens_total: currentSub.tokens_total + tokensToAdd,
-                plan: planType,
-                status: 'active',
-                current_period_end: new Date(subscription.current_period_end * 1000).toISOString(),
-                updated_at: new Date().toISOString(),
-              })
-              .eq('user_id', userId)
+          console.log(`[Webhook] User ${userId} now has ${tokensToAdd} tokens (${planType} plan activated)`)
+        } else if (invoice.billing_reason === 'subscription_cycle') {
+          // Renewal - ADD tokens to existing balance
+          const newBalance = currentSub.tokens_balance + tokensToAdd
+          const newTotal = currentSub.tokens_total + tokensToAdd
 
-            console.log(`Added ${tokensToAdd} tokens to user ${userId} on renewal`)
-          }
+          console.log(`[Webhook] Renewal for user ${userId} - adding ${tokensToAdd} tokens (${currentSub.tokens_balance} -> ${newBalance})`)
+
+          await supabaseAdmin
+            .from('subscriptions')
+            .update({
+              tokens_balance: newBalance,
+              tokens_total: newTotal,
+              plan: planType,
+              status: 'active',
+              current_period_end: new Date(subscription.current_period_end * 1000).toISOString(),
+              updated_at: new Date().toISOString(),
+            })
+            .eq('user_id', userId)
+
+          console.log(`[Webhook] User ${userId} tokens renewed: ${newBalance} total`)
         }
         break
       }

@@ -127,8 +127,6 @@ export const RecipeService = {
         })
       );
 
-      console.log('[RecipeService] Recipes transformed to client format');
-
       return recipes;
     } catch (error) {
       console.error('[RecipeService] generateRecipe error:', error);
@@ -492,6 +490,134 @@ export const RecipeService = {
         code: ErrorCode.API_ERROR,
         message: 'Failed to update recipe',
         userMessage: 'Failed to update recipe. Please try again.',
+        originalError: error,
+      });
+    }
+  },
+
+  /**
+   * Refine an existing recipe using AI based on user feedback
+   * Does NOT consume a Munchie - free refinement
+   * @param request - Refinement request with recipe details and user feedback
+   * @returns The refined recipe (already saved to database)
+   */
+  async refineRecipe(request: {
+    recipeId: string;
+    refinementRequest: string;
+    originalRecipe: {
+      title: string;
+      description: string;
+      emoji: string;
+      mealType: 'breakfast' | 'lunch' | 'dinner' | 'snack';
+      prepTime: number;
+      cookTime: number;
+      totalTime: number;
+      servings: number;
+      difficulty: string;
+      calories: number;
+      protein: number;
+      carbs: number;
+      fats: number;
+      fiber?: number;
+      sugar?: number;
+      sodium?: number;
+      cholesterol?: number;
+      ingredients: any[];
+      instructions: any[];
+      equipment?: any[];
+      tags?: string[];
+    };
+  }): Promise<any> {
+    try {
+      const supabase = getSupabaseClient();
+
+      logger.log('[RecipeService] Refining recipe:', request.recipeId);
+
+      // Call refine-recipe Edge Function
+      const { data, error } = await supabase.functions.invoke('refine-recipe', {
+        body: {
+          recipe_id: request.recipeId,
+          refinement_request: request.refinementRequest,
+          original_recipe: {
+            title: request.originalRecipe.title,
+            description: request.originalRecipe.description,
+            emoji: request.originalRecipe.emoji,
+            meal_type: request.originalRecipe.mealType,
+            prep_time: request.originalRecipe.prepTime,
+            cook_time: request.originalRecipe.cookTime,
+            total_time: request.originalRecipe.totalTime,
+            servings: request.originalRecipe.servings,
+            difficulty: request.originalRecipe.difficulty,
+            calories: request.originalRecipe.calories,
+            protein: request.originalRecipe.protein,
+            carbs: request.originalRecipe.carbs,
+            fats: request.originalRecipe.fats,
+            fiber: request.originalRecipe.fiber,
+            sugar: request.originalRecipe.sugar,
+            sodium: request.originalRecipe.sodium,
+            cholesterol: request.originalRecipe.cholesterol,
+            ingredients: request.originalRecipe.ingredients,
+            instructions: request.originalRecipe.instructions,
+            equipment: request.originalRecipe.equipment,
+            tags: request.originalRecipe.tags,
+          },
+        },
+      });
+
+      if (error) {
+        logger.error('[RecipeService] Edge Function error:', error);
+        throw new LomaError({
+          code: ErrorCode.API_ERROR,
+          message: 'Recipe refinement failed',
+          userMessage: 'Unable to refine recipe. Please try again.',
+          originalError: error,
+        });
+      }
+
+      if (!data || !data.success) {
+        logger.error('[RecipeService] Edge Function returned unsuccessful response:', data);
+        throw new LomaError({
+          code: ErrorCode.API_ERROR,
+          message: 'Recipe refinement failed',
+          userMessage: data?.error || 'Unable to refine recipe. Please try again.',
+        });
+      }
+
+      if (!data.recipe) {
+        logger.error('[RecipeService] No recipe in response:', data);
+        throw new LomaError({
+          code: ErrorCode.API_ERROR,
+          message: 'Invalid refinement response',
+          userMessage: 'Received invalid refined recipe. Please try again.',
+        });
+      }
+
+      logger.log(
+        `[RecipeService] Successfully refined recipe`,
+        `New ID: ${data.recipe.id}, Tokens: ${data.metadata?.tokens_used}`
+      );
+
+      // Transform database recipe to client format
+      const { dbRecipeToClientRecipe } = await import('./recipeTransformers');
+      const refinedRecipe = dbRecipeToClientRecipe(data.recipe, {
+        is_favorite: false,
+        cooked_count: 0,
+      });
+
+      return refinedRecipe;
+    } catch (error) {
+      console.error('[RecipeService] refineRecipe error:', error);
+
+      // If it's already a LomaError, rethrow it
+      if (error instanceof LomaError) {
+        throw error;
+      }
+
+      // Otherwise, wrap it
+      throw new LomaError({
+        code: ErrorCode.API_ERROR,
+        message: 'Failed to refine recipe',
+        userMessage: 'Failed to refine recipe. Please try again.',
         originalError: error,
       });
     }

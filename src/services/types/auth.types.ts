@@ -39,7 +39,6 @@ export interface SignUpRequest {
     allergens: string[];
     equipment: string;
     cookingFrequency: string;
-    mealPrepInterest: string;
   };
 }
 

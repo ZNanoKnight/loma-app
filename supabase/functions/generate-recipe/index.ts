@@ -88,12 +88,19 @@ serve(async (req) => {
     console.log(`[generate-recipe] User profile fetched successfully`);
 
     // Build user preferences from profile
+    // Ensure all array fields are actually arrays (database might return null or non-array values)
+    const ensureArray = (value: any): string[] => {
+      if (Array.isArray(value)) return value;
+      if (value === null || value === undefined) return [];
+      return [];
+    };
+
     const userPreferences: UserPreferences = {
-      dietaryRestrictions: profile.dietary_restrictions || [],
-      allergens: profile.allergens || [],
-      cuisinePreferences: profile.cuisine_preferences || [],
-      goals: profile.goals || [],
-      equipment: profile.equipment || [],
+      dietaryRestrictions: ensureArray(profile.dietary_restrictions),
+      allergens: ensureArray(profile.allergens),
+      cuisinePreferences: [], // Deprecated - no longer stored in database
+      goals: ensureArray(profile.goals),
+      equipment: ensureArray(profile.equipment),
       cookingSkillLevel: profile.cooking_skill_level || 'intermediate',
       preferredPrepTime: profile.preferred_prep_time,
     };
@@ -180,40 +187,137 @@ serve(async (req) => {
 
     console.log(`[generate-recipe] Successfully parsed ${recipeResponse.recipes.length} recipes`);
 
+    // Debug: Log the first recipe structure from AI
+    console.log(`[generate-recipe] AI recipe structure sample:`, JSON.stringify(recipeResponse.recipes[0], null, 2));
+
+    // Helper function to parse numeric values from AI response
+    // AI might return "5 minutes" instead of 5, or strings instead of numbers
+    const parseNumber = (value: any, defaultValue: number = 0): number => {
+      if (typeof value === 'number') return Math.round(value);
+      if (typeof value === 'string') {
+        // Extract first number from string (e.g., "5 minutes" -> 5)
+        const match = value.match(/[\d.]+/);
+        if (match) return Math.round(parseFloat(match[0]));
+      }
+      return defaultValue;
+    };
+
+    // Helper to normalize ingredients from AI response
+    const normalizeIngredients = (ingredients: any[]): any[] => {
+      if (!Array.isArray(ingredients)) return [];
+      return ingredients.map((ing, idx) => {
+        // Handle various formats AI might return
+        if (typeof ing === 'string') {
+          return { name: ing, amount: 1, unit: 'unit' };
+        }
+        // AI might use "quantity" instead of "amount", or combine amount+unit
+        const amount = ing.amount ?? ing.quantity ?? 1;
+        let parsedAmount = 1;
+        let unit = ing.unit || 'unit';
+
+        // If amount is a string like "1 cup", parse it
+        if (typeof amount === 'string') {
+          const match = amount.match(/^([\d./]+)\s*(.*)$/);
+          if (match) {
+            // Handle fractions like "1/2"
+            if (match[1].includes('/')) {
+              const [num, denom] = match[1].split('/');
+              parsedAmount = parseFloat(num) / parseFloat(denom);
+            } else {
+              parsedAmount = parseFloat(match[1]) || 1;
+            }
+            if (match[2]) unit = match[2].trim() || unit;
+          }
+        } else {
+          parsedAmount = parseNumber(amount, 1);
+        }
+
+        return {
+          name: ing.name || ing.ingredient || 'Unknown ingredient',
+          amount: parsedAmount,
+          unit: unit,
+          notes: ing.notes || ing.preparation || undefined,
+        };
+      });
+    };
+
+    // Helper to normalize instructions from AI response
+    const normalizeInstructions = (instructions: any[]): any[] => {
+      if (!Array.isArray(instructions)) return [];
+      return instructions.map((inst, idx) => {
+        // If it's just a string, wrap it
+        if (typeof inst === 'string') {
+          return { step_number: idx + 1, instruction: inst };
+        }
+        return {
+          step_number: inst.step_number ?? inst.stepNumber ?? idx + 1,
+          instruction: inst.instruction ?? inst.step ?? inst.text ?? String(inst),
+          time_minutes: inst.time_minutes ?? inst.timeMinutes ?? undefined,
+        };
+      });
+    };
+
+    // Helper to normalize equipment from AI response
+    const normalizeEquipment = (equipment: any[]): any[] => {
+      if (!Array.isArray(equipment)) return [];
+      return equipment.map((eq) => {
+        if (typeof eq === 'string') {
+          return { name: eq, optional: false };
+        }
+        return {
+          name: eq.name || String(eq),
+          optional: eq.optional ?? false,
+        };
+      });
+    };
+
     // Store recipes in database
     const storedRecipes = [];
 
     for (let i = 0; i < recipeResponse.recipes.length; i++) {
       const recipe = recipeResponse.recipes[i];
 
+      // Sanitize numeric fields from AI response
+      // Try both snake_case and camelCase field names
+      const sanitizedRecipe = {
+        title: String(recipe.title || 'Untitled Recipe').slice(0, 60),
+        description: String(recipe.description || '').slice(0, 200),
+        emoji: String(recipe.emoji || '🍽️').slice(0, 4),
+        meal_type: meal_type,
+        prep_time: parseNumber(recipe.prep_time ?? recipe.prepTime),
+        cook_time: parseNumber(recipe.cook_time ?? recipe.cookTime),
+        total_time: parseNumber(recipe.total_time ?? recipe.totalTime),
+        servings: parseNumber(recipe.servings, 1),
+        difficulty: String(recipe.difficulty || 'medium'),
+        calories: parseNumber(recipe.calories),
+        protein: parseNumber(recipe.protein),
+        carbs: parseNumber(recipe.carbs),
+        fats: parseNumber(recipe.fats),
+        fiber: parseNumber(recipe.fiber),
+        sugar: parseNumber(recipe.sugar),
+        sodium: parseNumber(recipe.sodium),
+        cholesterol: parseNumber(recipe.cholesterol),
+        ingredients: normalizeIngredients(recipe.ingredients),
+        instructions: normalizeInstructions(recipe.instructions),
+        equipment: normalizeEquipment(recipe.equipment),
+        tags: Array.isArray(recipe.tags) ? recipe.tags : [],
+        generated_by_user_id: user.id,
+        ai_model: 'gpt-4o-mini',
+      };
+
+      // Debug: Log sanitized recipe
+      console.log(`[generate-recipe] Sanitized recipe ${i + 1}:`, JSON.stringify({
+        title: sanitizedRecipe.title,
+        prep_time: sanitizedRecipe.prep_time,
+        calories: sanitizedRecipe.calories,
+        ingredientCount: sanitizedRecipe.ingredients.length,
+        instructionCount: sanitizedRecipe.instructions.length,
+      }));
+
       // Insert recipe into recipes table
       const { data: insertedRecipe, error: recipeError } = await supabase
         .from('recipes')
-        .insert({
-          title: recipe.title,
-          description: recipe.description,
-          emoji: recipe.emoji,
-          meal_type: meal_type,
-          prep_time: recipe.prep_time,
-          cook_time: recipe.cook_time,
-          total_time: recipe.total_time,
-          servings: recipe.servings,
-          difficulty: recipe.difficulty,
-          calories: recipe.calories,
-          protein: recipe.protein,
-          carbs: recipe.carbs,
-          fats: recipe.fats,
-          fiber: recipe.fiber,
-          sugar: recipe.sugar,
-          sodium: recipe.sodium,
-          cholesterol: recipe.cholesterol,
-          ingredients: recipe.ingredients,
-          instructions: recipe.instructions,
-          equipment: recipe.equipment,
-          tags: recipe.tags,
-          generated_by_user_id: user.id,
-          ai_model: 'gpt-4o-mini',
-        })
+        .insert(sanitizedRecipe)
         .select()
         .single();
 
@@ -224,18 +328,10 @@ serve(async (req) => {
 
       console.log(`[generate-recipe] Stored recipe ${i + 1}: ${recipe.title}`);
 
-      // Link recipe to user in user_recipes table
-      const { error: linkError } = await supabase.from('user_recipes').insert({
-        user_id: user.id,
-        recipe_id: insertedRecipe.id,
-        is_favorite: false,
-        is_saved: true,
-      });
-
-      if (linkError) {
-        console.error(`[generate-recipe] Error linking recipe ${i + 1}:`, linkError);
-        // Non-fatal error - continue
-      }
+      // Note: We do NOT add to user_recipes here.
+      // Recipes are only added to user_recipes when the user explicitly saves them
+      // via the "Save to Recipe Book" button on RecipeReviewScreen.
+      // This prevents all 4 generated options from appearing in the user's Recipe Book.
 
       storedRecipes.push(insertedRecipe);
     }

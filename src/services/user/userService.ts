@@ -29,27 +29,13 @@ export interface UserProfile {
   // Dietary information
   dietary_preferences?: string[];
   allergens?: string[];
-  disliked_ingredients?: string[];
-  cuisine_preferences?: string[];
 
   // Cooking information
   equipment?: string;
   cooking_frequency?: string;
-  meal_prep_interest?: string;
   default_serving_size?: number;
 
-  // Nutrition targets
-  target_weight?: string;
-  target_protein?: string;
-  target_calories?: string;
-  target_carbs?: string;
-  target_fat?: string;
-
   // Settings
-  notifications?: boolean;
-  meal_reminders?: boolean;
-  weekly_report?: boolean;
-  dark_mode?: boolean;
   metric_units?: boolean;
 
   // Profile

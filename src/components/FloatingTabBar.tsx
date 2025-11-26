@@ -61,11 +61,22 @@ export default function FloatingTabBar({ state, descriptors, navigation }: Botto
               canPreventDefault: true,
             });
 
-            if (!isFocused && !event.defaultPrevented) {
-              navigation.navigate(route.name);
-            } else if (isFocused && route.name === 'HomeTab') {
-              // If already on Home tab, reset to HomeScreen
-              navigation.navigate('HomeTab', { screen: 'Home' });
+            if (!event.defaultPrevented) {
+              // Always reset to initial screen when tapping a tab
+              // This ensures Home tab goes to HomeScreen, not RecipeReviewScreen etc.
+              const tabToInitialScreen: Record<string, string> = {
+                'HomeTab': 'Home',
+                'RecipesTab': 'RecipeBook',
+                'ProgressTab': 'Progress',
+                'SettingsTab': 'SettingsMain'
+              };
+
+              const initialScreen = tabToInitialScreen[route.name];
+              if (initialScreen) {
+                navigation.navigate(route.name, { screen: initialScreen });
+              } else {
+                navigation.navigate(route.name);
+              }
             }
           };
 

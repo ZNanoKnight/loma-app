@@ -22,21 +22,9 @@ export const UserProfileSchema = z.object({
   goals: z.array(z.string()).default([]),
   dietary_preferences: z.array(z.string()).default([]),
   allergens: z.array(z.string()).default([]),
-  disliked_ingredients: z.array(z.string()).default([]),
-  cuisine_preferences: z.array(z.string()).default([]),
   equipment: z.string().optional(),
   cooking_frequency: z.string().optional(),
-  meal_prep_interest: z.string().optional(),
   default_serving_size: z.number().int().positive().default(1),
-  target_weight: z.string().optional(),
-  target_protein: z.string().optional(),
-  target_calories: z.string().optional(),
-  target_carbs: z.string().optional(),
-  target_fat: z.string().optional(),
-  notifications: z.boolean().default(true),
-  meal_reminders: z.boolean().default(true),
-  weekly_report: z.boolean().default(true),
-  dark_mode: z.boolean().default(false),
   metric_units: z.boolean().default(false),
   profile_image_url: z.string().url().optional().nullable(),
   has_completed_onboarding: z.boolean().default(false),
@@ -72,7 +60,6 @@ export const SignUpRequestSchema = z.object({
     allergens: z.array(z.string()).default([]),
     equipment: z.string().optional(),
     cookingFrequency: z.string().optional(),
-    mealPrepInterest: z.string().optional(),
   }),
 });
 
@@ -245,11 +232,8 @@ export const RecipeGenerationRequestSchema = z.object({
     .object({
       dietaryRestrictions: z.array(z.string()).default([]),
       allergens: z.array(z.string()).default([]),
-      cuisinePreferences: z.array(z.string()).default([]),
       goals: z.array(z.string()).default([]),
       equipment: z.string().optional(),
-      targetCalories: z.string().optional(),
-      targetProtein: z.string().optional(),
     })
     .optional(),
 });

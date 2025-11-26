@@ -8,57 +8,178 @@ import {
   StatusBar,
   ScrollView,
   TextInput,
-  Alert
+  Alert,
+  ActivityIndicator
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useUser } from '../../context/UserContext';
+import { useRecipe } from '../../context/RecipeContext';
+import { AuthService } from '../../services/auth/authService';
+import { RecipeService } from '../../services/recipes/recipeService';
 
 export default function RecipeReviewScreen() {
   const navigation = useNavigation<any>();
   const { userData, updateUserData } = useUser();
-  const [notes, setNotes] = useState('');
+  const { currentRecipe, setCurrentRecipe } = useRecipe();
+  const [refinementRequest, setRefinementRequest] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
+  const [isRefining, setIsRefining] = useState(false);
 
-  // Mock recipe data - in production, this would come from the previous screen
-  const recipe = {
-    id: '1',
-    title: 'Mediterranean Chicken Bowl',
-    description: 'A protein-packed, flavorful bowl with perfectly seasoned chicken, quinoa, and fresh vegetables',
-    emoji: '🥗',
-    prepTime: 15,
-    cookTime: 20,
-    totalTime: 35,
-    servings: 2,
+  // Use recipe from context (set by RecipeGeneratedScreen)
+  const recipe = currentRecipe || {
+    id: '',
+    title: 'No Recipe Selected',
+    description: 'Please select a recipe first',
+    emoji: '🍽️',
+    prepTime: 0,
+    cookTime: 0,
+    totalTime: 0,
+    servings: 1,
     difficulty: 'Easy',
-    calories: 485,
-    protein: 42,
-    carbs: 38,
-    fats: 18,
-    fiber: 8,
-    sugar: 6,
-    sodium: 580,
-    cholesterol: 95,
+    calories: 0,
+    protein: 0,
+    carbs: 0,
+    fats: 0,
+    fiber: 0,
+    sugar: 0,
+    sodium: 0,
+    cholesterol: 0,
+    mealType: 'dinner' as const,
+    ingredients: [],
+    instructions: [],
+    equipment: [],
+    tags: [],
   };
 
-  const handleSaveToRecipeBook = () => {
-    // Add the recipe to the user's saved recipes
-    const recipeToSave = {
-      ...recipe,
-      notes: notes.trim(),
-      savedAt: new Date().toISOString(),
-    };
+  const handleSaveToRecipeBook = async () => {
+    if (!recipe.id) {
+      Alert.alert('Error', 'No recipe selected. Please go back and select a recipe.');
+      return;
+    }
 
-    const updatedSavedRecipes = [...userData.savedRecipes, recipeToSave];
+    setIsSaving(true);
 
-    updateUserData({
-      savedRecipes: updatedSavedRecipes,
-      totalRecipes: userData.totalRecipes + 1,
-    });
+    try {
+      // Get current session for user ID
+      const session = await AuthService.getCurrentSession();
+      if (!session) {
+        Alert.alert('Error', 'Please sign in to save recipes.');
+        setIsSaving(false);
+        return;
+      }
 
-    // Navigate to Recipe Book in the Recipes tab
-    navigation.navigate('RecipesTab', {
-      screen: 'RecipeBook',
-      params: { newRecipe: recipeToSave }
-    });
+      // Save recipe to Supabase (creates user_recipes entry)
+      await RecipeService.saveRecipe(session.user.id, recipe.id);
+
+      console.log('[RecipeReviewScreen] Recipe saved successfully:', recipe.id);
+
+      // Update local user data for stats
+      updateUserData({
+        totalRecipes: userData.totalRecipes + 1,
+      });
+
+      // Navigate to Recipe Book in the Recipes tab
+      navigation.navigate('RecipesTab', {
+        screen: 'RecipeBook',
+      });
+    } catch (error) {
+      console.error('[RecipeReviewScreen] Error saving recipe:', error);
+      Alert.alert('Error', 'Failed to save recipe. Please try again.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleRefineRecipe = async () => {
+    if (!recipe.id) {
+      Alert.alert('Error', 'No recipe selected. Please go back and select a recipe.');
+      return;
+    }
+
+    if (!refinementRequest.trim()) {
+      Alert.alert('Error', 'Please describe what changes you would like to make.');
+      return;
+    }
+
+    setIsRefining(true);
+
+    try {
+      // Get current session for user ID
+      const session = await AuthService.getCurrentSession();
+      if (!session) {
+        Alert.alert('Error', 'Please sign in to refine recipes.');
+        setIsRefining(false);
+        return;
+      }
+
+      console.log('[RecipeReviewScreen] Refining recipe:', recipe.id);
+
+      // Call the refine recipe service
+      const refinedRecipe = await RecipeService.refineRecipe({
+        recipeId: recipe.id,
+        refinementRequest: refinementRequest.trim(),
+        originalRecipe: {
+          title: recipe.title,
+          description: recipe.description,
+          emoji: recipe.emoji,
+          mealType: recipe.mealType,
+          prepTime: recipe.prepTime,
+          cookTime: recipe.cookTime,
+          totalTime: recipe.totalTime,
+          servings: recipe.servings,
+          difficulty: recipe.difficulty,
+          calories: recipe.calories,
+          protein: recipe.protein,
+          carbs: recipe.carbs,
+          fats: recipe.fats,
+          fiber: recipe.fiber,
+          sugar: recipe.sugar,
+          sodium: recipe.sodium,
+          cholesterol: recipe.cholesterol,
+          ingredients: recipe.ingredients,
+          instructions: recipe.instructions,
+          equipment: recipe.equipment,
+          tags: recipe.tags,
+        },
+      });
+
+      console.log('[RecipeReviewScreen] Recipe refined successfully:', refinedRecipe.id);
+
+      // Update the current recipe in context with the refined version
+      setCurrentRecipe(refinedRecipe as any);
+
+      // Clear the refinement request
+      setRefinementRequest('');
+
+      // Update local user data for stats
+      updateUserData({
+        totalRecipes: userData.totalRecipes + 1,
+      });
+
+      // Show success message
+      Alert.alert(
+        'Recipe Refined!',
+        'Your recipe has been updated and automatically saved to your Recipe Book.',
+        [
+          {
+            text: 'View Recipe Book',
+            onPress: () => navigation.navigate('RecipesTab', { screen: 'RecipeBook' }),
+          },
+          {
+            text: 'Review Changes',
+            style: 'cancel',
+          },
+        ]
+      );
+    } catch (error: any) {
+      console.error('[RecipeReviewScreen] Error refining recipe:', error);
+      Alert.alert(
+        'Refinement Failed',
+        error?.userMessage || 'Failed to refine recipe. Please try again.'
+      );
+    } finally {
+      setIsRefining(false);
+    }
   };
 
   return (
@@ -160,39 +281,65 @@ export default function RecipeReviewScreen() {
               </View>
             </View>
 
-            {/* Notes Section */}
-            <View style={styles.notesSection}>
-              <Text style={styles.sectionTitle}>Personal Notes (Optional)</Text>
-              <Text style={styles.notesSubtitle}>
-                Add any modifications, substitutions, or reminders
+            {/* Refinement Section */}
+            <View style={styles.refinementSection}>
+              <Text style={styles.sectionTitle}>Refine This Recipe</Text>
+              <Text style={styles.refinementSubtitle}>
+                Want to make changes? Describe what you'd like to modify and we'll update the recipe for you - no Munchies required!
               </Text>
               <TextInput
-                style={styles.notesInput}
-                value={notes}
+                style={styles.refinementInput}
+                value={refinementRequest}
                 onChangeText={(text) => {
-                  if (text.length <= 1000) {
-                    setNotes(text);
+                  if (text.length <= 500) {
+                    setRefinementRequest(text);
                   }
                 }}
-                placeholder="e.g., 'Use chicken thighs instead of breasts' or 'Add extra garlic'"
+                placeholder="e.g., 'Make it vegetarian', 'Reduce carbs', 'Use chicken thighs instead', 'Add more protein'"
                 placeholderTextColor="#9CA3AF"
                 multiline
-                maxLength={1000}
+                maxLength={500}
                 textAlignVertical="top"
+                editable={!isRefining}
               />
               <Text style={styles.characterCount}>
-                {notes.length}/1000 characters
+                {refinementRequest.length}/500 characters
               </Text>
+
+              {/* Refine Button */}
+              <TouchableOpacity
+                style={[
+                  styles.refineButton,
+                  (!refinementRequest.trim() || isRefining) && styles.refineButtonDisabled
+                ]}
+                onPress={handleRefineRecipe}
+                activeOpacity={0.8}
+                disabled={!refinementRequest.trim() || isRefining}
+              >
+                {isRefining ? (
+                  <View style={styles.refiningContainer}>
+                    <ActivityIndicator color="#6B46C1" size="small" />
+                    <Text style={styles.refiningText}>Refining recipe...</Text>
+                  </View>
+                ) : (
+                  <Text style={styles.refineButtonText}>Refine Recipe</Text>
+                )}
+              </TouchableOpacity>
             </View>
           </View>
 
           {/* Save Button */}
           <TouchableOpacity
-            style={styles.saveButton}
+            style={[styles.saveButton, (isSaving || isRefining) && styles.saveButtonDisabled]}
             onPress={handleSaveToRecipeBook}
             activeOpacity={0.8}
+            disabled={isSaving || isRefining}
           >
-            <Text style={styles.saveButtonText}>Save to Recipe Book</Text>
+            {isSaving ? (
+              <ActivityIndicator color="#FFFFFF" size="small" />
+            ) : (
+              <Text style={styles.saveButtonText}>Save to Recipe Book</Text>
+            )}
           </TouchableOpacity>
         </ScrollView>
       </SafeAreaView>
@@ -352,18 +499,19 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#1F2937',
   },
-  notesSection: {
+  refinementSection: {
     borderTopWidth: 1,
     borderTopColor: '#E5E7EB',
     paddingTop: 24,
   },
-  notesSubtitle: {
+  refinementSubtitle: {
     fontFamily: 'Quicksand-Regular',
     fontSize: 13,
-    color: '#9CA3AF',
+    color: '#6B7280',
     marginBottom: 12,
+    lineHeight: 18,
   },
-  notesInput: {
+  refinementInput: {
     fontFamily: 'Quicksand-Regular',
     backgroundColor: '#F9FAFB',
     borderWidth: 1,
@@ -373,8 +521,36 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     fontSize: 14,
     color: '#1F2937',
-    minHeight: 120,
+    minHeight: 100,
     textAlignVertical: 'top',
+  },
+  refineButton: {
+    backgroundColor: '#FFFFFF',
+    borderWidth: 2,
+    borderColor: '#6B46C1',
+    paddingVertical: 14,
+    borderRadius: 12,
+    alignItems: 'center',
+    marginTop: 16,
+  },
+  refineButtonDisabled: {
+    borderColor: '#D1D5DB',
+    backgroundColor: '#F9FAFB',
+  },
+  refineButtonText: {
+    fontFamily: 'Quicksand-SemiBold',
+    color: '#6B46C1',
+    fontSize: 16,
+  },
+  refiningContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  refiningText: {
+    fontFamily: 'Quicksand-Medium',
+    color: '#6B46C1',
+    fontSize: 14,
   },
   characterCount: {
     fontFamily: 'Quicksand-Regular',
@@ -401,5 +577,8 @@ const styles = StyleSheet.create({
     fontFamily: 'Quicksand-SemiBold',
     color: '#FFFFFF',
     fontSize: 18,
+  },
+  saveButtonDisabled: {
+    opacity: 0.7,
   },
 });

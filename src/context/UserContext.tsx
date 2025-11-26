@@ -20,7 +20,6 @@ interface UserData {
   allergens: string[];
   equipment: string;
   cookingFrequency: string;
-  mealPrepInterest: string;
   selectedPlan: string;
 
   // App data
@@ -33,19 +32,9 @@ interface UserData {
   moneySaved: number;
 
   // Settings
-  notifications: boolean;
-  mealReminders: boolean;
-  weeklyReport: boolean;
-  darkMode: boolean;
   metricUnits: boolean;
 
   // Profile
-  targetWeight: string;
-  targetProtein: string;
-  targetCalories: string;
-  macroTargets?: { carbs: string; fat: string };
-  dislikedIngredients?: string[];
-  cuisinePreferences?: string[];
   defaultServingSize?: number;
   profileImageUri?: string; // Temporary storage for profile photo URI
   // NOTE: In production, this would be replaced with a URL to the uploaded image from the backend
@@ -84,7 +73,6 @@ const initialUserData: UserData = {
   allergens: [],
   equipment: 'basic',
   cookingFrequency: '',
-  mealPrepInterest: '',
   selectedPlan: '',
 
   // App data
@@ -97,19 +85,9 @@ const initialUserData: UserData = {
   moneySaved: 0,
 
   // Settings
-  notifications: true,
-  mealReminders: true,
-  weeklyReport: true,
-  darkMode: false,
   metricUnits: false,
 
   // Profile
-  targetWeight: '',
-  targetProtein: '50',
-  targetCalories: '2000',
-  macroTargets: { carbs: '', fat: '' },
-  dislikedIngredients: [],
-  cuisinePreferences: [],
   defaultServingSize: 2,
   profileImageUri: undefined,
 
@@ -214,20 +192,8 @@ export function UserProvider({ children }: { children: ReactNode }) {
           allergens: data.allergens,
           equipment: data.equipment,
           cooking_frequency: data.cookingFrequency,
-          meal_prep_interest: data.mealPrepInterest,
-          target_weight: data.targetWeight,
-          target_protein: data.targetProtein,
-          target_calories: data.targetCalories,
-          target_carbs: data.macroTargets?.carbs,
-          target_fat: data.macroTargets?.fat,
-          disliked_ingredients: data.dislikedIngredients,
-          cuisine_preferences: data.cuisinePreferences,
           default_serving_size: data.defaultServingSize,
           profile_image_url: data.profileImageUri,
-          notifications: data.notifications,
-          meal_reminders: data.mealReminders,
-          weekly_report: data.weeklyReport,
-          dark_mode: data.darkMode,
           metric_units: data.metricUnits,
           has_completed_onboarding: data.hasCompletedOnboarding,
         });

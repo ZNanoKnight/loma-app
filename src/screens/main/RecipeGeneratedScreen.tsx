@@ -83,21 +83,6 @@ export default function RecipeGeneratedScreen() {
     }
   };
 
-  const handleRegenerate = () => {
-    Alert.alert(
-      'Regenerate Recipes?',
-      'This will cost 1 Munchie to generate 4 new recipes. Continue?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Generate',
-          style: 'default',
-          onPress: () => navigation.goBack(), // Go back to HomeScreen to regenerate
-        },
-      ]
-    );
-  };
-
   return (
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" />
@@ -191,16 +176,6 @@ export default function RecipeGeneratedScreen() {
             </Text>
           </TouchableOpacity>
 
-          {/* Regenerate Button */}
-          <TouchableOpacity
-            style={styles.regenerateButton}
-            onPress={handleRegenerate}
-            activeOpacity={0.8}
-          >
-            <Text style={styles.regenerateButtonText}>
-              🔄 Generate Different Options
-            </Text>
-          </TouchableOpacity>
         </ScrollView>
       </SafeAreaView>
     </View>
@@ -359,19 +334,5 @@ const styles = StyleSheet.create({
   },
   selectButtonTextDisabled: {
     color: '#9CA3AF',
-  },
-  regenerateButton: {
-    backgroundColor: '#F3F4F6',
-    paddingVertical: 16,
-    borderRadius: 12,
-    alignItems: 'center',
-    marginTop: 16,
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
-  },
-  regenerateButtonText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#6B46C1',
   },
 });

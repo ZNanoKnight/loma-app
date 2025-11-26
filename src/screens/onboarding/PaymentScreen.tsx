@@ -160,7 +160,6 @@ export default function PaywallScreen() {
           allergens: userData.allergens || [],
           equipment: userData.equipment || '',
           cookingFrequency: userData.cookingFrequency || '',
-          mealPrepInterest: userData.mealPrepInterest || '',
         },
       });
 
@@ -201,17 +200,7 @@ export default function PaywallScreen() {
         allergens: userData.allergens,
         equipment: userData.equipment,
         cooking_frequency: userData.cookingFrequency,
-        meal_prep_interest: userData.mealPrepInterest,
-        target_weight: userData.targetWeight,
-        target_protein: userData.targetProtein,
-        target_calories: userData.targetCalories,
-        disliked_ingredients: userData.dislikedIngredients,
-        cuisine_preferences: userData.cuisinePreferences,
         default_serving_size: userData.defaultServingSize || 1,
-        notifications: true,
-        meal_reminders: true,
-        weekly_report: true,
-        dark_mode: false,
         metric_units: false,
         has_completed_onboarding: false, // Will be set to true after payment/confirmation
       });
