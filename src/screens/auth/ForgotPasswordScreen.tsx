@@ -202,20 +202,21 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   backLinkText: {
+    fontFamily: 'Quicksand-Regular',
     fontSize: 16,
-    color: '#10B981',
-    fontWeight: '600',
+    color: '#40916C',
   },
   header: {
     marginBottom: 32,
   },
   title: {
+    fontFamily: 'PTSerif-Bold',
     fontSize: 32,
-    fontWeight: '700',
-    color: '#111827',
+    color: '#1B4332',
     marginBottom: 8,
   },
   subtitle: {
+    fontFamily: 'Quicksand-Regular',
     fontSize: 16,
     color: '#6B7280',
     lineHeight: 24,
@@ -227,12 +228,13 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   label: {
+    fontFamily: 'Quicksand-Bold',
     fontSize: 14,
-    fontWeight: '600',
     color: '#374151',
     marginBottom: 8,
   },
   input: {
+    fontFamily: 'Quicksand-Regular',
     backgroundColor: '#FFFFFF',
     borderWidth: 1,
     borderColor: '#E5E7EB',
@@ -242,12 +244,12 @@ const styles = StyleSheet.create({
     color: '#111827',
   },
   resetButton: {
-    backgroundColor: '#10B981',
+    backgroundColor: '#1B4332',
     borderRadius: 12,
     padding: 16,
     alignItems: 'center',
     marginBottom: 24,
-    shadowColor: '#10B981',
+    shadowColor: '#1B4332',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
@@ -259,20 +261,21 @@ const styles = StyleSheet.create({
     elevation: 0,
   },
   resetButtonText: {
+    fontFamily: 'Quicksand-Bold',
     color: '#FFFFFF',
     fontSize: 16,
-    fontWeight: '600',
   },
   helpContainer: {
     alignItems: 'center',
   },
   helpText: {
+    fontFamily: 'Quicksand-Regular',
     color: '#6B7280',
     fontSize: 14,
   },
   helpLink: {
-    color: '#10B981',
-    fontWeight: '600',
+    fontFamily: 'Quicksand-Bold',
+    color: '#40916C',
   },
   // Success screen styles
   successContainer: {
@@ -285,7 +288,7 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: '#D1FAE5',
+    backgroundColor: '#E8F5E9',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 24,
@@ -294,26 +297,28 @@ const styles = StyleSheet.create({
     fontSize: 40,
   },
   successTitle: {
+    fontFamily: 'PTSerif-Bold',
     fontSize: 28,
-    fontWeight: '700',
-    color: '#111827',
+    color: '#1B4332',
     marginBottom: 16,
     textAlign: 'center',
   },
   successMessage: {
+    fontFamily: 'Quicksand-Regular',
     fontSize: 16,
     color: '#6B7280',
     marginBottom: 8,
     textAlign: 'center',
   },
   successEmail: {
+    fontFamily: 'Quicksand-Bold',
     fontSize: 16,
-    fontWeight: '600',
-    color: '#10B981',
+    color: '#40916C',
     marginBottom: 24,
     textAlign: 'center',
   },
   successNote: {
+    fontFamily: 'Quicksand-Light',
     fontSize: 14,
     color: '#9CA3AF',
     textAlign: 'center',
@@ -322,7 +327,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   backButton: {
-    backgroundColor: '#10B981',
+    backgroundColor: '#1B4332',
     borderRadius: 12,
     padding: 16,
     alignItems: 'center',
@@ -330,9 +335,9 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   backButtonText: {
+    fontFamily: 'Quicksand-Bold',
     color: '#FFFFFF',
     fontSize: 16,
-    fontWeight: '600',
   },
   resendButton: {
     padding: 16,
@@ -340,8 +345,8 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   resendButtonText: {
-    color: '#10B981',
+    fontFamily: 'Quicksand-Bold',
+    color: '#40916C',
     fontSize: 14,
-    fontWeight: '600',
   },
 });

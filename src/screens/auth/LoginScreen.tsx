@@ -233,12 +233,13 @@ const styles = StyleSheet.create({
     marginBottom: 32,
   },
   title: {
+    fontFamily: 'PTSerif-Bold',
     fontSize: 32,
-    fontWeight: '700',
-    color: '#111827',
+    color: '#1B4332',
     marginBottom: 8,
   },
   subtitle: {
+    fontFamily: 'Quicksand-Regular',
     fontSize: 16,
     color: '#6B7280',
     lineHeight: 24,
@@ -250,12 +251,13 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   label: {
+    fontFamily: 'Quicksand-Bold',
     fontSize: 14,
-    fontWeight: '600',
     color: '#374151',
     marginBottom: 8,
   },
   input: {
+    fontFamily: 'Quicksand-Regular',
     backgroundColor: '#FFFFFF',
     borderWidth: 1,
     borderColor: '#E5E7EB',
@@ -273,6 +275,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   passwordInput: {
+    fontFamily: 'Quicksand-Regular',
     flex: 1,
     padding: 16,
     fontSize: 16,
@@ -282,26 +285,26 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   showPasswordText: {
-    color: '#10B981',
+    fontFamily: 'Quicksand-Bold',
+    color: '#40916C',
     fontSize: 14,
-    fontWeight: '600',
   },
   forgotPassword: {
     alignSelf: 'flex-end',
     marginTop: 8,
   },
   forgotPasswordText: {
-    color: '#10B981',
+    fontFamily: 'Quicksand-Bold',
+    color: '#40916C',
     fontSize: 14,
-    fontWeight: '600',
   },
   loginButton: {
-    backgroundColor: '#10B981',
+    backgroundColor: '#1B4332',
     borderRadius: 12,
     padding: 16,
     alignItems: 'center',
     marginBottom: 24,
-    shadowColor: '#10B981',
+    shadowColor: '#1B4332',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
@@ -313,9 +316,9 @@ const styles = StyleSheet.create({
     elevation: 0,
   },
   loginButtonText: {
+    fontFamily: 'Quicksand-Bold',
     color: '#FFFFFF',
     fontSize: 16,
-    fontWeight: '600',
   },
   signUpContainer: {
     flexDirection: 'row',
@@ -323,12 +326,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   signUpText: {
+    fontFamily: 'Quicksand-Regular',
     color: '#6B7280',
     fontSize: 14,
   },
   signUpLink: {
-    color: '#10B981',
+    fontFamily: 'Quicksand-Bold',
+    color: '#40916C',
     fontSize: 14,
-    fontWeight: '600',
   },
 });

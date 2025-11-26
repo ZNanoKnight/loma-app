@@ -270,7 +270,7 @@ const styles = StyleSheet.create({
     borderRadius: 2,
   },
   progressText: {
-    fontFamily: 'Quicksand-Regular',
+    fontFamily: 'Quicksand-Light',
     color: '#6B7280',
     fontSize: 12,
     marginTop: 8,
@@ -281,15 +281,15 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   backButtonText: {
-    fontFamily: 'Quicksand-Medium',
-    color: '#6B46C1',
+    fontFamily: 'Quicksand-Regular',
+    color: '#40916C',
     fontSize: 16,
   },
   content: {
     flex: 1,
   },
   title: {
-    fontFamily: 'Quicksand-Bold',
+    fontFamily: 'PTSerif-Bold',
     fontSize: 32,
     color: '#1F2937',
     marginBottom: 10,
@@ -308,7 +308,7 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   label: {
-    fontFamily: 'Quicksand-Medium',
+    fontFamily: 'Quicksand-Bold',
     color: '#1F2937',
     fontSize: 14,
     marginBottom: 8,
@@ -338,17 +338,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   genderButtonActive: {
-    backgroundColor: '#F3F0FF',
-    borderColor: '#6B46C1',
+    backgroundColor: '#E8F5E9',
+    borderColor: '#1B4332',
     borderWidth: 2,
   },
   genderButtonText: {
-    fontFamily: 'Quicksand-Medium',
+    fontFamily: 'Quicksand-Regular',
     color: '#6B7280',
     fontSize: 16,
   },
   genderButtonTextActive: {
-    color: '#6B46C1',
+    color: '#1B4332',
   },
   heightContainer: {
     flexDirection: 'row',
@@ -374,13 +374,13 @@ const styles = StyleSheet.create({
     borderWidth: 0,
   },
   heightUnit: {
-    fontFamily: 'Quicksand-Regular',
+    fontFamily: 'Quicksand-Light',
     color: '#6B7280',
     fontSize: 14,
     marginLeft: 8,
   },
   continueButton: {
-    backgroundColor: '#6B46C1',
+    backgroundColor: '#1B4332',
     paddingVertical: 16,
     borderRadius: 12,
     shadowColor: '#000',
@@ -396,7 +396,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#D1D5DB',
   },
   continueButtonText: {
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
     color: '#FFFFFF',
     fontSize: 18,
     textAlign: 'center',

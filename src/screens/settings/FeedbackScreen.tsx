@@ -216,12 +216,11 @@ const styles = StyleSheet.create({
   backIcon: {
     color: '#1F2937',
     fontSize: 24,
-    fontFamily: 'Quicksand-Regular',
   },
   headerTitle: {
     fontSize: 18,
-    color: '#1F2937',
-    fontFamily: 'Quicksand-SemiBold',
+    color: '#1B4332',
+    fontFamily: 'Quicksand-Bold',
   },
   placeholder: {
     width: 40,
@@ -257,7 +256,7 @@ const styles = StyleSheet.create({
   inputLabel: {
     fontSize: 14,
     color: '#374151',
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
   },
   input: {
     backgroundColor: 'white',
@@ -277,7 +276,7 @@ const styles = StyleSheet.create({
   inputHint: {
     fontSize: 12,
     color: '#9CA3AF',
-    fontFamily: 'Quicksand-Regular',
+    fontFamily: 'Quicksand-Light',
   },
   footer: {
     paddingHorizontal: 20,
@@ -287,11 +286,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   submitButton: {
-    backgroundColor: '#6B46C1',
+    backgroundColor: '#1B4332',
     borderRadius: 12,
     paddingVertical: 16,
     alignItems: 'center',
-    shadowColor: '#6B46C1',
+    shadowColor: '#1B4332',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
@@ -305,6 +304,6 @@ const styles = StyleSheet.create({
   submitButtonText: {
     fontSize: 16,
     color: 'white',
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
   },
 });

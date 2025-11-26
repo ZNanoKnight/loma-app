@@ -266,7 +266,7 @@ const styles = StyleSheet.create({
     borderRadius: 2,
   },
   progressText: {
-    fontFamily: 'Quicksand-Regular',
+    fontFamily: 'Quicksand-Light',
     color: '#6B7280',
     fontSize: 12,
     marginTop: 8,
@@ -277,8 +277,8 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   backButtonText: {
-    fontFamily: 'Quicksand-Medium',
-    color: '#6B46C1',
+    fontFamily: 'Quicksand-Regular',
+    color: '#40916C',
     fontSize: 16,
   },
   content: {
@@ -317,8 +317,8 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   allergenCardActive: {
-    backgroundColor: '#F3F0FF',
-    borderColor: '#6B46C1',
+    backgroundColor: '#E8F5E9',
+    borderColor: '#1B4332',
     borderWidth: 2,
   },
   allergenEmoji: {
@@ -326,12 +326,12 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   allergenTitle: {
-    fontFamily: 'Quicksand-Medium',
+    fontFamily: 'Quicksand-Regular',
     fontSize: 15,
     color: '#1F2937',
   },
   allergenTitleActive: {
-    color: '#6B46C1',
+    color: '#1B4332',
   },
   equipmentContainer: {
     marginBottom: 10,
@@ -347,8 +347,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   equipmentCardActive: {
-    backgroundColor: '#EEF2FF',
-    borderColor: '#6B46C1',
+    backgroundColor: '#E8F5E9',
+    borderColor: '#1B4332',
     borderWidth: 2,
   },
   equipmentEmoji: {
@@ -359,13 +359,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   equipmentTitle: {
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
     fontSize: 18,
     color: '#1F2937',
     marginBottom: 4,
   },
   equipmentTitleActive: {
-    color: '#6B46C1',
+    color: '#1B4332',
   },
   equipmentDescription: {
     fontFamily: 'Quicksand-Regular',
@@ -374,17 +374,17 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   equipmentDescriptionActive: {
-    color: '#6B46C1',
+    color: '#1B4332',
   },
   equipmentTierName: {
-    fontFamily: 'Quicksand-SemiBold',
-    color: '#6B46C1',
+    fontFamily: 'Quicksand-Bold',
+    color: '#1B4332',
   },
   equipmentTierNameActive: {
-    color: '#6B46C1',
+    color: '#1B4332',
   },
   continueButton: {
-    backgroundColor: '#6B46C1',
+    backgroundColor: '#1B4332',
     paddingVertical: 16,
     borderRadius: 12,
     shadowColor: '#000',
@@ -399,7 +399,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   continueButtonText: {
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
     color: '#FFFFFF',
     fontSize: 18,
     textAlign: 'center',

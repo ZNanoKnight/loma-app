@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
   },
   tabBar: {
     flexDirection: 'row',
-    backgroundColor: 'rgba(167, 139, 250, 0.95)', // Semi-transparent light purple
+    backgroundColor: 'rgba(27, 67, 50, 0.95)', // Semi-transparent dark forest green
     borderRadius: 30,
     paddingVertical: 8,
     paddingHorizontal: 12,
@@ -149,7 +149,7 @@ const styles = StyleSheet.create({
     shadowRadius: 16,
     elevation: 12,
     borderWidth: 1,
-    borderColor: 'rgba(139, 92, 246, 0.4)',
+    borderColor: 'rgba(45, 106, 79, 0.4)',
     backdropFilter: 'blur(10px)',
   },
   tabButton: {
@@ -168,10 +168,10 @@ const styles = StyleSheet.create({
     minWidth: 60,
   },
   tabButtonActive: {
-    backgroundColor: 'rgba(107, 70, 193, 0.4)',
+    backgroundColor: 'rgba(64, 145, 108, 0.4)',
   },
   tabLabel: {
-    fontFamily: 'Quicksand-Medium',
+    fontFamily: 'Quicksand-Regular',
     fontSize: 11,
     color: 'rgba(255, 255, 255, 0.75)',
     marginTop: 2,
@@ -179,6 +179,6 @@ const styles = StyleSheet.create({
   },
   tabLabelActive: {
     color: '#FFFFFF',
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
   },
 });

@@ -318,7 +318,7 @@ export default function RecipeReviewScreen() {
               >
                 {isRefining ? (
                   <View style={styles.refiningContainer}>
-                    <ActivityIndicator color="#6B46C1" size="small" />
+                    <ActivityIndicator color="#1B4332" size="small" />
                     <Text style={styles.refiningText}>Refining recipe...</Text>
                   </View>
                 ) : (
@@ -379,14 +379,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   backIcon: {
-    fontFamily: 'Quicksand-Regular',
     color: '#1F2937',
     fontSize: 24,
   },
   headerTitle: {
-    fontFamily: 'Quicksand-Bold',
+    fontFamily: 'PTSerif-Bold',
     fontSize: 20,
-    color: '#1F2937',
+    color: '#1B4332',
   },
   placeholder: {
     width: 40,
@@ -445,12 +444,12 @@ const styles = StyleSheet.create({
     fontSize: 24,
   },
   timeValue: {
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
     fontSize: 16,
     color: '#1F2937',
   },
   timeLabel: {
-    fontFamily: 'Quicksand-Regular',
+    fontFamily: 'Quicksand-Light',
     fontSize: 12,
     color: '#9CA3AF',
   },
@@ -458,7 +457,7 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   sectionTitle: {
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
     fontSize: 16,
     color: '#1F2937',
     marginBottom: 16,
@@ -477,11 +476,11 @@ const styles = StyleSheet.create({
   macroValue: {
     fontFamily: 'Quicksand-Bold',
     fontSize: 20,
-    color: '#6B46C1',
+    color: '#1B4332',
     marginBottom: 4,
   },
   macroLabel: {
-    fontFamily: 'Quicksand-Regular',
+    fontFamily: 'Quicksand-Light',
     fontSize: 12,
     color: '#6B7280',
   },
@@ -494,12 +493,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   additionalMacroLabel: {
-    fontFamily: 'Quicksand-Medium',
+    fontFamily: 'Quicksand-Regular',
     fontSize: 14,
     color: '#6B7280',
   },
   additionalMacroValue: {
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
     fontSize: 14,
     color: '#1F2937',
   },
@@ -531,7 +530,7 @@ const styles = StyleSheet.create({
   refineButton: {
     backgroundColor: '#FFFFFF',
     borderWidth: 2,
-    borderColor: '#6B46C1',
+    borderColor: '#1B4332',
     paddingVertical: 14,
     borderRadius: 12,
     alignItems: 'center',
@@ -542,8 +541,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#F9FAFB',
   },
   refineButtonText: {
-    fontFamily: 'Quicksand-SemiBold',
-    color: '#6B46C1',
+    fontFamily: 'Quicksand-Bold',
+    color: '#1B4332',
     fontSize: 16,
   },
   refiningContainer: {
@@ -552,23 +551,23 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   refiningText: {
-    fontFamily: 'Quicksand-Medium',
-    color: '#6B46C1',
+    fontFamily: 'Quicksand-Regular',
+    color: '#1B4332',
     fontSize: 14,
   },
   characterCount: {
-    fontFamily: 'Quicksand-Regular',
+    fontFamily: 'Quicksand-Light',
     fontSize: 12,
     color: '#9CA3AF',
     textAlign: 'right',
     marginTop: 8,
   },
   saveButton: {
-    backgroundColor: '#6B46C1',
+    backgroundColor: '#1B4332',
     paddingVertical: 16,
     borderRadius: 16,
     alignItems: 'center',
-    shadowColor: '#6B46C1',
+    shadowColor: '#1B4332',
     shadowOffset: {
       width: 0,
       height: 4,
@@ -578,7 +577,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   saveButtonText: {
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
     color: '#FFFFFF',
     fontSize: 18,
   },

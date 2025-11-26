@@ -837,12 +837,11 @@ const styles = StyleSheet.create({
   backIcon: {
     color: '#1F2937',
     fontSize: 24,
-    fontFamily: 'Quicksand-Regular',
   },
   headerTitle: {
     fontSize: 18,
-    color: '#1F2937',
-    fontFamily: 'Quicksand-SemiBold',
+    color: '#1B4332',
+    fontFamily: 'Quicksand-Bold',
   },
   placeholder: {
     width: 40,
@@ -872,7 +871,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#1F2937',
     marginBottom: 4,
-    fontFamily: 'Quicksand-Medium',
+    fontFamily: 'Quicksand-Bold',
   },
   settingDescription: {
     fontSize: 13,
@@ -883,7 +882,6 @@ const styles = StyleSheet.create({
   chevron: {
     fontSize: 18,
     color: '#9CA3AF',
-    fontFamily: 'Quicksand-Regular',
   },
   // Modal styles
   modalOverlay: {
@@ -909,12 +907,11 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontSize: 22,
     fontFamily: 'Quicksand-Bold',
-    color: '#1F2937',
+    color: '#1B4332',
   },
   modalClose: {
     fontSize: 28,
     color: '#9CA3AF',
-    fontFamily: 'Quicksand-Regular',
   },
   modalScroll: {
     maxHeight: 400,
@@ -930,8 +927,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   modalOptionSelected: {
-    backgroundColor: '#F3F0FF',
-    borderColor: '#6B46C1',
+    backgroundColor: '#E8F5E9',
+    borderColor: '#1B4332',
     borderWidth: 2,
   },
   modalOptionEmoji: {
@@ -943,12 +940,12 @@ const styles = StyleSheet.create({
   },
   modalOptionTitle: {
     fontSize: 16,
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
     color: '#1F2937',
     marginBottom: 2,
   },
   modalOptionTitleSelected: {
-    color: '#6B46C1',
+    color: '#1B4332',
   },
   modalOptionDescription: {
     fontSize: 13,
@@ -959,7 +956,7 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     borderRadius: 12,
-    backgroundColor: '#6B46C1',
+    backgroundColor: '#1B4332',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -969,7 +966,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Quicksand-Bold',
   },
   modalSaveButton: {
-    backgroundColor: '#6B46C1',
+    backgroundColor: '#1B4332',
     paddingVertical: 16,
     borderRadius: 12,
     alignItems: 'center',
@@ -979,14 +976,14 @@ const styles = StyleSheet.create({
   modalSaveButtonText: {
     color: '#FFFFFF',
     fontSize: 16,
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
   },
   modalInputContainer: {
     paddingVertical: 10,
   },
   inputLabel: {
     fontSize: 15,
-    fontFamily: 'Quicksand-Medium',
+    fontFamily: 'Quicksand-Bold',
     color: '#1F2937',
     marginBottom: 8,
     marginTop: 12,
@@ -1017,18 +1014,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   genderButtonSelected: {
-    backgroundColor: '#F3F0FF',
-    borderColor: '#6B46C1',
+    backgroundColor: '#E8F5E9',
+    borderColor: '#1B4332',
     borderWidth: 2,
   },
   genderButtonText: {
     fontSize: 14,
-    fontFamily: 'Quicksand-Medium',
+    fontFamily: 'Quicksand-Regular',
     color: '#1F2937',
   },
   genderButtonTextSelected: {
-    color: '#6B46C1',
-    fontFamily: 'Quicksand-SemiBold',
+    color: '#1B4332',
+    fontFamily: 'Quicksand-Bold',
   },
   heightInputs: {
     flexDirection: 'row',
@@ -1066,8 +1063,8 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   allergenChipSelected: {
-    backgroundColor: '#F3F0FF',
-    borderColor: '#6B46C1',
+    backgroundColor: '#E8F5E9',
+    borderColor: '#1B4332',
     borderWidth: 2,
   },
   allergenChipEmoji: {
@@ -1076,10 +1073,10 @@ const styles = StyleSheet.create({
   },
   allergenChipText: {
     fontSize: 14,
-    fontFamily: 'Quicksand-Medium',
+    fontFamily: 'Quicksand-Regular',
     color: '#1F2937',
   },
   allergenChipTextSelected: {
-    color: '#6B46C1',
+    color: '#1B4332',
   },
 });

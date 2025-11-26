@@ -3,19 +3,31 @@
  */
 
 export const Colors = {
-  // Primary - White/Bone
-  primary: '#FEFEFE',
-  primaryDark: '#F5F5F0',
+  // Background - White/Bone
+  background: '#FFFFFF',
+  backgroundAlt: '#FEFEFE',
 
-  // Secondary - Purple
-  secondary: '#6B46C1',
-  secondaryDark: '#342671',
-  secondaryLight: '#9B7DD4',
+  // Primary - Dark Forest Green
+  primary: '#1B4332',
+  primaryDark: '#0D2818',
+  primaryLight: '#2D6A4F',
 
-  // Tertiary - Orange
+  // Secondary - Bright Green
+  secondary: '#40916C',
+  secondaryLight: '#52B788',
+  secondaryLighter: '#74C69D',
+
+  // Tertiary - Orange (unchanged)
   tertiary: '#FF8C00',
   tertiaryLight: '#FFA500',
   tertiaryDark: '#D2691E',
+
+  // Green Tints (for backgrounds)
+  tint: {
+    lightest: '#D8F3DC',
+    light: '#B7E4C7',
+    pale: '#E8F5E9',
+  },
 
   // Neutrals
   white: '#FFFFFF',

@@ -229,7 +229,7 @@ const styles = StyleSheet.create({
     borderRadius: 2,
   },
   progressText: {
-    fontFamily: 'Quicksand-Regular',
+    fontFamily: 'Quicksand-Light',
     color: '#6B7280',
     fontSize: 12,
     marginTop: 8,
@@ -240,15 +240,15 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   backButtonText: {
-    fontFamily: 'Quicksand-Medium',
-    color: '#6B46C1',
+    fontFamily: 'Quicksand-Regular',
+    color: '#40916C',
     fontSize: 16,
   },
   content: {
     flex: 1,
   },
   title: {
-    fontFamily: 'Quicksand-Bold',
+    fontFamily: 'PTSerif-Bold',
     fontSize: 32,
     color: '#1F2937',
     marginBottom: 10,
@@ -275,8 +275,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   preferenceCardActive: {
-    backgroundColor: '#F3F0FF',
-    borderColor: '#6B46C1',
+    backgroundColor: '#E8F5E9',
+    borderColor: '#1B4332',
     borderWidth: 2,
   },
   preferenceContent: {
@@ -292,27 +292,27 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   preferenceTitle: {
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
     fontSize: 17,
     color: '#1F2937',
     marginBottom: 2,
   },
   preferenceTitleActive: {
-    color: '#6B46C1',
+    color: '#1B4332',
   },
   preferenceDescription: {
-    fontFamily: 'Quicksand-Regular',
+    fontFamily: 'Quicksand-Light',
     fontSize: 13,
     color: '#6B7280',
   },
   preferenceDescriptionActive: {
-    color: '#6B46C1',
+    color: '#1B4332',
   },
   checkmark: {
     width: 24,
     height: 24,
     borderRadius: 12,
-    backgroundColor: '#6B46C1',
+    backgroundColor: '#1B4332',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -322,7 +322,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   continueButton: {
-    backgroundColor: '#6B46C1',
+    backgroundColor: '#1B4332',
     paddingVertical: 16,
     borderRadius: 12,
     shadowColor: '#000',
@@ -336,7 +336,7 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   continueButtonText: {
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
     color: '#FFFFFF',
     fontSize: 18,
     textAlign: 'center',

@@ -413,7 +413,7 @@ const styles = StyleSheet.create({
     fontSize: 80,
   },
   title: {
-    fontFamily: 'Quicksand-Bold',
+    fontFamily: 'PTSerif-Bold',
     fontSize: 32,
     color: '#1F2937',
     marginBottom: 10,
@@ -429,11 +429,11 @@ const styles = StyleSheet.create({
   },
   tokenSection: {
     marginBottom: 30,
-    backgroundColor: '#F3F0FF',
+    backgroundColor: '#E8F5E9',
     borderRadius: 16,
     padding: 20,
     borderWidth: 1,
-    borderColor: '#E9D5FF',
+    borderColor: '#B7E4C7',
   },
   tokenHeader: {
     flexDirection: 'row',
@@ -447,16 +447,16 @@ const styles = StyleSheet.create({
   tokenTitle: {
     fontFamily: 'Quicksand-Bold',
     fontSize: 18,
-    color: '#6B46C1',
+    color: '#1B4332',
   },
   tokenSubtitle: {
     fontFamily: 'Quicksand-Regular',
     fontSize: 14,
-    color: '#8B5CF6',
+    color: '#40916C',
     lineHeight: 20,
   },
   sectionTitle: {
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
     fontSize: 20,
     color: '#1F2937',
     marginBottom: 16,
@@ -476,8 +476,8 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   planCardActive: {
-    backgroundColor: '#F3F0FF',
-    borderColor: '#6B46C1',
+    backgroundColor: '#E8F5E9',
+    borderColor: '#1B4332',
     borderWidth: 2,
   },
   popularBadge: {
@@ -498,13 +498,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   planName: {
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
     fontSize: 18,
     color: '#1F2937',
     marginBottom: 4,
   },
   planNameActive: {
-    color: '#6B46C1',
+    color: '#1B4332',
   },
   priceContainer: {
     flexDirection: 'row',
@@ -516,7 +516,7 @@ const styles = StyleSheet.create({
     color: '#1F2937',
   },
   planPriceActive: {
-    color: '#6B46C1',
+    color: '#1B4332',
   },
   planPeriod: {
     fontFamily: 'Quicksand-Regular',
@@ -525,10 +525,10 @@ const styles = StyleSheet.create({
     marginLeft: 4,
   },
   planPeriodActive: {
-    color: '#6B46C1',
+    color: '#1B4332',
   },
   planSavings: {
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
     fontSize: 12,
     color: '#10B981',
     marginTop: 4,
@@ -543,17 +543,17 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   planMunchiesActive: {
-    color: '#6B46C1',
+    color: '#1B4332',
   },
   planMunchiesHighlight: {
-    fontFamily: 'Quicksand-SemiBold',
-    color: '#6B46C1',
+    fontFamily: 'Quicksand-Bold',
+    color: '#1B4332',
   },
   checkmark: {
     width: 24,
     height: 24,
     borderRadius: 12,
-    backgroundColor: '#6B46C1',
+    backgroundColor: '#1B4332',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -575,12 +575,12 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   featureText: {
-    fontFamily: 'Quicksand-Regular',
+    fontFamily: 'Quicksand-Light',
     fontSize: 12,
     color: '#6B7280',
   },
   completeButton: {
-    backgroundColor: '#6B46C1',
+    backgroundColor: '#1B4332',
     paddingVertical: 16,
     borderRadius: 12,
     shadowColor: '#000',
@@ -597,13 +597,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#D1D5DB',
   },
   completeButtonText: {
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
     color: '#FFFFFF',
     fontSize: 18,
     textAlign: 'center',
   },
   securityNote: {
-    fontFamily: 'Quicksand-Regular',
+    fontFamily: 'Quicksand-Light',
     fontSize: 12,
     color: '#6B7280',
     textAlign: 'center',

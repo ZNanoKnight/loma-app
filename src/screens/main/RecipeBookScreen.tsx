@@ -219,8 +219,8 @@ export default function RecipeBookScreen() {
     return (
       <SafeAreaView style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
         <StatusBar barStyle="dark-content" />
-        <ActivityIndicator size="large" color="#6B46C1" />
-        <Text style={{ color: 'white', marginTop: 16, fontSize: 16 }}>Loading recipes...</Text>
+        <ActivityIndicator size="large" color="#1B4332" />
+        <Text style={{ fontFamily: 'Quicksand-Regular', color: '#6B7280', marginTop: 16, fontSize: 16 }}>Loading recipes...</Text>
       </SafeAreaView>
     );
   }
@@ -335,8 +335,8 @@ export default function RecipeBookScreen() {
           <RefreshControl
             refreshing={isRefreshing}
             onRefresh={handleRefresh}
-            tintColor="#6B46C1"
-            colors={['#6B46C1']}
+            tintColor="#1B4332"
+            colors={['#1B4332']}
           />
         }
         ListEmptyComponent={
@@ -379,9 +379,9 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 32,
-    color: '#000000',
+    color: '#1B4332',
     marginBottom: 4,
-    fontFamily: 'Quicksand-Bold',
+    fontFamily: 'PTSerif-Bold',
   },
   headerStats: {
     flexDirection: 'row',
@@ -414,7 +414,6 @@ const styles = StyleSheet.create({
   searchIcon: {
     fontSize: 16,
     marginRight: 10,
-    fontFamily: 'Quicksand-Regular',
   },
   searchInput: {
     flex: 1,
@@ -425,7 +424,6 @@ const styles = StyleSheet.create({
   clearIcon: {
     fontSize: 16,
     color: '#9CA3AF',
-    fontFamily: 'Quicksand-Regular',
   },
   filterWrapper: {
     height: 50,
@@ -452,18 +450,17 @@ const styles = StyleSheet.create({
     borderColor: '#E5E7EB',
   },
   filterTabActive: {
-    backgroundColor: '#6B46C1',
-    borderColor: '#6B46C1',
+    backgroundColor: '#1B4332',
+    borderColor: '#1B4332',
   },
   filterEmoji: {
     fontSize: 16,
     marginRight: 6,
-    fontFamily: 'Quicksand-Regular',
   },
   filterText: {
     fontSize: 14,
     color: '#1F2937',
-    fontFamily: 'Quicksand-Medium',
+    fontFamily: 'Quicksand-Regular',
   },
   filterTextActive: {
     color: 'white',
@@ -487,7 +484,6 @@ const styles = StyleSheet.create({
   sortIcon: {
     fontSize: 14,
     marginRight: 6,
-    fontFamily: 'Quicksand-Regular',
   },
   sortText: {
     fontSize: 13,
@@ -517,7 +513,6 @@ const styles = StyleSheet.create({
   sortOptionIcon: {
     fontSize: 16,
     marginRight: 8,
-    fontFamily: 'Quicksand-Regular',
   },
   sortOptionText: {
     fontSize: 14,
@@ -525,8 +520,8 @@ const styles = StyleSheet.create({
     fontFamily: 'Quicksand-Regular',
   },
   sortOptionTextActive: {
-    color: '#6B46C1',
-    fontFamily: 'Quicksand-SemiBold',
+    color: '#1B4332',
+    fontFamily: 'Quicksand-Bold',
   },
   recipeList: {
     paddingHorizontal: 20,
@@ -556,7 +551,6 @@ const styles = StyleSheet.create({
   },
   recipeEmoji: {
     fontSize: 48,
-    fontFamily: 'Quicksand-Regular',
   },
   favoriteIndicator: {
     position: 'absolute',
@@ -565,7 +559,6 @@ const styles = StyleSheet.create({
   },
   favoriteIcon: {
     fontSize: 16,
-    fontFamily: 'Quicksand-Regular',
   },
   recipeInfo: {
     padding: 12,
@@ -574,7 +567,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#1F2937',
     marginBottom: 8,
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
   },
   recipeStats: {
     flexDirection: 'row',
@@ -588,18 +581,17 @@ const styles = StyleSheet.create({
   statIcon: {
     fontSize: 12,
     marginRight: 2,
-    fontFamily: 'Quicksand-Regular',
   },
   statText: {
     fontSize: 12,
     color: '#6B7280',
-    fontFamily: 'Quicksand-Regular',
+    fontFamily: 'Quicksand-Light',
   },
   cookedCount: {
     fontSize: 11,
     color: '#9CA3AF',
     fontStyle: 'italic',
-    fontFamily: 'Quicksand-Regular',
+    fontFamily: 'Quicksand-Light',
   },
   emptyState: {
     alignItems: 'center',
@@ -608,13 +600,12 @@ const styles = StyleSheet.create({
   emptyEmoji: {
     fontSize: 48,
     marginBottom: 16,
-    fontFamily: 'Quicksand-Regular',
   },
   emptyTitle: {
     fontSize: 18,
     color: '#1F2937',
     marginBottom: 8,
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
   },
   emptySubtitle: {
     fontSize: 14,
@@ -624,7 +615,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 40,
   },
   generateButton: {
-    backgroundColor: '#6B46C1',
+    backgroundColor: '#1B4332',
     paddingHorizontal: 24,
     paddingVertical: 12,
     borderRadius: 12,
@@ -633,6 +624,6 @@ const styles = StyleSheet.create({
   generateButtonText: {
     color: '#FFFFFF',
     fontSize: 16,
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
   },
 });

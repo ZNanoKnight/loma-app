@@ -198,7 +198,7 @@ const styles = StyleSheet.create({
     borderRadius: 2,
   },
   progressText: {
-    fontFamily: 'Quicksand-Regular',
+    fontFamily: 'Quicksand-Light',
     color: '#6B7280',
     fontSize: 12,
     marginTop: 8,
@@ -209,17 +209,17 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   backButtonText: {
-    fontFamily: 'Quicksand-Medium',
-    color: '#6B46C1',
+    fontFamily: 'Quicksand-Regular',
+    color: '#40916C',
     fontSize: 16,
   },
   content: {
     flex: 1,
   },
   title: {
-    fontFamily: 'Quicksand-Bold',
+    fontFamily: 'PTSerif-Bold',
     fontSize: 32,
-    color: '#6B46C1',
+    color: '#1B4332',
     marginBottom: 10,
   },
   subtitle: {
@@ -244,8 +244,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   goalCardActive: {
-    backgroundColor: '#EEF2FF',
-    borderColor: '#6B46C1',
+    backgroundColor: '#E8F5E9',
+    borderColor: '#1B4332',
     borderWidth: 2,
   },
   goalContent: {
@@ -261,22 +261,22 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   goalTitle: {
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
     fontSize: 18,
     color: '#1F2937',
     marginBottom: 4,
   },
   goalTitleActive: {
-    color: '#6B46C1',
+    color: '#1B4332',
   },
   goalDescription: {
-    fontFamily: 'Quicksand-Regular',
+    fontFamily: 'Quicksand-Light',
     fontSize: 13,
     color: '#6B7280',
     lineHeight: 18,
   },
   goalDescriptionActive: {
-    color: '#6B46C1',
+    color: '#1B4332',
   },
   checkmark: {
     width: 24,
@@ -292,14 +292,14 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   selectionIndicator: {
-    fontFamily: 'Quicksand-Regular',
+    fontFamily: 'Quicksand-Light',
     color: '#9CA3AF',
     fontSize: 14,
     textAlign: 'center',
     marginBottom: 20,
   },
   continueButton: {
-    backgroundColor: '#6B46C1',
+    backgroundColor: '#1B4332',
     paddingVertical: 16,
     borderRadius: 12,
     shadowColor: '#000',
@@ -316,7 +316,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#D1D5DB',
   },
   continueButtonText: {
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
     color: 'white',
     fontSize: 18,
     textAlign: 'center',

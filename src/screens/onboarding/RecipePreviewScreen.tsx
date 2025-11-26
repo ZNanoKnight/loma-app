@@ -672,7 +672,7 @@ const styles = StyleSheet.create({
     borderRadius: 2,
   },
   progressText: {
-    fontFamily: 'Quicksand-Regular',
+    fontFamily: 'Quicksand-Light',
     color: '#6B7280',
     fontSize: 12,
     marginTop: 8,
@@ -683,15 +683,15 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   backButtonText: {
-    fontFamily: 'Quicksand-Medium',
-    color: '#6B46C1',
+    fontFamily: 'Quicksand-Regular',
+    color: '#40916C',
     fontSize: 16,
   },
   content: {
     flex: 1,
   },
   title: {
-    fontFamily: 'Quicksand-Bold',
+    fontFamily: 'PTSerif-Bold',
     fontSize: 28,
     color: '#1F2937',
     marginBottom: 10,
@@ -761,7 +761,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   statValue: {
-    fontFamily: 'Quicksand-Medium',
+    fontFamily: 'Quicksand-Regular',
     fontSize: 14,
     color: '#4B5563',
   },
@@ -776,7 +776,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   macroLabel: {
-    fontFamily: 'Quicksand-Regular',
+    fontFamily: 'Quicksand-Light',
     fontSize: 12,
     color: '#9CA3AF',
     marginBottom: 4,
@@ -784,7 +784,7 @@ const styles = StyleSheet.create({
   macroValue: {
     fontFamily: 'Quicksand-Bold',
     fontSize: 18,
-    color: '#6B46C1',
+    color: '#1B4332',
   },
   navigationContainer: {
     flexDirection: 'row',
@@ -816,13 +816,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#E5E7EB',
   },
   dotActive: {
-    backgroundColor: '#6B46C1',
+    backgroundColor: '#1B4332',
   },
   benefitsContainer: {
     marginBottom: 25,
   },
   benefitsTitle: {
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
     fontSize: 18,
     color: '#1F2937',
     marginBottom: 12,
@@ -843,7 +843,7 @@ const styles = StyleSheet.create({
     color: '#4B5563',
   },
   continueButton: {
-    backgroundColor: '#6B46C1',
+    backgroundColor: '#1B4332',
     paddingVertical: 16,
     borderRadius: 12,
     shadowColor: '#000',
@@ -857,7 +857,7 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   continueButtonText: {
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
     color: '#FFFFFF',
     fontSize: 18,
     textAlign: 'center',

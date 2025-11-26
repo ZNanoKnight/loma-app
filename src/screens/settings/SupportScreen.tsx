@@ -165,12 +165,11 @@ const styles = StyleSheet.create({
   backIcon: {
     color: '#1F2937',
     fontSize: 24,
-    fontFamily: 'Quicksand-Regular',
   },
   headerTitle: {
     fontSize: 18,
-    color: '#1F2937',
-    fontFamily: 'Quicksand-SemiBold',
+    color: '#1B4332',
+    fontFamily: 'Quicksand-Bold',
   },
   placeholder: {
     width: 40,
@@ -193,20 +192,19 @@ const styles = StyleSheet.create({
   actionIcon: {
     fontSize: 32,
     marginBottom: 8,
-    fontFamily: 'Quicksand-Regular',
   },
   actionTitle: {
     fontSize: 14,
     color: '#1F2937',
     marginBottom: 4,
     textAlign: 'center',
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
   },
   actionDescription: {
     fontSize: 11,
     color: '#6B7280',
     textAlign: 'center',
-    fontFamily: 'Quicksand-Regular',
+    fontFamily: 'Quicksand-Light',
   },
   settingsContainer: {
     marginHorizontal: 20,
@@ -234,13 +232,12 @@ const styles = StyleSheet.create({
   bubbleIcon: {
     fontSize: 24,
     marginRight: 12,
-    fontFamily: 'Quicksand-Regular',
   },
   bubbleTitle: {
     flex: 1,
     fontSize: 16,
     color: '#1F2937',
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
   },
   bubbleItems: {
     backgroundColor: '#FAFAFA',
@@ -260,12 +257,11 @@ const styles = StyleSheet.create({
   settingLabel: {
     fontSize: 14,
     color: '#374151',
-    fontFamily: 'Quicksand-Medium',
+    fontFamily: 'Quicksand-Regular',
   },
   chevron: {
     fontSize: 14,
-    color: '#6B46C1',
-    fontFamily: 'Quicksand-Regular',
+    color: '#40916C',
   },
   dangerZone: {
     marginHorizontal: 20,
@@ -274,7 +270,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#6B7280',
     marginBottom: 12,
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
   },
   dangerButton: {
     backgroundColor: 'rgba(239, 68, 68, 0.1)',
@@ -287,7 +283,7 @@ const styles = StyleSheet.create({
   dangerButtonText: {
     color: '#EF4444',
     fontSize: 16,
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
   },
   infoContainer: {
     paddingHorizontal: 20,
@@ -298,12 +294,12 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#9CA3AF',
     marginTop: 8,
-    fontFamily: 'Quicksand-Regular',
+    fontFamily: 'Quicksand-Light',
   },
   infoValue: {
     fontSize: 14,
     color: '#6B7280',
     marginTop: 2,
-    fontFamily: 'Quicksand-Medium',
+    fontFamily: 'Quicksand-Regular',
   },
 });

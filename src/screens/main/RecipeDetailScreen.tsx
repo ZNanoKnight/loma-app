@@ -424,12 +424,11 @@ const styles = StyleSheet.create({
   backIcon: {
     color: '#1F2937',
     fontSize: 24,
-    fontFamily: 'Quicksand-Regular',
   },
   headerTitle: {
     fontSize: 18,
-    color: 'white',
-    fontFamily: 'Quicksand-SemiBold',
+    color: '#1B4332',
+    fontFamily: 'Quicksand-Bold',
   },
   headerActions: {
     flexDirection: 'row',
@@ -445,7 +444,6 @@ const styles = StyleSheet.create({
   },
   actionIcon: {
     fontSize: 16,
-    fontFamily: 'Quicksand-Regular',
   },
   recipeCard: {
     backgroundColor: 'white',
@@ -469,7 +467,6 @@ const styles = StyleSheet.create({
   },
   recipeEmoji: {
     fontSize: 40,
-    fontFamily: 'Quicksand-Regular',
   },
   titleContainer: {
     flex: 1,
@@ -498,12 +495,11 @@ const styles = StyleSheet.create({
   },
   quickStatIcon: {
     fontSize: 12,
-    fontFamily: 'Quicksand-Regular',
   },
   quickStatText: {
     fontSize: 12,
     color: '#6B7280',
-    fontFamily: 'Quicksand-Regular',
+    fontFamily: 'Quicksand-Light',
   },
   historySection: {
     borderTopWidth: 1,
@@ -525,12 +521,11 @@ const styles = StyleSheet.create({
   star: {
     fontSize: 16,
     marginRight: 2,
-    fontFamily: 'Quicksand-Regular',
   },
   ratingText: {
     fontSize: 12,
     color: '#9CA3AF',
-    fontFamily: 'Quicksand-Regular',
+    fontFamily: 'Quicksand-Light',
   },
   historyStats: {
     flexDirection: 'row',
@@ -538,7 +533,7 @@ const styles = StyleSheet.create({
   historyText: {
     fontSize: 12,
     color: '#6B7280',
-    fontFamily: 'Quicksand-Regular',
+    fontFamily: 'Quicksand-Light',
   },
   tabs: {
     flexDirection: 'row',
@@ -553,15 +548,15 @@ const styles = StyleSheet.create({
   },
   tabActive: {
     borderBottomWidth: 2,
-    borderBottomColor: '#6B46C1',
+    borderBottomColor: '#1B4332',
   },
   tabText: {
     fontSize: 14,
     color: '#9CA3AF',
-    fontFamily: 'Quicksand-Medium',
+    fontFamily: 'Quicksand-Regular',
   },
   tabTextActive: {
-    color: '#6B46C1',
+    color: '#1B4332',
   },
   tabContent: {
     minHeight: 200,
@@ -572,7 +567,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#1F2937',
     marginBottom: 12,
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
   },
   instructionItem: {
     flexDirection: 'row',
@@ -582,15 +577,15 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     borderRadius: 12,
-    backgroundColor: '#F3E8FF',
+    backgroundColor: '#E8F5E9',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
   },
   instructionNumberText: {
     fontSize: 12,
-    color: '#6B46C1',
-    fontFamily: 'Quicksand-SemiBold',
+    color: '#1B4332',
+    fontFamily: 'Quicksand-Bold',
   },
   instructionText: {
     flex: 1,
@@ -613,15 +608,15 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   tag: {
-    backgroundColor: '#F3E8FF',
+    backgroundColor: '#E8F5E9',
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 12,
   },
   tagText: {
     fontSize: 12,
-    color: '#6B46C1',
-    fontFamily: 'Quicksand-Medium',
+    color: '#1B4332',
+    fontFamily: 'Quicksand-Regular',
   },
   ingredientsContent: {},
   ingredientItem: {
@@ -639,7 +634,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#9CA3AF',
     marginBottom: 2,
-    fontFamily: 'Quicksand-Regular',
+    fontFamily: 'Quicksand-Light',
   },
   ingredientName: {
     fontSize: 14,
@@ -649,11 +644,11 @@ const styles = StyleSheet.create({
   ingredientCalories: {
     fontSize: 12,
     color: '#9CA3AF',
-    fontFamily: 'Quicksand-Regular',
+    fontFamily: 'Quicksand-Light',
   },
   addToListButton: {
     flexDirection: 'row',
-    backgroundColor: '#F3E8FF',
+    backgroundColor: '#E8F5E9',
     paddingVertical: 12,
     borderRadius: 12,
     alignItems: 'center',
@@ -663,19 +658,18 @@ const styles = StyleSheet.create({
   },
   addToListIcon: {
     fontSize: 16,
-    fontFamily: 'Quicksand-Regular',
   },
   addToListText: {
     fontSize: 14,
-    color: '#6B46C1',
-    fontFamily: 'Quicksand-SemiBold',
+    color: '#1B4332',
+    fontFamily: 'Quicksand-Bold',
   },
   nutritionContent: {},
   servingSizeText: {
     fontSize: 12,
     color: '#9CA3AF',
     marginBottom: 16,
-    fontFamily: 'Quicksand-Regular',
+    fontFamily: 'Quicksand-Light',
   },
   mainMacros: {
     flexDirection: 'row',
@@ -690,14 +684,14 @@ const styles = StyleSheet.create({
   },
   mainMacroValue: {
     fontSize: 20,
-    color: '#6B46C1',
+    color: '#1B4332',
     marginBottom: 4,
     fontFamily: 'Quicksand-Bold',
   },
   mainMacroLabel: {
     fontSize: 12,
     color: '#6B7280',
-    fontFamily: 'Quicksand-Regular',
+    fontFamily: 'Quicksand-Light',
   },
   detailedNutrition: {},
   nutritionRow: {
@@ -715,10 +709,10 @@ const styles = StyleSheet.create({
   nutritionValue: {
     fontSize: 14,
     color: '#1F2937',
-    fontFamily: 'Quicksand-Medium',
+    fontFamily: 'Quicksand-Bold',
   },
   startCookingButton: {
-    backgroundColor: '#6B46C1',
+    backgroundColor: '#1B4332',
     paddingVertical: 16,
     borderRadius: 16,
     alignItems: 'center',
@@ -726,7 +720,7 @@ const styles = StyleSheet.create({
   startCookingText: {
     color: 'white',
     fontSize: 16,
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
   },
   modalOverlay: {
     flex: 1,
@@ -744,7 +738,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#1F2937',
     marginBottom: 16,
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
   },
   ratingStars: {
     flexDirection: 'row',
@@ -752,7 +746,6 @@ const styles = StyleSheet.create({
   },
   ratingStar: {
     fontSize: 32,
-    fontFamily: 'Quicksand-Regular',
   },
   comingSoonModal: {
     backgroundColor: 'white',
@@ -780,7 +773,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Quicksand-Regular',
   },
   comingSoonButton: {
-    backgroundColor: '#6B46C1',
+    backgroundColor: '#1B4332',
     paddingVertical: 12,
     paddingHorizontal: 32,
     borderRadius: 12,
@@ -788,6 +781,6 @@ const styles = StyleSheet.create({
   comingSoonButtonText: {
     color: 'white',
     fontSize: 14,
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
   },
 });

@@ -180,7 +180,7 @@ export default function EmailConfirmationScreen() {
             disabled={resending}
           >
             {resending ? (
-              <ActivityIndicator color="#6B46C1" />
+              <ActivityIndicator color="#1B4332" />
             ) : (
               <Text style={styles.resendButtonText}>Resend Code</Text>
             )}
@@ -222,13 +222,14 @@ const styles = StyleSheet.create({
     fontSize: 80,
   },
   title: {
+    fontFamily: 'PTSerif-Bold',
     fontSize: 28,
-    fontWeight: '700',
-    color: '#111827',
+    color: '#1B4332',
     marginBottom: 16,
     textAlign: 'center',
   },
   message: {
+    fontFamily: 'Quicksand-Regular',
     fontSize: 16,
     color: '#6B7280',
     textAlign: 'center',
@@ -236,10 +237,11 @@ const styles = StyleSheet.create({
     lineHeight: 24,
   },
   email: {
-    fontWeight: '600',
-    color: '#6B46C1',
+    fontFamily: 'Quicksand-Bold',
+    color: '#40916C',
   },
   instructions: {
+    fontFamily: 'Quicksand-Light',
     fontSize: 14,
     color: '#9CA3AF',
     textAlign: 'center',
@@ -251,18 +253,18 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   otpInput: {
+    fontFamily: 'Quicksand-Bold',
     backgroundColor: '#FFFFFF',
     borderWidth: 2,
     borderColor: '#E5E7EB',
     borderRadius: 12,
     padding: 20,
     fontSize: 32,
-    fontWeight: '700',
     color: '#111827',
     letterSpacing: 8,
   },
   verifyButton: {
-    backgroundColor: '#6B46C1',
+    backgroundColor: '#1B4332',
     borderRadius: 12,
     padding: 16,
     width: '100%',
@@ -275,14 +277,14 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   verifyButtonText: {
+    fontFamily: 'Quicksand-Bold',
     color: '#FFFFFF',
     fontSize: 16,
-    fontWeight: '600',
   },
   resendButton: {
-    backgroundColor: '#F3F0FF',
+    backgroundColor: '#E8F5E9',
     borderWidth: 1,
-    borderColor: '#6B46C1',
+    borderColor: '#1B4332',
     borderRadius: 12,
     padding: 16,
     width: '100%',
@@ -292,12 +294,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   resendButtonText: {
-    color: '#6B46C1',
+    fontFamily: 'Quicksand-Bold',
+    color: '#1B4332',
     fontSize: 16,
-    fontWeight: '600',
   },
   loginButton: {
-    backgroundColor: '#6B46C1',
+    backgroundColor: '#1B4332',
     borderRadius: 12,
     padding: 16,
     width: '100%',
@@ -305,11 +307,12 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   loginButtonText: {
+    fontFamily: 'Quicksand-Bold',
     color: '#FFFFFF',
     fontSize: 16,
-    fontWeight: '600',
   },
   helpText: {
+    fontFamily: 'Quicksand-Light',
     fontSize: 12,
     color: '#9CA3AF',
     textAlign: 'center',

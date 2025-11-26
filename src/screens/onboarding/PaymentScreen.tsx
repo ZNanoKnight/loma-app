@@ -667,7 +667,7 @@ const styles = StyleSheet.create({
     borderRadius: 2,
   },
   progressText: {
-    fontFamily: 'Quicksand-Regular',
+    fontFamily: 'Quicksand-Light',
     color: '#6B7280',
     fontSize: 12,
     marginTop: 8,
@@ -678,15 +678,15 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   backButtonText: {
-    fontFamily: 'Quicksand-Medium',
-    color: '#6B46C1',
+    fontFamily: 'Quicksand-Regular',
+    color: '#40916C',
     fontSize: 16,
   },
   content: {
     flex: 1,
   },
   title: {
-    fontFamily: 'Quicksand-Bold',
+    fontFamily: 'PTSerif-Bold',
     fontSize: 32,
     color: '#1F2937',
     marginBottom: 10,
@@ -702,7 +702,7 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   plansSectionTitle: {
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
     fontSize: 18,
     color: '#1F2937',
     marginBottom: 12,
@@ -736,7 +736,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   planName: {
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
     fontSize: 18,
     color: '#1F2937',
     marginBottom: 4,
@@ -757,7 +757,7 @@ const styles = StyleSheet.create({
     marginLeft: 4,
   },
   planCostPerRecipe: {
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
     fontSize: 12,
     color: '#10B981',
     marginTop: 4,
@@ -769,14 +769,14 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   planMunchiesHighlight: {
-    fontFamily: 'Quicksand-SemiBold',
-    color: '#6B46C1',
+    fontFamily: 'Quicksand-Bold',
+    color: '#1B4332',
   },
   accountSection: {
     marginBottom: 25,
   },
   sectionTitle: {
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
     fontSize: 20,
     color: '#1F2937',
     marginBottom: 16,
@@ -785,7 +785,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   label: {
-    fontFamily: 'Quicksand-Medium',
+    fontFamily: 'Quicksand-Bold',
     color: '#1F2937',
     fontSize: 14,
     marginBottom: 8,
@@ -817,8 +817,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   checkboxActive: {
-    backgroundColor: '#6B46C1',
-    borderColor: '#6B46C1',
+    backgroundColor: '#1B4332',
+    borderColor: '#1B4332',
   },
   checkboxMark: {
     fontFamily: 'Quicksand-Bold',
@@ -833,8 +833,8 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   termsLink: {
-    fontFamily: 'Quicksand-SemiBold',
-    color: '#6B46C1',
+    fontFamily: 'Quicksand-Bold',
+    color: '#40916C',
     textDecorationLine: 'underline',
   },
   featuresContainer: {
@@ -850,12 +850,12 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   featureText: {
-    fontFamily: 'Quicksand-Regular',
+    fontFamily: 'Quicksand-Light',
     fontSize: 12,
     color: '#6B7280',
   },
   completeButton: {
-    backgroundColor: '#6B46C1',
+    backgroundColor: '#1B4332',
     paddingVertical: 16,
     borderRadius: 12,
     shadowColor: '#000',
@@ -872,7 +872,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#D1D5DB',
   },
   completeButtonText: {
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
     color: '#FFFFFF',
     fontSize: 18,
     textAlign: 'center',
@@ -881,7 +881,7 @@ const styles = StyleSheet.create({
     color: '#9CA3AF',
   },
   securityNote: {
-    fontFamily: 'Quicksand-Regular',
+    fontFamily: 'Quicksand-Light',
     fontSize: 12,
     color: '#6B7280',
     textAlign: 'center',
@@ -912,12 +912,12 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   tokenCard: {
-    backgroundColor: '#F3F0FF',
+    backgroundColor: '#E8F5E9',
     borderRadius: 16,
     padding: 20,
     marginBottom: 16,
     borderWidth: 1,
-    borderColor: '#6B46C1',
+    borderColor: '#1B4332',
   },
   tokenItem: {
     flexDirection: 'row',
@@ -928,7 +928,7 @@ const styles = StyleSheet.create({
     width: 28,
     height: 28,
     borderRadius: 14,
-    backgroundColor: '#6B46C1',
+    backgroundColor: '#1B4332',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
@@ -947,7 +947,7 @@ const styles = StyleSheet.create({
   },
   tokenHighlight: {
     fontFamily: 'Quicksand-Bold',
-    color: '#6B46C1',
+    color: '#1B4332',
   },
   tokenBenefitBox: {
     flexDirection: 'row',
@@ -963,7 +963,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   tokenBenefitText: {
-    fontFamily: 'Quicksand-Medium',
+    fontFamily: 'Quicksand-Regular',
     fontSize: 14,
     color: '#92400E',
     lineHeight: 20,

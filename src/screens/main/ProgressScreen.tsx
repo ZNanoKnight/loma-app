@@ -101,7 +101,7 @@ export default function ProgressScreen() {
         <StatusBar barStyle="dark-content" />
         <SafeAreaView style={styles.safeArea}>
           <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color="#6B46C1" />
+            <ActivityIndicator size="large" color="#1B4332" />
             <Text style={styles.loadingText}>Loading your progress...</Text>
           </View>
         </SafeAreaView>
@@ -242,8 +242,8 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 32,
-    color: '#1F2937',
-    fontFamily: 'Quicksand-Bold',
+    color: '#1B4332',
+    fontFamily: 'PTSerif-Bold',
   },
   summaryCard: {
     backgroundColor: 'white',
@@ -258,7 +258,7 @@ const styles = StyleSheet.create({
     color: '#1F2937',
     marginBottom: 16,
     textAlign: 'center',
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
   },
   summaryGrid: {
     flexDirection: 'row',
@@ -269,14 +269,14 @@ const styles = StyleSheet.create({
   },
   summaryNumber: {
     fontSize: 24,
-    color: '#6B46C1',
+    color: '#1B4332',
     marginBottom: 4,
     fontFamily: 'Quicksand-Bold',
   },
   summaryLabel: {
     fontSize: 12,
     color: '#6B7280',
-    fontFamily: 'Quicksand-Regular',
+    fontFamily: 'Quicksand-Light',
   },
   streakCard: {
     backgroundColor: 'white',
@@ -291,7 +291,7 @@ const styles = StyleSheet.create({
     color: '#1F2937',
     marginBottom: 8,
     textAlign: 'center',
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
   },
   cardSubtitle: {
     fontSize: 13,
@@ -321,7 +321,7 @@ const styles = StyleSheet.create({
   streakLabel: {
     fontSize: 12,
     color: '#6B7280',
-    fontFamily: 'Quicksand-Regular',
+    fontFamily: 'Quicksand-Light',
   },
   streakDivider: {
     width: 1,
@@ -350,9 +350,9 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   viewAllLink: {
-    color: '#6B46C1',
+    color: '#40916C',
     fontSize: 14,
-    fontFamily: 'Quicksand-Medium',
+    fontFamily: 'Quicksand-Regular',
   },
   achievementsGrid: {
     flexDirection: 'row',
@@ -376,12 +376,12 @@ const styles = StyleSheet.create({
     color: '#1F2937',
     marginBottom: 4,
     textAlign: 'center',
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
   },
   achievementMunchies: {
     fontSize: 12,
-    color: '#10B981',
-    fontFamily: 'Quicksand-SemiBold',
+    color: '#40916C',
+    fontFamily: 'Quicksand-Bold',
   },
   noAchievements: {
     paddingVertical: 20,

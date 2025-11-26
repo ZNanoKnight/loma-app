@@ -57,7 +57,7 @@ export default function AppPreferencesScreen() {
                 <Switch
                   value={metricUnits}
                   onValueChange={setMetricUnits}
-                  trackColor={{ false: '#E5E7EB', true: '#6B46C1' }}
+                  trackColor={{ false: '#E5E7EB', true: '#40916C' }}
                   thumbColor="white"
                 />
               </View>
@@ -139,12 +139,11 @@ const styles = StyleSheet.create({
   backIcon: {
     color: '#1F2937',
     fontSize: 24,
-    fontFamily: 'Quicksand-Regular',
   },
   headerTitle: {
     fontSize: 18,
-    color: '#1F2937',
-    fontFamily: 'Quicksand-SemiBold',
+    color: '#1B4332',
+    fontFamily: 'Quicksand-Bold',
   },
   placeholder: {
     width: 40,
@@ -171,13 +170,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#1F2937',
     marginBottom: 4,
-    fontFamily: 'Quicksand-Medium',
+    fontFamily: 'Quicksand-Bold',
   },
   settingDescription: {
     fontSize: 13,
     color: '#9CA3AF',
     lineHeight: 18,
-    fontFamily: 'Quicksand-Regular',
+    fontFamily: 'Quicksand-Light',
   },
   settingRight: {
     flexDirection: 'row',
@@ -192,6 +191,5 @@ const styles = StyleSheet.create({
   chevron: {
     fontSize: 18,
     color: '#9CA3AF',
-    fontFamily: 'Quicksand-Regular',
   },
 });

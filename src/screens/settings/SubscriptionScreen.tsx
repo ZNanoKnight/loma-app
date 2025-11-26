@@ -168,7 +168,7 @@ export default function SubscriptionScreen() {
   if (loading) {
     return (
       <View style={[styles.container, styles.centerContent]}>
-        <ActivityIndicator size="large" color="#6B46C1" />
+        <ActivityIndicator size="large" color="#1B4332" />
         <Text style={styles.loadingText}>Loading subscription...</Text>
       </View>
     );
@@ -267,7 +267,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   loadingText: {
-    fontFamily: 'Quicksand-Medium',
+    fontFamily: 'Quicksand-Regular',
     fontSize: 16,
     color: '#6B7280',
     marginTop: 12,
@@ -298,12 +298,11 @@ const styles = StyleSheet.create({
   backIcon: {
     color: '#1F2937',
     fontSize: 24,
-    fontFamily: 'Quicksand-Regular',
   },
   headerTitle: {
     fontSize: 18,
-    color: '#1F2937',
-    fontFamily: 'Quicksand-SemiBold',
+    color: '#1B4332',
+    fontFamily: 'Quicksand-Bold',
   },
   placeholder: {
     width: 40,
@@ -319,7 +318,7 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(255, 255, 255, 0.2)',
   },
   planBadge: {
-    backgroundColor: '#6B46C1',
+    backgroundColor: '#1B4332',
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 12,
@@ -354,7 +353,7 @@ const styles = StyleSheet.create({
     color: '#9CA3AF',
     textAlign: 'center',
     marginTop: 4,
-    fontFamily: 'Quicksand-Regular',
+    fontFamily: 'Quicksand-Light',
   },
   settingsContainer: {
     backgroundColor: 'white',
@@ -370,7 +369,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 14,
     color: '#4B5563',
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
   },
   settingRow: {
     flexDirection: 'row',
@@ -383,7 +382,7 @@ const styles = StyleSheet.create({
   settingLabel: {
     fontSize: 16,
     color: '#1F2937',
-    fontFamily: 'Quicksand-Medium',
+    fontFamily: 'Quicksand-Regular',
   },
   settingRight: {
     flexDirection: 'row',
@@ -398,14 +397,13 @@ const styles = StyleSheet.create({
   chevron: {
     fontSize: 18,
     color: '#9CA3AF',
-    fontFamily: 'Quicksand-Regular',
   },
   actionsContainer: {
     paddingHorizontal: 20,
     marginBottom: 24,
   },
   primaryButton: {
-    backgroundColor: '#6B46C1',
+    backgroundColor: '#1B4332',
     paddingVertical: 14,
     borderRadius: 12,
     alignItems: 'center',
@@ -414,6 +412,6 @@ const styles = StyleSheet.create({
   primaryButtonText: {
     color: 'white',
     fontSize: 16,
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
   },
 });

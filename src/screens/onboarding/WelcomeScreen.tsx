@@ -139,13 +139,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 2,
-    borderColor: '#6B46C1',
+    borderColor: '#1B4332',
     borderStyle: 'dashed',
   },
   placeholderText: {
-    fontFamily: 'Quicksand-Medium',
+    fontFamily: 'Quicksand-Regular',
     fontSize: 12,
-    color: '#6B46C1',
+    color: '#1B4332',
     textAlign: 'center',
   },
   mainContent: {
@@ -157,9 +157,9 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   headline: {
-    fontFamily: 'Quicksand-Bold',
+    fontFamily: 'PTSerif-Bold',
     fontSize: 36,
-    color: '#6B46C1',  // Purple text
+    color: '#1B4332',  // Dark forest green
     textAlign: 'left',
     lineHeight: 44,
   },
@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   rotatingText: {
-    fontFamily: 'Quicksand-Bold',
+    fontFamily: 'PTSerif-Bold',
     fontSize: 36,
     color: '#FF8C00',  // Orange text for emphasis
     textAlign: 'left',
@@ -187,7 +187,7 @@ const styles = StyleSheet.create({
     paddingTop: 20,
   },
   button: {
-    backgroundColor: '#6B46C1',  // Purple button
+    backgroundColor: '#1B4332',  // Dark forest green button
     paddingVertical: 16,
     paddingHorizontal: 32,
     borderRadius: 12,
@@ -202,7 +202,7 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   buttonText: {
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
     color: '#FFFFFF',  // White text
     fontSize: 18,
     textAlign: 'center',
@@ -217,8 +217,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   signInLink: {
-    fontFamily: 'Quicksand-SemiBold',
-    color: '#6B46C1',  // Purple link
+    fontFamily: 'Quicksand-Bold',
+    color: '#40916C',  // Secondary green link
     fontSize: 14,
     textDecorationLine: 'underline',
   },

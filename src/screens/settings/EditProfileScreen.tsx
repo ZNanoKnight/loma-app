@@ -222,15 +222,14 @@ const styles = StyleSheet.create({
   backIcon: {
     color: '#1F2937',
     fontSize: 24,
-    fontFamily: 'Quicksand-Regular',
   },
   headerTitle: {
     fontSize: 20,
-    color: '#000000',
-    fontFamily: 'Quicksand-Bold',
+    color: '#1B4332',
+    fontFamily: 'PTSerif-Bold',
   },
   saveButton: {
-    backgroundColor: '#6B46C1',
+    backgroundColor: '#1B4332',
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 12,
@@ -238,7 +237,7 @@ const styles = StyleSheet.create({
   saveButtonText: {
     color: 'white',
     fontSize: 14,
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
   },
   avatarSection: {
     alignItems: 'center',
@@ -256,7 +255,6 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     textAlign: 'center',
     lineHeight: 100,
-    fontFamily: 'Quicksand-Regular',
   },
   avatarImage: {
     width: 100,
@@ -268,7 +266,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
     right: 0,
-    backgroundColor: '#6B46C1',
+    backgroundColor: '#1B4332',
     width: 32,
     height: 32,
     borderRadius: 16,
@@ -277,12 +275,11 @@ const styles = StyleSheet.create({
   },
   editIcon: {
     fontSize: 16,
-    fontFamily: 'Quicksand-Regular',
   },
   avatarLabel: {
     fontSize: 14,
-    color: '#6B46C1',
-    fontFamily: 'Quicksand-SemiBold',
+    color: '#40916C',
+    fontFamily: 'Quicksand-Bold',
   },
   formContainer: {
     backgroundColor: 'white',
@@ -302,7 +299,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#1F2937',
     marginBottom: 8,
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
   },
   input: {
     backgroundColor: '#F9FAFB',

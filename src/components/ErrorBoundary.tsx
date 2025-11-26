@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontFamily: 'Quicksand-Bold',
+    fontFamily: 'PTSerif-Regular',
     color: Colors.gray[900],
     marginBottom: 12,
     textAlign: 'center',
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
   },
   errorText: {
     fontSize: 12,
-    fontFamily: 'Quicksand-Regular',
+    fontFamily: 'Quicksand-Light',
     color: Colors.gray[900],
   },
 });

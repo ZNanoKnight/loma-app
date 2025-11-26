@@ -102,7 +102,7 @@ export default function RecipeSavedScreen({ route }: RecipeSavedScreenProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#6B46C1',
+    backgroundColor: '#1B4332',
   },
   safeArea: {
     flex: 1,
@@ -118,16 +118,16 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   congratsTitle: {
-    fontFamily: 'Quicksand-Bold',
+    fontFamily: 'PTSerif-Bold',
     fontSize: 36,
     color: '#FFFFFF',
     textAlign: 'center',
     marginBottom: 16,
   },
   congratsSubtitle: {
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
     fontSize: 18,
-    color: '#F3E8FF',
+    color: '#B7E4C7',
     textAlign: 'center',
     marginBottom: 32,
   },
@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   recipeName: {
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
     fontSize: 20,
     color: '#FFFFFF',
     textAlign: 'center',
@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
   successMessage: {
     fontFamily: 'Quicksand-Regular',
     fontSize: 16,
-    color: '#F3E8FF',
+    color: '#B7E4C7',
     textAlign: 'center',
     lineHeight: 24,
   },
@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
   },
   primaryButtonText: {
     fontFamily: 'Quicksand-Bold',
-    color: '#6B46C1',
+    color: '#1B4332',
     fontSize: 18,
   },
   secondaryButton: {
@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(255, 255, 255, 0.3)',
   },
   secondaryButtonText: {
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
     color: '#FFFFFF',
     fontSize: 16,
   },

@@ -35,7 +35,7 @@ export default function CookingInstructionsScreen() {
         <SafeAreaView style={styles.safeArea}>
           <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 20 }}>
             <Text style={{ fontSize: 48, marginBottom: 16 }}>🍳</Text>
-            <Text style={{ color: '#1F2937', fontSize: 18, textAlign: 'center', fontFamily: 'Quicksand-SemiBold' }}>
+            <Text style={{ color: '#1F2937', fontSize: 18, textAlign: 'center', fontFamily: 'Quicksand-Bold' }}>
               No recipe loaded
             </Text>
             <Text style={{ color: '#6B7280', fontSize: 14, textAlign: 'center', marginTop: 8, fontFamily: 'Quicksand-Regular' }}>
@@ -43,9 +43,9 @@ export default function CookingInstructionsScreen() {
             </Text>
             <TouchableOpacity
               onPress={() => navigation.goBack()}
-              style={{ marginTop: 20, backgroundColor: '#6B46C1', paddingHorizontal: 24, paddingVertical: 12, borderRadius: 12 }}
+              style={{ marginTop: 20, backgroundColor: '#1B4332', paddingHorizontal: 24, paddingVertical: 12, borderRadius: 12 }}
             >
-              <Text style={{ color: 'white', fontFamily: 'Quicksand-SemiBold' }}>Go Back</Text>
+              <Text style={{ color: 'white', fontFamily: 'Quicksand-Bold' }}>Go Back</Text>
             </TouchableOpacity>
           </View>
         </SafeAreaView>
@@ -243,21 +243,20 @@ const styles = StyleSheet.create({
   closeIcon: {
     color: '#1F2937',
     fontSize: 20,
-    fontFamily: 'Quicksand-Regular',
   },
   headerCenter: {
     alignItems: 'center',
   },
   headerTitle: {
     fontSize: 18,
-    color: '#1F2937',
-    fontFamily: 'Quicksand-SemiBold',
+    color: '#1B4332',
+    fontFamily: 'Quicksand-Bold',
   },
   headerSubtitle: {
     fontSize: 12,
     color: '#6B7280',
     marginTop: 2,
-    fontFamily: 'Quicksand-Regular',
+    fontFamily: 'Quicksand-Light',
   },
   placeholder: {
     width: 40,
@@ -274,7 +273,7 @@ const styles = StyleSheet.create({
   },
   progressFill: {
     height: '100%',
-    backgroundColor: '#6B46C1',
+    backgroundColor: '#1B4332',
     borderRadius: 4,
   },
   progressText: {
@@ -289,7 +288,7 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   stepCard: {
-    backgroundColor: '#F3E8FF',
+    backgroundColor: '#E8F5E9',
     borderRadius: 20,
     padding: 24,
     marginBottom: 20,
@@ -303,7 +302,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#6B46C1',
+    backgroundColor: '#1B4332',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
@@ -328,7 +327,7 @@ const styles = StyleSheet.create({
   },
   tipContainer: {
     flexDirection: 'row',
-    backgroundColor: '#F3E8FF',
+    backgroundColor: '#D8F3DC',
     borderRadius: 12,
     padding: 12,
     marginTop: 8,
@@ -336,12 +335,11 @@ const styles = StyleSheet.create({
   tipIcon: {
     fontSize: 16,
     marginRight: 8,
-    fontFamily: 'Quicksand-Regular',
   },
   tipText: {
     flex: 1,
     fontSize: 14,
-    color: '#6B46C1',
+    color: '#1B4332',
     lineHeight: 20,
     fontFamily: 'Quicksand-Regular',
   },
@@ -355,7 +353,6 @@ const styles = StyleSheet.create({
   warningIcon: {
     fontSize: 16,
     marginRight: 8,
-    fontFamily: 'Quicksand-Regular',
   },
   warningText: {
     flex: 1,
@@ -371,7 +368,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#1F2937',
     marginBottom: 12,
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
   },
   stepDots: {
     flexDirection: 'row',
@@ -386,15 +383,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   stepDotActive: {
-    backgroundColor: '#6B46C1',
+    backgroundColor: '#1B4332',
   },
   stepDotCompleted: {
-    backgroundColor: '#10B981',
+    backgroundColor: '#40916C',
   },
   stepDotNumber: {
     fontSize: 14,
     color: '#6B7280',
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
   },
   stepDotNumberActive: {
     color: 'white',
@@ -425,16 +422,15 @@ const styles = StyleSheet.create({
   navIcon: {
     fontSize: 18,
     color: '#6B7280',
-    fontFamily: 'Quicksand-Regular',
   },
   navText: {
     fontSize: 16,
     color: '#6B7280',
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
   },
   completeButton: {
     flexDirection: 'row',
-    backgroundColor: '#10B981',
+    backgroundColor: '#40916C',
     paddingVertical: 14,
     paddingHorizontal: 24,
     borderRadius: 16,
@@ -444,11 +440,10 @@ const styles = StyleSheet.create({
   completeIcon: {
     fontSize: 18,
     color: 'white',
-    fontFamily: 'Quicksand-Regular',
   },
   completeText: {
     fontSize: 16,
     color: 'white',
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
   },
 });

@@ -210,14 +210,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   backIcon: {
-    fontFamily: 'Quicksand-Regular',
     color: '#1F2937',
     fontSize: 24,
   },
   headerTitle: {
-    fontFamily: 'Quicksand-Bold',
+    fontFamily: 'PTSerif-Bold',
     fontSize: 20,
-    color: '#1F2937',
+    color: '#1B4332',
   },
   placeholder: {
     width: 40,
@@ -257,8 +256,8 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   mealCardSelected: {
-    borderColor: '#6B46C1',
-    backgroundColor: '#F3F0FF',
+    borderColor: '#1B4332',
+    backgroundColor: '#E8F5E9',
   },
   selectionIndicator: {
     position: 'absolute',
@@ -267,7 +266,7 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     borderRadius: 12,
-    backgroundColor: '#6B46C1',
+    backgroundColor: '#1B4332',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -281,7 +280,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   mealTitle: {
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
     fontSize: 14,
     color: '#1F2937',
     textAlign: 'center',
@@ -299,21 +298,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   macroLabel: {
-    fontFamily: 'Quicksand-Medium',
+    fontFamily: 'Quicksand-Light',
     fontSize: 11,
     color: '#9CA3AF',
   },
   macroValue: {
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
     fontSize: 12,
-    color: '#6B46C1',
+    color: '#1B4332',
   },
   selectButton: {
-    backgroundColor: '#6B46C1',
+    backgroundColor: '#1B4332',
     paddingVertical: 16,
     borderRadius: 16,
     alignItems: 'center',
-    shadowColor: '#6B46C1',
+    shadowColor: '#1B4332',
     shadowOffset: {
       width: 0,
       height: 4,
@@ -328,7 +327,7 @@ const styles = StyleSheet.create({
     elevation: 0,
   },
   selectButtonText: {
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
     color: '#FFFFFF',
     fontSize: 18,
   },

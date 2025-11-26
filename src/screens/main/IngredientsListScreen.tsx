@@ -210,21 +210,20 @@ const styles = StyleSheet.create({
   backIcon: {
     color: '#1F2937',
     fontSize: 24,
-    fontFamily: 'Quicksand-Regular',
   },
   headerCenter: {
     alignItems: 'center',
   },
   headerTitle: {
     fontSize: 18,
-    color: '#1F2937',
-    fontFamily: 'Quicksand-SemiBold',
+    color: '#1B4332',
+    fontFamily: 'Quicksand-Bold',
   },
   headerSubtitle: {
     fontSize: 12,
     color: '#6B7280',
     marginTop: 2,
-    fontFamily: 'Quicksand-Regular',
+    fontFamily: 'Quicksand-Light',
   },
   placeholder: {
     width: 40,
@@ -241,7 +240,7 @@ const styles = StyleSheet.create({
   },
   progressFill: {
     height: '100%',
-    backgroundColor: '#6B46C1',
+    backgroundColor: '#1B4332',
     borderRadius: 4,
   },
   progressText: {
@@ -263,13 +262,12 @@ const styles = StyleSheet.create({
   categoryEmoji: {
     fontSize: 20,
     marginRight: 8,
-    fontFamily: 'Quicksand-Regular',
   },
   categoryTitle: {
     flex: 1,
     fontSize: 16,
     color: '#1F2937',
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
   },
   categoryCount: {
     fontSize: 14,
@@ -302,8 +300,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   checkboxChecked: {
-    backgroundColor: '#10B981',
-    borderColor: '#10B981',
+    backgroundColor: '#40916C',
+    borderColor: '#40916C',
   },
   checkmark: {
     color: 'white',
@@ -320,8 +318,8 @@ const styles = StyleSheet.create({
   },
   amount: {
     fontSize: 14,
-    color: '#6B46C1',
-    fontFamily: 'Quicksand-SemiBold',
+    color: '#1B4332',
+    fontFamily: 'Quicksand-Bold',
   },
   ingredientName: {
     fontSize: 14,
@@ -334,7 +332,7 @@ const styles = StyleSheet.create({
     color: '#6B7280',
     marginTop: 2,
     fontStyle: 'italic',
-    fontFamily: 'Quicksand-Regular',
+    fontFamily: 'Quicksand-Light',
   },
   textChecked: {
     color: '#9CA3AF',
@@ -351,9 +349,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   checkAllText: {
-    color: '#6B46C1',
+    color: '#1B4332',
     fontSize: 14,
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
   },
   bottomContainer: {
     paddingHorizontal: 20,
@@ -365,12 +363,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   continueButtonActive: {
-    backgroundColor: '#6B46C1',
+    backgroundColor: '#1B4332',
   },
   continueButtonText: {
     color: '#1F2937',
     fontSize: 16,
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
   },
   continueButtonTextActive: {
     color: 'white',

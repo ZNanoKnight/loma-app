@@ -137,7 +137,7 @@ export default function AllAchievementsScreen() {
         <StatusBar barStyle="dark-content" />
         <SafeAreaView style={styles.safeArea}>
           <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color="#6B46C1" />
+            <ActivityIndicator size="large" color="#1B4332" />
             <Text style={styles.loadingText}>Loading achievements...</Text>
           </View>
         </SafeAreaView>
@@ -243,12 +243,11 @@ const styles = StyleSheet.create({
   backIcon: {
     color: '#1F2937',
     fontSize: 24,
-    fontFamily: 'Quicksand-Regular',
   },
   headerTitle: {
     fontSize: 24,
-    color: '#1F2937',
-    fontFamily: 'Quicksand-Bold',
+    color: '#1B4332',
+    fontFamily: 'PTSerif-Bold',
   },
   placeholder: {
     width: 40,
@@ -301,7 +300,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#1F2937',
     marginBottom: 4,
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
   },
   achievementDescription: {
     fontSize: 13,
@@ -312,19 +311,19 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   earnedBadge: {
-    backgroundColor: '#ECFDF5',
+    backgroundColor: '#E8F5E9',
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 12,
   },
   earnedText: {
     fontSize: 13,
-    color: '#10B981',
-    fontFamily: 'Quicksand-SemiBold',
+    color: '#40916C',
+    fontFamily: 'Quicksand-Bold',
   },
   munchiesText: {
     fontSize: 13,
-    color: '#6B46C1',
-    fontFamily: 'Quicksand-SemiBold',
+    color: '#1B4332',
+    fontFamily: 'Quicksand-Bold',
   },
 });

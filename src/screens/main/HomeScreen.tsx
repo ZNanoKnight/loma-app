@@ -267,8 +267,8 @@ export default function HomeScreen() {
               <RefreshControl
                 refreshing={refreshing}
                 onRefresh={onRefresh}
-                tintColor="#6B46C1"
-                colors={['#6B46C1']}
+                tintColor="#1B4332"
+                colors={['#1B4332']}
               />
             }
           >
@@ -284,7 +284,7 @@ export default function HomeScreen() {
             <View style={styles.munchiesCallout}>
               {loadingTokens ? (
                 <View style={styles.munchiesLoading}>
-                  <ActivityIndicator size="small" color="#6B46C1" />
+                  <ActivityIndicator size="small" color="#1B4332" />
                   <Text style={styles.munchiesLoadingText}>Loading Munchies...</Text>
                 </View>
               ) : (
@@ -415,7 +415,7 @@ export default function HomeScreen() {
 
               {/* Progress Indicator */}
               <View style={styles.modalProgressContainer}>
-                <ActivityIndicator size="small" color="#6B46C1" />
+                <ActivityIndicator size="small" color="#1B4332" />
                 <Text style={styles.modalProgressText}>
                   This usually takes about 60 seconds
                 </Text>
@@ -519,9 +519,9 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   greeting: {
-    fontFamily: 'Quicksand-Bold',
+    fontFamily: 'PTSerif-Bold',
     fontSize: 28,
-    color: '#1F2937',
+    color: '#1B4332',
     marginBottom: 4,
   },
   subGreeting: {
@@ -530,28 +530,28 @@ const styles = StyleSheet.create({
     color: '#6B7280',
   },
   munchiesCallout: {
-    backgroundColor: '#F3F0FF',
+    backgroundColor: '#E8F5E9',
     borderRadius: 16,
     padding: 16,
     marginBottom: 20,
     borderWidth: 1,
-    borderColor: '#E9D5FF',
+    borderColor: '#B7E4C7',
   },
   munchiesTitle: {
     fontFamily: 'Quicksand-Bold',
     fontSize: 18,
-    color: '#6B46C1',
+    color: '#1B4332',
     marginBottom: 4,
   },
   munchiesSubtext: {
     fontFamily: 'Quicksand-Regular',
     fontSize: 14,
-    color: '#8B5CF6',
+    color: '#40916C',
     lineHeight: 20,
   },
   boldText: {
     fontFamily: 'Quicksand-Bold',
-    color: '#6B46C1',
+    color: '#1B4332',
   },
   munchiesLoading: {
     flexDirection: 'row',
@@ -560,13 +560,13 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   munchiesLoadingText: {
-    fontFamily: 'Quicksand-Medium',
+    fontFamily: 'Quicksand-Regular',
     fontSize: 14,
-    color: '#6B46C1',
+    color: '#1B4332',
     marginLeft: 8,
   },
   outOfTokensText: {
-    fontFamily: 'Quicksand-Medium',
+    fontFamily: 'Quicksand-Regular',
     color: '#DC2626',
   },
   notificationButton: {
@@ -595,7 +595,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   cardTitle: {
-    fontFamily: 'Quicksand-Bold',
+    fontFamily: 'PTSerif-Bold',
     fontSize: 22,
     color: '#1F2937',
     marginBottom: 20,
@@ -604,7 +604,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   optionLabel: {
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
     fontSize: 14,
     color: '#6B7280',
     marginBottom: 10,
@@ -623,21 +623,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   mealTypeCardActive: {
-    backgroundColor: '#F3F0FF',
-    borderColor: '#6B46C1',
+    backgroundColor: '#E8F5E9',
+    borderColor: '#1B4332',
   },
   mealTypeEmoji: {
     fontSize: 24,
     marginRight: 12,
   },
   mealTypeText: {
-    fontFamily: 'Quicksand-Medium',
+    fontFamily: 'Quicksand-Regular',
     fontSize: 16,
     color: '#4B5563',
   },
   mealTypeTextActive: {
-    fontFamily: 'Quicksand-SemiBold',
-    color: '#6B46C1',
+    fontFamily: 'Quicksand-Bold',
+    color: '#1B4332',
   },
   servingsInput: {
     fontFamily: 'Quicksand-Regular',
@@ -664,11 +664,11 @@ const styles = StyleSheet.create({
     textAlignVertical: 'top',
   },
   generateButton: {
-    backgroundColor: '#6B46C1',
+    backgroundColor: '#1B4332',
     paddingVertical: 16,
     borderRadius: 16,
     alignItems: 'center',
-    shadowColor: '#6B46C1',
+    shadowColor: '#1B4332',
     shadowOffset: {
       width: 0,
       height: 4,
@@ -683,7 +683,7 @@ const styles = StyleSheet.create({
     elevation: 0,
   },
   generateButtonText: {
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
     color: 'white',
     fontSize: 18,
   },
@@ -705,7 +705,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   quickActionText: {
-    fontFamily: 'Quicksand-Medium',
+    fontFamily: 'Quicksand-Regular',
     fontSize: 12,
     color: '#1F2937',
   },
@@ -724,7 +724,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     maxWidth: 340,
-    shadowColor: '#6B46C1',
+    shadowColor: '#1B4332',
     shadowOffset: {
       width: 0,
       height: 8,
@@ -738,16 +738,16 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   modalTitle: {
-    fontFamily: 'Quicksand-Bold',
+    fontFamily: 'PTSerif-Bold',
     fontSize: 24,
     color: '#1F2937',
     marginBottom: 8,
     textAlign: 'center',
   },
   modalMessage: {
-    fontFamily: 'Quicksand-Medium',
+    fontFamily: 'Quicksand-Regular',
     fontSize: 16,
-    color: '#6B46C1',
+    color: '#1B4332',
     textAlign: 'center',
     marginBottom: 24,
     minHeight: 24,
@@ -755,7 +755,7 @@ const styles = StyleSheet.create({
   modalProgressContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F3F0FF',
+    backgroundColor: '#E8F5E9',
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 12,
@@ -809,7 +809,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   outOfMunchiesTitle: {
-    fontFamily: 'Quicksand-Bold',
+    fontFamily: 'PTSerif-Bold',
     fontSize: 26,
     color: '#1F2937',
     marginBottom: 12,
@@ -824,18 +824,18 @@ const styles = StyleSheet.create({
     lineHeight: 22,
   },
   outOfMunchiesInfoBox: {
-    backgroundColor: '#F3F0FF',
+    backgroundColor: '#E8F5E9',
     borderRadius: 16,
     padding: 16,
     width: '100%',
     marginBottom: 20,
     borderWidth: 1,
-    borderColor: '#E9D5FF',
+    borderColor: '#B7E4C7',
   },
   outOfMunchiesInfoTitle: {
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
     fontSize: 14,
-    color: '#6B46C1',
+    color: '#1B4332',
     marginBottom: 12,
   },
   outOfMunchiesInfoItem: {
@@ -847,7 +847,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Quicksand-Bold',
     fontSize: 12,
     color: '#FFFFFF',
-    backgroundColor: '#6B46C1',
+    backgroundColor: '#1B4332',
     width: 20,
     height: 20,
     borderRadius: 10,
@@ -864,18 +864,18 @@ const styles = StyleSheet.create({
     lineHeight: 18,
   },
   outOfMunchiesInfoBold: {
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
     color: '#1F2937',
   },
   outOfMunchiesPrimaryButton: {
-    backgroundColor: '#6B46C1',
+    backgroundColor: '#1B4332',
     paddingVertical: 14,
     paddingHorizontal: 24,
     borderRadius: 12,
     width: '100%',
     alignItems: 'center',
     marginBottom: 10,
-    shadowColor: '#6B46C1',
+    shadowColor: '#1B4332',
     shadowOffset: {
       width: 0,
       height: 4,
@@ -885,7 +885,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   outOfMunchiesPrimaryButtonText: {
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
     fontSize: 16,
     color: '#FFFFFF',
   },
@@ -896,7 +896,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   outOfMunchiesSecondaryButtonText: {
-    fontFamily: 'Quicksand-Medium',
+    fontFamily: 'Quicksand-Regular',
     fontSize: 14,
     color: '#6B7280',
   },

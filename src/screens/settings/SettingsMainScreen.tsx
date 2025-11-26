@@ -387,8 +387,8 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 32,
-    color: '#000000',
-    fontFamily: 'Quicksand-Bold',
+    color: '#1B4332',
+    fontFamily: 'PTSerif-Bold',
   },
   placeholder: {
     width: 40,
@@ -424,7 +424,6 @@ const styles = StyleSheet.create({
     borderRadius: 40,
     textAlign: 'center',
     lineHeight: 80,
-    fontFamily: 'Quicksand-Regular',
   },
   avatarImage: {
     width: 80,
@@ -436,7 +435,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
     right: 0,
-    backgroundColor: '#6B46C1',
+    backgroundColor: '#1B4332',
     width: 28,
     height: 28,
     borderRadius: 14,
@@ -445,11 +444,10 @@ const styles = StyleSheet.create({
   },
   editIcon: {
     fontSize: 14,
-    fontFamily: 'Quicksand-Regular',
   },
   userName: {
     fontSize: 20,
-    color: '#000000',
+    color: '#1B4332',
     marginBottom: 4,
     fontFamily: 'Quicksand-Bold',
   },
@@ -462,7 +460,7 @@ const styles = StyleSheet.create({
   memberSince: {
     fontSize: 12,
     color: '#9CA3AF',
-    fontFamily: 'Quicksand-Regular',
+    fontFamily: 'Quicksand-Light',
   },
   settingsContainer: {
     marginHorizontal: 20,
@@ -494,18 +492,16 @@ const styles = StyleSheet.create({
   sectionIcon: {
     fontSize: 24,
     marginRight: 12,
-    fontFamily: 'Quicksand-Regular',
   },
   sectionTitle: {
     flex: 1,
     fontSize: 16,
     color: '#1F2937',
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
   },
   chevron: {
     fontSize: 20,
-    color: '#6B46C1',
-    fontFamily: 'Quicksand-Regular',
+    color: '#40916C',
   },
   expandedContent: {
     backgroundColor: '#FAFAFA',
@@ -530,16 +526,15 @@ const styles = StyleSheet.create({
   },
   settingValue: {
     fontSize: 14,
-    color: '#6B46C1',
+    color: '#40916C',
     fontFamily: 'Quicksand-Regular',
   },
   settingChevron: {
     fontSize: 14,
-    color: '#6B46C1',
-    fontFamily: 'Quicksand-Regular',
+    color: '#40916C',
   },
   primaryButton: {
-    backgroundColor: '#6B46C1',
+    backgroundColor: '#1B4332',
     paddingVertical: 12,
     borderRadius: 8,
     alignItems: 'center',
@@ -549,18 +544,18 @@ const styles = StyleSheet.create({
   primaryButtonText: {
     color: 'white',
     fontSize: 14,
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
   },
   comingSoonBadge: {
-    backgroundColor: '#F3E8FF',
+    backgroundColor: '#E8F5E9',
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 12,
   },
   comingSoonText: {
-    color: '#7C3AED',
+    color: '#40916C',
     fontSize: 12,
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
   },
   signOutButton: {
     backgroundColor: 'white',
@@ -575,13 +570,13 @@ const styles = StyleSheet.create({
   signOutText: {
     color: '#EF4444',
     fontSize: 16,
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
   },
   versionText: {
     textAlign: 'center',
     color: '#9CA3AF',
     fontSize: 12,
     marginBottom: 40,
-    fontFamily: 'Quicksand-Regular',
+    fontFamily: 'Quicksand-Light',
   },
 });

@@ -156,12 +156,11 @@ const styles = StyleSheet.create({
   backIcon: {
     color: '#1F2937',
     fontSize: 24,
-    fontFamily: 'Quicksand-Regular',
   },
   headerTitle: {
     fontSize: 18,
-    color: '#1F2937',
-    fontFamily: 'Quicksand-SemiBold',
+    color: '#1B4332',
+    fontFamily: 'Quicksand-Bold',
   },
   placeholder: {
     width: 40,
@@ -180,7 +179,6 @@ const styles = StyleSheet.create({
   infoIcon: {
     fontSize: 24,
     marginRight: 12,
-    fontFamily: 'Quicksand-Regular',
   },
   infoText: {
     flex: 1,
@@ -202,7 +200,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#1F2937',
     marginBottom: 8,
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
   },
   input: {
     backgroundColor: '#F9FAFB',
@@ -218,10 +216,10 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#9CA3AF',
     marginTop: 6,
-    fontFamily: 'Quicksand-Regular',
+    fontFamily: 'Quicksand-Light',
   },
   changeButton: {
-    backgroundColor: '#6B46C1',
+    backgroundColor: '#1B4332',
     paddingVertical: 14,
     borderRadius: 12,
     alignItems: 'center',
@@ -230,6 +228,6 @@ const styles = StyleSheet.create({
   changeButtonText: {
     color: 'white',
     fontSize: 16,
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
   },
 });

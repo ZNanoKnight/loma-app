@@ -92,11 +92,17 @@ export default Sentry.wrap(function App() {
     async function loadFonts() {
       try {
         await Font.loadAsync({
+          // Serif fonts for headers
+          'PTSerif-Regular': require('./assets/fonts/PTSerif-Regular.ttf'),
+          'PTSerif-Bold': require('./assets/fonts/PTSerif-Bold.ttf'),
+          'PTSerif-Italic': require('./assets/fonts/PTSerif-Italic.ttf'),
+          'PTSerif-BoldItalic': require('./assets/fonts/PTSerif-BoldItalic.ttf'),
+          // Sans-serif fonts for body/subtext
           'Quicksand-Regular': require('./assets/fonts/Quicksand-Regular.ttf'),
-          'Quicksand-Bold': require('./assets/fonts/Quicksand-Bold.ttf'),
-          'Quicksand-Light': require('./assets/fonts/Quicksand-Light.ttf'),
           'Quicksand-Medium': require('./assets/fonts/Quicksand-Medium.ttf'),
           'Quicksand-SemiBold': require('./assets/fonts/Quicksand-SemiBold.ttf'),
+          'Quicksand-Bold': require('./assets/fonts/Quicksand-Bold.ttf'),
+          'Quicksand-Light': require('./assets/fonts/Quicksand-Light.ttf'),
         });
         
         setFontsLoaded(true);
@@ -111,7 +117,7 @@ export default Sentry.wrap(function App() {
 
   if (!fontsLoaded) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#4F46E5' }}>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#1B4332' }}>
         <ActivityIndicator size="large" color="white" />
       </View>
     );

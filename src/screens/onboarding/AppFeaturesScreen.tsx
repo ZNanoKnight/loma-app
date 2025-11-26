@@ -297,7 +297,7 @@ const styles = StyleSheet.create({
     borderRadius: 2,
   },
   progressText: {
-    fontFamily: 'Quicksand-Regular',
+    fontFamily: 'Quicksand-Light',
     color: '#6B7280',
     fontSize: 12,
     marginTop: 8,
@@ -308,21 +308,21 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   backButtonText: {
-    fontFamily: 'Quicksand-Medium',
-    color: '#6B46C1',
+    fontFamily: 'Quicksand-Regular',
+    color: '#40916C',
     fontSize: 16,
   },
   content: {
     flex: 1,
   },
   title: {
-    fontFamily: 'Quicksand-Bold',
+    fontFamily: 'PTSerif-Bold',
     fontSize: 32,
     color: '#1F2937',
     marginBottom: 8,
   },
   titleHighlight: {
-    color: '#6B46C1',
+    color: '#1B4332',
   },
   subtitle: {
     fontFamily: 'Quicksand-Regular',
@@ -344,7 +344,7 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: '#F3F0FF',
+    backgroundColor: '#D8F3DC',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 10,
@@ -388,7 +388,7 @@ const styles = StyleSheet.create({
     width: 26,
     height: 26,
     borderRadius: 13,
-    backgroundColor: '#6B46C1',
+    backgroundColor: '#1B4332',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
@@ -403,20 +403,20 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   stepTitle: {
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
     fontSize: 15,
     color: '#1F2937',
     marginBottom: 4,
   },
   stepDescription: {
-    fontFamily: 'Quicksand-Regular',
+    fontFamily: 'Quicksand-Light',
     fontSize: 13,
     color: '#6B7280',
     lineHeight: 18,
   },
   highlight: {
-    fontFamily: 'Quicksand-SemiBold',
-    color: '#6B46C1',
+    fontFamily: 'Quicksand-Bold',
+    color: '#1B4332',
   },
   // Munchies Card
   munchiesCard: {
@@ -444,7 +444,7 @@ const styles = StyleSheet.create({
     color: '#92400E',
   },
   munchiesSubtitle: {
-    fontFamily: 'Quicksand-Regular',
+    fontFamily: 'Quicksand-Light',
     fontSize: 12,
     color: '#B45309',
   },
@@ -476,7 +476,7 @@ const styles = StyleSheet.create({
     lineHeight: 18,
   },
   munchiesBold: {
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
   },
   // Recipe Book Features
   recipeFeaturesList: {
@@ -490,7 +490,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#F3F0FF',
+    backgroundColor: '#D8F3DC',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
@@ -503,13 +503,13 @@ const styles = StyleSheet.create({
     paddingTop: 2,
   },
   recipeFeatureTitle: {
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
     fontSize: 14,
     color: '#1F2937',
     marginBottom: 2,
   },
   recipeFeatureText: {
-    fontFamily: 'Quicksand-Regular',
+    fontFamily: 'Quicksand-Light',
     fontSize: 12,
     color: '#6B7280',
     lineHeight: 16,
@@ -526,7 +526,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#F3F0FF',
+    backgroundColor: '#D8F3DC',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
@@ -539,20 +539,20 @@ const styles = StyleSheet.create({
     paddingTop: 2,
   },
   achievementTitle: {
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
     fontSize: 14,
     color: '#1F2937',
     marginBottom: 2,
   },
   achievementText: {
-    fontFamily: 'Quicksand-Regular',
+    fontFamily: 'Quicksand-Light',
     fontSize: 12,
     color: '#6B7280',
     lineHeight: 16,
   },
   // Continue Button
   continueButton: {
-    backgroundColor: '#6B46C1',
+    backgroundColor: '#1B4332',
     paddingVertical: 16,
     borderRadius: 12,
     shadowColor: '#000',
@@ -567,7 +567,7 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   continueButtonText: {
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
     color: '#FFFFFF',
     fontSize: 18,
     textAlign: 'center',

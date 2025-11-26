@@ -230,21 +230,20 @@ const styles = StyleSheet.create({
   backIcon: {
     color: '#1F2937',
     fontSize: 24,
-    fontFamily: 'Quicksand-Regular',
   },
   headerCenter: {
     alignItems: 'center',
   },
   headerTitle: {
     fontSize: 18,
-    color: '#1F2937',
-    fontFamily: 'Quicksand-SemiBold',
+    color: '#1B4332',
+    fontFamily: 'Quicksand-Bold',
   },
   headerSubtitle: {
     fontSize: 12,
     color: '#6B7280',
     marginTop: 2,
-    fontFamily: 'Quicksand-Regular',
+    fontFamily: 'Quicksand-Light',
   },
   placeholder: {
     width: 40,
@@ -261,7 +260,7 @@ const styles = StyleSheet.create({
   },
   progressFill: {
     height: '100%',
-    backgroundColor: '#6B46C1',
+    backgroundColor: '#1B4332',
     borderRadius: 4,
   },
   progressText: {
@@ -283,7 +282,6 @@ const styles = StyleSheet.create({
   recipeEmoji: {
     fontSize: 32,
     marginRight: 12,
-    fontFamily: 'Quicksand-Regular',
   },
   recipeInfo: {
     flex: 1,
@@ -292,7 +290,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#1F2937',
     marginBottom: 4,
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
   },
   recipeTime: {
     fontSize: 14,
@@ -312,7 +310,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     color: '#1F2937',
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
   },
   sectionCount: {
     fontSize: 14,
@@ -345,8 +343,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   checkboxChecked: {
-    backgroundColor: '#10B981',
-    borderColor: '#10B981',
+    backgroundColor: '#40916C',
+    borderColor: '#40916C',
   },
   checkmark: {
     color: 'white',
@@ -370,18 +368,18 @@ const styles = StyleSheet.create({
     color: '#6B7280',
     marginTop: 2,
     fontStyle: 'italic',
-    fontFamily: 'Quicksand-Regular',
+    fontFamily: 'Quicksand-Light',
   },
   checkedBadge: {
-    backgroundColor: '#ECFDF5',
+    backgroundColor: '#E8F5E9',
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 6,
   },
   checkedText: {
     fontSize: 12,
-    color: '#10B981',
-    fontFamily: 'Quicksand-SemiBold',
+    color: '#40916C',
+    fontFamily: 'Quicksand-Bold',
   },
   quickActions: {
     paddingHorizontal: 20,
@@ -394,9 +392,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   checkAllText: {
-    color: '#6B46C1',
+    color: '#1B4332',
     fontSize: 14,
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
   },
   bottomContainer: {
     paddingHorizontal: 20,
@@ -409,12 +407,12 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   continueButtonActive: {
-    backgroundColor: '#6B46C1',
+    backgroundColor: '#1B4332',
   },
   continueButtonText: {
     color: '#1F2937',
     fontSize: 16,
-    fontFamily: 'Quicksand-SemiBold',
+    fontFamily: 'Quicksand-Bold',
   },
   continueButtonTextActive: {
     color: 'white',
