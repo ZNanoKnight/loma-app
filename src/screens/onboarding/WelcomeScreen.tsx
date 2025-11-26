@@ -6,26 +6,102 @@ import {
   TouchableOpacity,
   SafeAreaView,
   StatusBar,
-  Animated
+  Animated,
+  Image
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { useVideoPlayer, VideoView } from 'expo-video';
+import { Asset } from 'expo-asset';
+
+// Pre-load logo image
+const logoImage = require('../../../assets/logos/loma_transparent-logo.png');
+// Resolve asset immediately
+Asset.fromModule(logoImage).downloadAsync();
 
 export default function WelcomeScreen() {
   const navigation = useNavigation<any>();
 
-  // Video player for bouncing fruits
-  const videoSource = require('../../../assets/iconography/BouncingFruits.mp4');
-  const player = useVideoPlayer(videoSource, player => {
-    player.loop = true;
-    player.play();
-  });
+  // Text fly-in animations (from bottom + fade in over 3 seconds)
+  const headlineAnim = useRef(new Animated.Value(100)).current;
+  const headlineOpacity = useRef(new Animated.Value(0)).current;
+  const subheadlineAnim = useRef(new Animated.Value(100)).current;
+  const subheadlineOpacity = useRef(new Animated.Value(0)).current;
+  const buttonAnim = useRef(new Animated.Value(100)).current;
+  const buttonOpacity = useRef(new Animated.Value(0)).current;
+  const signInAnim = useRef(new Animated.Value(100)).current;
+  const signInOpacity = useRef(new Animated.Value(0)).current;
 
   // Rotating text animation
-  const rotatingWords = ['nutritious', 'wholesome', 'balanced', 'nourishing', 'clean', 'simple', 'fresh', 'delicious', 'mindful', 'effortless'];
+  const rotatingWords = ['nutritious', 'wholesome', 'balanced', 'nourishing', 'clean', 'simple', 'fresh', 'delicious', 'mindful', 'effortless', 'premium'];
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const slideAnim = useRef(new Animated.Value(0)).current;
 
+  // Initial entrance animations
+  useEffect(() => {
+    // Staggered text fly-in animations
+    // Headline
+    Animated.parallel([
+      Animated.timing(headlineAnim, {
+        toValue: 0,
+        duration: 3000,
+        useNativeDriver: true,
+      }),
+      Animated.timing(headlineOpacity, {
+        toValue: 1,
+        duration: 3000,
+        useNativeDriver: true,
+      }),
+    ]).start();
+
+    // Subheadline (slight delay)
+    setTimeout(() => {
+      Animated.parallel([
+        Animated.timing(subheadlineAnim, {
+          toValue: 0,
+          duration: 3000,
+          useNativeDriver: true,
+        }),
+        Animated.timing(subheadlineOpacity, {
+          toValue: 1,
+          duration: 3000,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    }, 200);
+
+    // Button (more delay)
+    setTimeout(() => {
+      Animated.parallel([
+        Animated.timing(buttonAnim, {
+          toValue: 0,
+          duration: 3000,
+          useNativeDriver: true,
+        }),
+        Animated.timing(buttonOpacity, {
+          toValue: 1,
+          duration: 3000,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    }, 400);
+
+    // Sign in row (most delay)
+    setTimeout(() => {
+      Animated.parallel([
+        Animated.timing(signInAnim, {
+          toValue: 0,
+          duration: 3000,
+          useNativeDriver: true,
+        }),
+        Animated.timing(signInOpacity, {
+          toValue: 1,
+          duration: 3000,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    }, 600);
+  }, []);
+
+  // Rotating words animation
   useEffect(() => {
     const interval = setInterval(() => {
       // Animate current word sliding up and out
@@ -45,7 +121,7 @@ export default function WelcomeScreen() {
           useNativeDriver: true,
         }).start();
       });
-    }, 4000); // Change word every 4 seconds
+    }, 3000); // Change word every 3 seconds
 
     return () => clearInterval(interval);
   }, []);
@@ -54,20 +130,31 @@ export default function WelcomeScreen() {
   return (
     <View style={styles.container}>
       {/* UI Content */}
-      <StatusBar barStyle="dark-content" />
+      <StatusBar barStyle="light-content" />
       <SafeAreaView style={styles.safeArea}>
 
-        {/* Video in absolute top right corner */}
+        {/* Logo in absolute top right corner */}
         <View style={styles.videoContainer}>
-          <View style={styles.videoPlaceholder}>
-            <Text style={styles.placeholderText}>Art Placeholder</Text>
-          </View>
+          <Image
+            source={logoImage}
+            style={styles.logoImage}
+            resizeMode="contain"
+            fadeDuration={0}
+          />
         </View>
 
         <View style={styles.content}>
           <View style={styles.centerWrapper}>
             <View style={styles.mainContent}>
-              <View style={styles.headlineContainer}>
+              <Animated.View
+                style={[
+                  styles.headlineContainer,
+                  {
+                    opacity: headlineOpacity,
+                    transform: [{ translateY: headlineAnim }]
+                  }
+                ]}
+              >
                 <Text style={styles.headline}>Loma meals are</Text>
                 <View style={styles.rotatingTextContainer}>
                   <Animated.Text
@@ -79,28 +166,52 @@ export default function WelcomeScreen() {
                     {rotatingWords[currentWordIndex]}
                   </Animated.Text>
                 </View>
-              </View>
-              <Text style={styles.subheadline}>
+              </Animated.View>
+              <Animated.Text
+                style={[
+                  styles.subheadline,
+                  {
+                    opacity: subheadlineOpacity,
+                    transform: [{ translateY: subheadlineAnim }]
+                  }
+                ]}
+              >
                 Take control of your goals with your 24/7, personalized AI dietician
-              </Text>
+              </Animated.Text>
             </View>
           </View>
-          
-          <View style={styles.buttonSection}>
-            <TouchableOpacity
-              style={styles.button}
-              activeOpacity={0.8}
-              onPress={() => navigation.navigate('AppFeatures')}
-            >
-              <Text style={styles.buttonText}>Get Started</Text>
-            </TouchableOpacity>
 
-            <View style={styles.signInRow}>
+          <View style={styles.buttonSection}>
+            <Animated.View
+              style={{
+                width: '100%',
+                opacity: buttonOpacity,
+                transform: [{ translateY: buttonAnim }]
+              }}
+            >
+              <TouchableOpacity
+                style={styles.button}
+                activeOpacity={0.8}
+                onPress={() => navigation.navigate('AppFeatures')}
+              >
+                <Text style={styles.buttonText}>Get Started</Text>
+              </TouchableOpacity>
+            </Animated.View>
+
+            <Animated.View
+              style={[
+                styles.signInRow,
+                {
+                  opacity: signInOpacity,
+                  transform: [{ translateY: signInAnim }]
+                }
+              ]}
+            >
               <Text style={styles.signInText}>Already have an account? </Text>
               <TouchableOpacity onPress={() => navigation.navigate('Login')}>
                 <Text style={styles.signInLink}>Sign in</Text>
               </TouchableOpacity>
-            </View>
+            </Animated.View>
           </View>
         </View>
       </SafeAreaView>
@@ -111,7 +222,7 @@ export default function WelcomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FEFEFE', // White/Bone background
+    backgroundColor: '#1B4332', // Dark forest green background (primary)
   },
   safeArea: {
     flex: 1,
@@ -131,22 +242,9 @@ const styles = StyleSheet.create({
     right: 20,
     zIndex: 10,
   },
-  videoPlaceholder: {
+  logoImage: {
     width: 120,
     height: 120,
-    borderRadius: 16,
-    backgroundColor: '#E5E7EB',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 2,
-    borderColor: '#1B4332',
-    borderStyle: 'dashed',
-  },
-  placeholderText: {
-    fontFamily: 'Quicksand-Regular',
-    fontSize: 12,
-    color: '#1B4332',
-    textAlign: 'center',
   },
   mainContent: {
     alignItems: 'flex-start',
@@ -159,7 +257,7 @@ const styles = StyleSheet.create({
   headline: {
     fontFamily: 'PTSerif-Bold',
     fontSize: 36,
-    color: '#1B4332',  // Dark forest green
+    color: '#FFFFFF',  // White text on dark background
     textAlign: 'left',
     lineHeight: 44,
   },
@@ -170,14 +268,14 @@ const styles = StyleSheet.create({
   rotatingText: {
     fontFamily: 'PTSerif-Bold',
     fontSize: 36,
-    color: '#FF8C00',  // Orange text for emphasis
+    color: '#FF8C00',  // Orange text for emphasis (tertiary)
     textAlign: 'left',
     lineHeight: 44,
   },
   subheadline: {
     fontFamily: 'Quicksand-Regular',
     fontSize: 18,
-    color: '#4B5563',  // Dark gray text
+    color: '#B7E4C7',  // Light green tint for readability on dark bg
     textAlign: 'left',
     lineHeight: 26,
   },
@@ -187,7 +285,7 @@ const styles = StyleSheet.create({
     paddingTop: 20,
   },
   button: {
-    backgroundColor: '#1B4332',  // Dark forest green button
+    backgroundColor: '#FF8C00',  // Tertiary orange button
     paddingVertical: 16,
     paddingHorizontal: 32,
     borderRadius: 12,
@@ -197,7 +295,7 @@ const styles = StyleSheet.create({
       width: 0,
       height: 2,
     },
-    shadowOpacity: 0.2,
+    shadowOpacity: 0.3,
     shadowRadius: 4,
     elevation: 3,
   },
@@ -213,12 +311,12 @@ const styles = StyleSheet.create({
   },
   signInText: {
     fontFamily: 'Quicksand-Regular',
-    color: '#6B7280',  // Gray text
+    color: '#74C69D',  // Secondary lighter green
     fontSize: 14,
   },
   signInLink: {
     fontFamily: 'Quicksand-Bold',
-    color: '#40916C',  // Secondary green link
+    color: '#FFFFFF',  // White link for contrast
     fontSize: 14,
     textDecorationLine: 'underline',
   },
