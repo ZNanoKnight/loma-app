@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   StyleSheet,
   Text,
@@ -7,50 +7,107 @@ import {
   SafeAreaView,
   StatusBar,
   ScrollView,
-  Dimensions
+  Dimensions,
+  ActivityIndicator
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { useUser } from '../../context/UserContext';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { AuthService } from '../../services/auth/authService';
+import { ProgressService, ProgressData } from '../../services/progress/progressService';
 
 const { width } = Dimensions.get('window');
 
 export default function ProgressScreen() {
   const navigation = useNavigation<any>();
-  const { userData } = useUser();
+  const [isLoading, setIsLoading] = useState(true);
+  const [progressData, setProgressData] = useState<ProgressData | null>(null);
 
-  const stats = {
-    currentStreak: userData.currentStreak,
-    longestStreak: 14, // Keep as mock for now (would need separate tracking)
-    totalRecipes: userData.totalRecipes,
-    hoursSaved: userData.hoursSaved,
-    moneySaved: userData.moneySaved,
-    weeklyGoal: 5,
-    weeklyComplete: userData.weeklyProgress.filter(day => day).length,
-  };
+  const loadProgressData = useCallback(async () => {
+    try {
+      const session = await AuthService.getCurrentSession();
+      if (!session) {
+        console.log('[ProgressScreen] No session found');
+        setIsLoading(false);
+        return;
+      }
 
-  const weekDays = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
-  const weekProgress = userData.weeklyProgress;
+      // Check if streak needs to be reset (user opened app after missing a day)
+      await ProgressService.checkStreakReset(session.user.id);
 
-  // Get all achievements based on user data
+      // Fetch progress data
+      const data = await ProgressService.getUserProgress(session.user.id);
+      setProgressData(data);
+
+      // Check for any new achievements to unlock
+      const achievementResult = await ProgressService.checkAchievements();
+      if (achievementResult?.newAchievements.length) {
+        console.log('[ProgressScreen] New achievements unlocked:', achievementResult.newAchievements);
+        // Refresh data after unlocking achievements
+        const updatedData = await ProgressService.getUserProgress(session.user.id);
+        setProgressData(updatedData);
+      }
+    } catch (error) {
+      console.error('[ProgressScreen] Error loading progress:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  // Load data when screen comes into focus
+  useFocusEffect(
+    useCallback(() => {
+      setIsLoading(true);
+      loadProgressData();
+    }, [loadProgressData])
+  );
+
+  // Calculate display values
+  const currentStreak = progressData?.stats.currentStreak || 0;
+  const bestStreak = progressData?.stats.bestStreak || 0;
+  const totalRecipesSaved = progressData?.totalRecipesSaved || 0;
+  const recipeCompletions = progressData?.stats.recipeCompletions || 0;
+  const totalRecipesGenerated = progressData?.totalRecipesGenerated || 0;
+  const unlockedAchievements = progressData?.unlockedAchievements || [];
+
+  // Use total saved recipes for "Recipes Cooked" display
+  const hoursSaved = ProgressService.formatHoursSaved(totalRecipesSaved);
+  const moneySaved = ProgressService.calculateMoneySaved(recipeCompletions);
+
+  // Get all achievements based on real data
   const allAchievements = [
-    // Recipe Explorer
-    { id: 'recipe_1', icon: '📖', title: 'First Bite', description: 'Generate your first recipe', earned: userData.totalRecipes >= 1, munchies: 1 },
-    { id: 'recipe_5', icon: '📖', title: 'Curious Cook', description: 'Generate 5 recipes', earned: userData.totalRecipes >= 5, munchies: 1 },
-    { id: 'recipe_15', icon: '📖', title: 'Recipe Enthusiast', description: 'Generate 15 recipes', earned: userData.totalRecipes >= 15, munchies: 1 },
-    { id: 'recipe_30', icon: '📖', title: 'Kitchen Adventurer', description: 'Generate 30 recipes', earned: userData.totalRecipes >= 30, munchies: 2 },
-    // Streak Master
-    { id: 'streak_1', icon: '🔥', title: 'Day Starter', description: 'Generate a recipe today', earned: userData.currentStreak >= 1, munchies: 1 },
-    { id: 'streak_2', icon: '🔥', title: 'Double Day', description: 'Generate recipes 2 days in a row', earned: userData.currentStreak >= 2, munchies: 1 },
-    { id: 'streak_3', icon: '🔥', title: 'Three Day Rush', description: 'Generate recipes 3 days in a row', earned: userData.currentStreak >= 3, munchies: 1 },
-    { id: 'streak_7', icon: '🔥', title: 'Week Streak', description: 'Generate recipes 7 days in a row', earned: userData.currentStreak >= 7, munchies: 2 },
+    // Recipe Generation achievements
+    { id: 'recipe_1', icon: '📖', title: 'First Bite', description: 'Generate your first recipe', earned: totalRecipesGenerated >= 1, munchies: 1 },
+    { id: 'recipe_5', icon: '📖', title: 'Curious Cook', description: 'Generate 5 recipes', earned: totalRecipesGenerated >= 5, munchies: 1 },
+    { id: 'recipe_15', icon: '📖', title: 'Recipe Enthusiast', description: 'Generate 15 recipes', earned: totalRecipesGenerated >= 15, munchies: 1 },
+    { id: 'recipe_30', icon: '📖', title: 'Kitchen Adventurer', description: 'Generate 30 recipes', earned: totalRecipesGenerated >= 30, munchies: 2 },
+    // Streak achievements (use the higher of current or best streak)
+    { id: 'streak_1', icon: '🔥', title: 'Day Starter', description: 'Generate a recipe today', earned: Math.max(currentStreak, bestStreak) >= 1, munchies: 1 },
+    { id: 'streak_2', icon: '🔥', title: 'Double Day', description: 'Generate recipes 2 days in a row', earned: Math.max(currentStreak, bestStreak) >= 2, munchies: 1 },
+    { id: 'streak_3', icon: '🔥', title: 'Three Day Rush', description: 'Generate recipes 3 days in a row', earned: Math.max(currentStreak, bestStreak) >= 3, munchies: 1 },
+    { id: 'streak_7', icon: '🔥', title: 'Week Streak', description: 'Generate recipes 7 days in a row', earned: Math.max(currentStreak, bestStreak) >= 7, munchies: 2 },
   ];
 
-  // Show only first 4 completed achievements
-  const completedAchievements = allAchievements.filter(a => a.earned).slice(0, 4);
+  // Show only first 4 completed achievements (prioritize ones stored in DB)
+  const completedAchievements = allAchievements
+    .filter(a => unlockedAchievements.includes(a.id) || a.earned)
+    .slice(0, 4);
 
   const handleViewAllAchievements = () => {
     navigation.navigate('AllAchievements');
   };
+
+  if (isLoading) {
+    return (
+      <View style={styles.container}>
+        <StatusBar barStyle="dark-content" />
+        <SafeAreaView style={styles.safeArea}>
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color="#6B46C1" />
+            <Text style={styles.loadingText}>Loading your progress...</Text>
+          </View>
+        </SafeAreaView>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -65,26 +122,26 @@ export default function ProgressScreen() {
               <Text style={styles.headerTitle}>Your Progress</Text>
             </View>
 
-            {/* Lifetime Stats - NOW AT TOP */}
+            {/* Lifetime Stats */}
             <View style={styles.summaryCard}>
               <Text style={styles.summaryTitle}>Lifetime Stats</Text>
               <View style={styles.summaryGrid}>
                 <View style={styles.summaryItem}>
-                  <Text style={styles.summaryNumber}>{stats.totalRecipes}</Text>
-                  <Text style={styles.summaryLabel}>Recipes Cooked</Text>
+                  <Text style={styles.summaryNumber}>{totalRecipesSaved}</Text>
+                  <Text style={styles.summaryLabel}>Recipes Saved</Text>
                 </View>
                 <View style={styles.summaryItem}>
-                  <Text style={styles.summaryNumber}>{stats.hoursSaved}</Text>
-                  <Text style={styles.summaryLabel}>Hours Saved</Text>
+                  <Text style={styles.summaryNumber}>{hoursSaved}</Text>
+                  <Text style={styles.summaryLabel}>Time Saved</Text>
                 </View>
                 <View style={styles.summaryItem}>
-                  <Text style={styles.summaryNumber}>${stats.moneySaved}</Text>
+                  <Text style={styles.summaryNumber}>${moneySaved}</Text>
                   <Text style={styles.summaryLabel}>Money Saved</Text>
                 </View>
               </View>
             </View>
 
-            {/* Streak Card - NOW IN BOX FORMAT */}
+            {/* Streak Card - Simplified without weekly circles */}
             <View style={styles.streakCard}>
               <Text style={styles.cardTitle}>Streak</Text>
               <Text style={styles.cardSubtitle}>
@@ -93,39 +150,30 @@ export default function ProgressScreen() {
               <View style={styles.streakHeader}>
                 <Text style={styles.streakEmoji}>🔥</Text>
                 <View style={styles.streakInfo}>
-                  <Text style={styles.streakNumber}>{stats.currentStreak}</Text>
+                  <Text style={styles.streakNumber}>{currentStreak}</Text>
                   <Text style={styles.streakLabel}>Day Streak</Text>
                 </View>
                 <View style={styles.streakDivider} />
                 <View style={styles.streakInfo}>
-                  <Text style={styles.streakNumber}>{stats.longestStreak}</Text>
+                  <Text style={styles.streakNumber}>{bestStreak}</Text>
                   <Text style={styles.streakLabel}>Best Streak</Text>
                 </View>
               </View>
-
-              {/* Week Grid */}
-              <View style={styles.weekGrid}>
-                {weekDays.map((day, index) => (
-                  <View key={index} style={styles.dayColumn}>
-                    <View style={[
-                      styles.dayCircle,
-                      weekProgress[index] && styles.dayCircleActive
-                    ]}>
-                      {weekProgress[index] && <Text style={styles.dayCheck}>✓</Text>}
-                    </View>
-                    <Text style={[
-                      styles.dayLabel,
-                      weekProgress[index] && styles.dayLabelActive
-                    ]}>
-                      {day}
-                    </Text>
-                  </View>
-                ))}
-              </View>
-
-              <Text style={styles.streakMessage}>
-                {stats.weeklyComplete} of {stats.weeklyGoal} days this week
-              </Text>
+              {currentStreak > 0 && (
+                <Text style={styles.streakMessage}>
+                  Keep it up! Generate a recipe today to maintain your streak.
+                </Text>
+              )}
+              {currentStreak === 0 && bestStreak > 0 && (
+                <Text style={styles.streakMessage}>
+                  Your best streak was {bestStreak} day{bestStreak > 1 ? 's' : ''}! Start a new streak today.
+                </Text>
+              )}
+              {currentStreak === 0 && bestStreak === 0 && (
+                <Text style={styles.streakMessage}>
+                  Generate your first recipe to start a streak!
+                </Text>
+              )}
             </View>
 
             {/* Achievements */}
@@ -137,18 +185,26 @@ export default function ProgressScreen() {
                 </TouchableOpacity>
               </View>
 
-              <View style={styles.achievementsGrid}>
-                {completedAchievements.map((achievement) => (
-                  <TouchableOpacity
-                    key={achievement.id}
-                    style={styles.achievementItem}
-                  >
-                    <Text style={styles.achievementIcon}>{achievement.icon}</Text>
-                    <Text style={styles.achievementTitle}>{achievement.title}</Text>
-                    <Text style={styles.achievementMunchies}>+{achievement.munchies} Munchie{achievement.munchies > 1 ? 's' : ''}</Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
+              {completedAchievements.length > 0 ? (
+                <View style={styles.achievementsGrid}>
+                  {completedAchievements.map((achievement) => (
+                    <View
+                      key={achievement.id}
+                      style={styles.achievementItem}
+                    >
+                      <Text style={styles.achievementIcon}>{achievement.icon}</Text>
+                      <Text style={styles.achievementTitle}>{achievement.title}</Text>
+                      <Text style={styles.achievementMunchies}>+{achievement.munchies} Munchie{achievement.munchies > 1 ? 's' : ''}</Text>
+                    </View>
+                  ))}
+                </View>
+              ) : (
+                <View style={styles.noAchievements}>
+                  <Text style={styles.noAchievementsText}>
+                    Generate your first recipe to unlock achievements!
+                  </Text>
+                </View>
+              )}
             </View>
           </ScrollView>
         </SafeAreaView>
@@ -168,6 +224,17 @@ const styles = StyleSheet.create({
   scrollContent: {
     paddingHorizontal: 20,
     paddingBottom: 100,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    marginTop: 12,
+    fontSize: 16,
+    color: '#6B7280',
+    fontFamily: 'Quicksand-Regular',
   },
   header: {
     marginTop: 20,
@@ -237,12 +304,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 20,
+    marginBottom: 16,
   },
   streakEmoji: {
     fontSize: 32,
     marginRight: 16,
-    fontFamily: 'Quicksand-Regular',
   },
   streakInfo: {
     alignItems: 'center',
@@ -262,40 +328,6 @@ const styles = StyleSheet.create({
     height: 40,
     backgroundColor: '#E5E7EB',
     marginHorizontal: 20,
-  },
-  weekGrid: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginBottom: 16,
-  },
-  dayColumn: {
-    alignItems: 'center',
-  },
-  dayCircle: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: '#F3F4F6',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 4,
-  },
-  dayCircleActive: {
-    backgroundColor: '#10B981',
-  },
-  dayCheck: {
-    color: 'white',
-    fontSize: 16,
-    fontFamily: 'Quicksand-Bold',
-  },
-  dayLabel: {
-    fontSize: 12,
-    color: '#9CA3AF',
-    fontFamily: 'Quicksand-Regular',
-  },
-  dayLabelActive: {
-    color: '#10B981',
-    fontFamily: 'Quicksand-SemiBold',
   },
   streakMessage: {
     textAlign: 'center',
@@ -335,13 +367,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 12,
   },
-  achievementItemLocked: {
-    opacity: 0.6,
-  },
   achievementIcon: {
     fontSize: 32,
     marginBottom: 8,
-    fontFamily: 'Quicksand-Regular',
   },
   achievementTitle: {
     fontSize: 14,
@@ -354,5 +382,15 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#10B981',
     fontFamily: 'Quicksand-SemiBold',
+  },
+  noAchievements: {
+    paddingVertical: 20,
+    alignItems: 'center',
+  },
+  noAchievementsText: {
+    fontSize: 14,
+    color: '#6B7280',
+    textAlign: 'center',
+    fontFamily: 'Quicksand-Regular',
   },
 });

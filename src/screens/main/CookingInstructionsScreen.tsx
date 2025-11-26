@@ -11,14 +11,14 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
-import { useUser } from '../../context/UserContext';
 import { useRecipe, CookingStep } from '../../context/RecipeContext';
+import { AuthService } from '../../services/auth/authService';
+import { ProgressService } from '../../services/progress/progressService';
 
 const { width } = Dimensions.get('window');
 
 export default function CookingInstructionsScreen() {
   const navigation = useNavigation<any>();
-  const { userData, updateUserData } = useUser();
   const { currentRecipe } = useRecipe();
   const [currentStep, setCurrentStep] = useState(0);
   const [completedSteps, setCompletedSteps] = useState<number[]>([]);
@@ -111,12 +111,18 @@ export default function CookingInstructionsScreen() {
     }
   };
 
-  const handleComplete = () => {
-    // Update streak and recipe count when completing cooking
-    updateUserData({
-      currentStreak: userData.currentStreak + 1,
-      totalRecipes: userData.totalRecipes + 1
-    });
+  const handleComplete = async () => {
+    // Record recipe completion in Supabase
+    try {
+      const session = await AuthService.getCurrentSession();
+      if (session) {
+        await ProgressService.recordRecipeCompletion(session.user.id);
+        // Check for newly unlocked achievements
+        await ProgressService.checkAchievements();
+      }
+    } catch (error) {
+      console.error('[CookingInstructionsScreen] Error recording completion:', error);
+    }
     navigation.navigate('RecipeCompletion');
   };
 
