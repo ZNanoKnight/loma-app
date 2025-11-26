@@ -39,6 +39,16 @@ if (ENV.SENTRY_DSN) {
     integrations: [
       Sentry.mobileReplayIntegration(),
       Sentry.feedbackIntegration(),
+      Sentry.reactNativeTracingIntegration({
+        // Enable user interaction tracing for button presses, gestures, etc.
+        enableUserInteractionTracing: true,
+        // Track app start performance
+        enableAppStartTracking: true,
+        // Track slow/frozen frames
+        enableNativeFramesTracking: true,
+        // Track stall detection (UI thread blocking)
+        enableStallTracking: true,
+      }),
     ],
 
     // Breadcrumbs for better error context
