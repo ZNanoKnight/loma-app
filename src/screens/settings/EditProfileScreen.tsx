@@ -226,7 +226,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 20,
     color: '#1B4332',
-    fontFamily: 'PTSerif-Bold',
+    fontFamily: 'Quicksand-Bold',
   },
   saveButton: {
     backgroundColor: '#1B4332',

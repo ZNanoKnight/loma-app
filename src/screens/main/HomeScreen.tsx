@@ -595,7 +595,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   cardTitle: {
-    fontFamily: 'PTSerif-Bold',
+    fontFamily: 'Quicksand-Bold',
     fontSize: 22,
     color: '#1F2937',
     marginBottom: 20,
