@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -22,9 +22,6 @@ export default function CookingInstructionsScreen() {
   const { currentRecipe } = useRecipe();
   const [currentStep, setCurrentStep] = useState(0);
   const [completedSteps, setCompletedSteps] = useState<number[]>([]);
-  const [activeTimer, setActiveTimer] = useState<number | null>(null);
-  const [timerSeconds, setTimerSeconds] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
 
   // Get steps from current recipe - no fallback to mock data
   const steps: CookingStep[] = currentRecipe?.instructions && currentRecipe.instructions.length > 0
@@ -59,55 +56,17 @@ export default function CookingInstructionsScreen() {
   const totalSteps = steps.length;
   const progress = ((currentStep + 1) / totalSteps) * 100;
   const currentStepData = steps[currentStep] || steps[0];
-  const totalTime = steps.reduce((acc, step) => acc + ((step && step.time) ? step.time : 0), 0);
-  const elapsedTime = steps.slice(0, currentStep).reduce((acc, step) => acc + ((step && step.time) ? step.time : 0), 0);
-
-  // Timer effect
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-    if (activeTimer !== null && !isPaused && timerSeconds > 0) {
-      interval = setInterval(() => {
-        setTimerSeconds(prev => {
-          if (prev <= 1) {
-            setActiveTimer(null);
-            // Play notification sound in production
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-    }
-    return () => clearInterval(interval);
-  }, [activeTimer, timerSeconds, isPaused]);
-
-  const formatTime = (seconds: number): string => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
-  };
 
   const handleNext = () => {
     if (currentStep < totalSteps - 1) {
       setCompletedSteps([...completedSteps, currentStep]);
       setCurrentStep(currentStep + 1);
-      setActiveTimer(null);
-      setTimerSeconds(0);
     }
   };
 
   const handlePrevious = () => {
     if (currentStep > 0) {
       setCurrentStep(currentStep - 1);
-      setActiveTimer(null);
-      setTimerSeconds(0);
-    }
-  };
-
-  const handleStartTimer = () => {
-    if (currentStepData.time) {
-      setActiveTimer(currentStep);
-      setTimerSeconds(currentStepData.time * 60);
-      setIsPaused(false);
     }
   };
 
@@ -128,8 +87,6 @@ export default function CookingInstructionsScreen() {
 
   const jumpToStep = (stepIndex: number) => {
     setCurrentStep(stepIndex);
-    setActiveTimer(null);
-    setTimerSeconds(0);
   };
 
   return (
@@ -146,13 +103,8 @@ export default function CookingInstructionsScreen() {
             </TouchableOpacity>
             <View style={styles.headerCenter}>
               <Text style={styles.headerTitle}>Cooking Mode</Text>
-              <Text style={styles.headerSubtitle}>
-                {elapsedTime} of {totalTime} min
-              </Text>
             </View>
-            <TouchableOpacity style={styles.voiceButton}>
-              <Text style={styles.voiceIcon}>🔊</Text>
-            </TouchableOpacity>
+            <View style={styles.placeholder} />
           </View>
 
           {/* Progress Bar */}
@@ -165,43 +117,6 @@ export default function CookingInstructionsScreen() {
             </Text>
           </View>
 
-          {/* Timer Section */}
-          {currentStepData.time && (
-            <View style={styles.timerSection}>
-              {activeTimer === null ? (
-                <TouchableOpacity
-                  style={styles.startTimerButton}
-                  onPress={handleStartTimer}
-                >
-                  <Text style={styles.timerIcon}>⏱️</Text>
-                  <Text style={styles.startTimerText}>
-                    Start {currentStepData.time} min timer
-                  </Text>
-                </TouchableOpacity>
-              ) : (
-                <View style={styles.activeTimerContainer}>
-                  <Text style={styles.timerDisplay}>{formatTime(timerSeconds)}</Text>
-                  <View style={styles.timerControls}>
-                    <TouchableOpacity
-                      style={styles.timerControlButton}
-                      onPress={() => setIsPaused(!isPaused)}
-                    >
-                      <Text style={styles.timerControlText}>
-                        {isPaused ? '▶️' : '⏸️'}
-                      </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={styles.timerControlButton}
-                      onPress={() => setActiveTimer(null)}
-                    >
-                      <Text style={styles.timerControlText}>⏹️</Text>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              )}
-            </View>
-          )}
-
           {/* Main Step Card */}
           <ScrollView 
             contentContainerStyle={styles.scrollContent}
@@ -212,26 +127,26 @@ export default function CookingInstructionsScreen() {
                 <View style={styles.stepNumber}>
                   <Text style={styles.stepNumberText}>{currentStep + 1}</Text>
                 </View>
-                <Text style={styles.stepTitle}>{currentStepData.title}</Text>
+                <Text style={styles.stepTitle}>{currentStepData.title || `Step ${currentStep + 1}`}</Text>
               </View>
 
               <Text style={styles.instruction}>
-                {currentStepData.instruction}
+                {currentStepData.instruction || ''}
               </Text>
 
-              {currentStepData.tip && (
+              {currentStepData.tip ? (
                 <View style={styles.tipContainer}>
                   <Text style={styles.tipIcon}>💡</Text>
                   <Text style={styles.tipText}>{currentStepData.tip}</Text>
                 </View>
-              )}
+              ) : null}
 
-              {currentStepData.warning && (
+              {currentStepData.warning ? (
                 <View style={styles.warningContainer}>
                   <Text style={styles.warningIcon}>⚠️</Text>
                   <Text style={styles.warningText}>{currentStepData.warning}</Text>
                 </View>
-              )}
+              ) : null}
             </View>
 
             {/* Step Overview */}
@@ -344,17 +259,8 @@ const styles = StyleSheet.create({
     marginTop: 2,
     fontFamily: 'Quicksand-Regular',
   },
-  voiceButton: {
+  placeholder: {
     width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#F3F4F6',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  voiceIcon: {
-    fontSize: 20,
-    fontFamily: 'Quicksand-Regular',
   },
   progressContainer: {
     paddingHorizontal: 20,
@@ -378,62 +284,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontFamily: 'Quicksand-Regular',
   },
-  timerSection: {
-    paddingHorizontal: 20,
-    marginBottom: 20,
-  },
-  startTimerButton: {
-    flexDirection: 'row',
-    backgroundColor: '#10B981',
-    paddingVertical: 12,
-    borderRadius: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-  },
-  timerIcon: {
-    fontSize: 20,
-    fontFamily: 'Quicksand-Regular',
-  },
-  startTimerText: {
-    color: 'white',
-    fontSize: 16,
-    fontFamily: 'Quicksand-SemiBold',
-  },
-  activeTimerContainer: {
-    backgroundColor: '#F9FAFB',
-    borderRadius: 12,
-    padding: 16,
-    alignItems: 'center',
-  },
-  timerDisplay: {
-    fontSize: 48,
-    color: '#6B46C1',
-    marginBottom: 12,
-    fontFamily: 'Quicksand-Bold',
-  },
-  timerControls: {
-    flexDirection: 'row',
-    gap: 20,
-  },
-  timerControlButton: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: '#F3F4F6',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  timerControlText: {
-    fontSize: 20,
-    fontFamily: 'Quicksand-Regular',
-  },
   scrollContent: {
     paddingHorizontal: 20,
     paddingBottom: 20,
   },
   stepCard: {
-    backgroundColor: 'white',
+    backgroundColor: '#F3E8FF',
     borderRadius: 20,
     padding: 24,
     marginBottom: 20,
@@ -453,7 +309,7 @@ const styles = StyleSheet.create({
     marginRight: 12,
   },
   stepNumberText: {
-    color: '#1F2937',
+    color: 'white',
     fontSize: 18,
     fontFamily: 'Quicksand-Bold',
   },

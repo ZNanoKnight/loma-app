@@ -39,6 +39,143 @@ interface RefinedRecipeResponse {
 }
 
 /**
+ * Parse a numeric value from AI response, handling strings like "25 minutes" or "300 calories"
+ */
+function parseNumericValue(value: any, defaultValue: number = 0): number {
+  if (typeof value === 'number') {
+    return Math.round(value);
+  }
+  if (typeof value === 'string') {
+    // Extract the first number from the string
+    const match = value.match(/[\d.]+/);
+    if (match) {
+      return Math.round(parseFloat(match[0]));
+    }
+  }
+  return defaultValue;
+}
+
+/**
+ * Normalize ingredients from AI response to match database schema
+ * AI might use various field names: name/item/ingredient, amount/quantity, etc.
+ */
+function normalizeIngredients(ingredients: any[]): any[] {
+  if (!Array.isArray(ingredients)) return [];
+  return ingredients.map((ing) => {
+    // Handle string-only ingredients
+    if (typeof ing === 'string') {
+      return { name: ing, amount: 1, unit: 'unit' };
+    }
+
+    // AI might use "quantity" instead of "amount", or combine amount+unit
+    const amount = ing.amount ?? ing.quantity ?? 1;
+    let parsedAmount = 1;
+    let unit = ing.unit || 'unit';
+
+    // If amount is a string like "1 cup", parse it
+    if (typeof amount === 'string') {
+      const match = amount.match(/^([\d./]+)\s*(.*)$/);
+      if (match) {
+        // Handle fractions like "1/2"
+        if (match[1].includes('/')) {
+          const [num, denom] = match[1].split('/');
+          parsedAmount = parseFloat(num) / parseFloat(denom);
+        } else {
+          parsedAmount = parseFloat(match[1]) || 1;
+        }
+        if (match[2]) unit = match[2].trim() || unit;
+      }
+    } else {
+      parsedAmount = parseNumericValue(amount, 1);
+    }
+
+    return {
+      name: ing.name || ing.item || ing.ingredient || 'Unknown ingredient',
+      amount: parsedAmount,
+      unit: unit,
+      notes: ing.notes || ing.preparation || undefined,
+      category: ing.category || undefined,
+      calories: ing.calories || undefined,
+    };
+  });
+}
+
+/**
+ * Normalize instructions from AI response to match database schema
+ * AI might use various field names: instruction/step/text, step_number/stepNumber, etc.
+ */
+function normalizeInstructions(instructions: any[]): any[] {
+  if (!Array.isArray(instructions)) return [];
+  return instructions.map((inst, idx) => {
+    // If it's just a string, wrap it
+    if (typeof inst === 'string') {
+      return { step_number: idx + 1, instruction: inst };
+    }
+    return {
+      step_number: inst.step_number ?? inst.stepNumber ?? inst.number ?? idx + 1,
+      instruction: inst.instruction ?? inst.step ?? inst.text ?? inst.description ?? String(inst),
+      time_minutes: inst.time_minutes ?? inst.timeMinutes ?? inst.time ?? undefined,
+      title: inst.title || undefined,
+      tip: inst.tip || undefined,
+      warning: inst.warning || undefined,
+    };
+  });
+}
+
+/**
+ * Normalize equipment from AI response to match database schema
+ * AI might return strings or objects with various field names
+ */
+function normalizeEquipment(equipment: any[]): any[] {
+  if (!Array.isArray(equipment)) return [];
+  return equipment.map((eq) => {
+    if (typeof eq === 'string') {
+      return { name: eq, optional: false };
+    }
+    return {
+      name: eq.name || eq.item || String(eq),
+      optional: eq.optional ?? eq.isOptional ?? false,
+      emoji: eq.emoji || undefined,
+    };
+  });
+}
+
+/**
+ * Sanitize the AI-generated recipe to ensure all fields have correct types
+ */
+function sanitizeRecipe(recipe: any, originalRecipe: any): any {
+  // Normalize arrays to ensure consistent field names
+  const normalizedIngredients = normalizeIngredients(recipe.ingredients);
+  const normalizedInstructions = normalizeInstructions(recipe.instructions);
+  const normalizedEquipment = normalizeEquipment(recipe.equipment);
+
+  console.log(`[refine-recipe] Normalized ${normalizedIngredients.length} ingredients, ${normalizedInstructions.length} instructions, ${normalizedEquipment.length} equipment`);
+
+  return {
+    title: recipe.title || originalRecipe.title,
+    description: recipe.description || originalRecipe.description,
+    emoji: recipe.emoji || originalRecipe.emoji,
+    prep_time: parseNumericValue(recipe.prep_time ?? recipe.prepTime, originalRecipe.prep_time),
+    cook_time: parseNumericValue(recipe.cook_time ?? recipe.cookTime, originalRecipe.cook_time),
+    total_time: parseNumericValue(recipe.total_time ?? recipe.totalTime, originalRecipe.total_time),
+    servings: parseNumericValue(recipe.servings, originalRecipe.servings),
+    difficulty: recipe.difficulty || originalRecipe.difficulty,
+    calories: parseNumericValue(recipe.calories, originalRecipe.calories),
+    protein: parseNumericValue(recipe.protein, originalRecipe.protein),
+    carbs: parseNumericValue(recipe.carbs, originalRecipe.carbs),
+    fats: parseNumericValue(recipe.fats, originalRecipe.fats),
+    fiber: parseNumericValue(recipe.fiber, originalRecipe.fiber || 0),
+    sugar: parseNumericValue(recipe.sugar, originalRecipe.sugar || 0),
+    sodium: parseNumericValue(recipe.sodium, originalRecipe.sodium || 0),
+    cholesterol: parseNumericValue(recipe.cholesterol, originalRecipe.cholesterol || 0),
+    ingredients: normalizedIngredients.length > 0 ? normalizedIngredients : originalRecipe.ingredients,
+    instructions: normalizedInstructions.length > 0 ? normalizedInstructions : originalRecipe.instructions,
+    equipment: normalizedEquipment.length > 0 ? normalizedEquipment : (originalRecipe.equipment || []),
+    tags: Array.isArray(recipe.tags) ? recipe.tags : (originalRecipe.tags || []),
+  };
+}
+
+/**
  * Build system prompt for recipe refinement
  */
 function buildRefineSystemPrompt(): string {
@@ -53,6 +190,7 @@ CRITICAL REQUIREMENTS:
 5. Preserve elements the user didn't ask to change
 6. Make the recipe practical and achievable
 7. Ensure macro-conscious, nutritionally-balanced output
+8. ALL numeric fields (prep_time, cook_time, total_time, servings, calories, protein, carbs, fats, fiber, sugar, sodium, cholesterol) MUST be plain integers, NOT strings with units
 
 REFINEMENT GUIDELINES:
 - If user asks to swap an ingredient, find appropriate substitutes
@@ -65,7 +203,9 @@ OUTPUT FORMAT:
 Return a valid JSON object with the EXACT structure specified.
 Do not include any text outside the JSON object.
 Do not use markdown code blocks.
-Return ONLY the JSON object with a single "recipe" key containing the refined recipe.`;
+Return ONLY the JSON object with a single "recipe" key containing the refined recipe.
+
+IMPORTANT: Time values must be integers (e.g., 25, not "25 minutes"). Nutrition values must be integers (e.g., 300, not "300 calories").`;
 }
 
 /**
@@ -245,8 +385,9 @@ serve(async (req) => {
       throw new Error('AI response missing recipe object');
     }
 
-    const refinedRecipe = recipeResponse.recipe;
-    console.log(`[refine-recipe] Successfully parsed refined recipe: ${refinedRecipe.title}`);
+    // Sanitize the AI response to ensure correct data types
+    const refinedRecipe = sanitizeRecipe(recipeResponse.recipe, original_recipe);
+    console.log(`[refine-recipe] Successfully parsed and sanitized refined recipe: ${refinedRecipe.title}`);
 
     // Store the refined recipe as a NEW recipe in the database
     const { data: insertedRecipe, error: recipeError } = await supabase
@@ -254,7 +395,7 @@ serve(async (req) => {
       .insert({
         title: refinedRecipe.title,
         description: refinedRecipe.description,
-        emoji: refinedRecipe.emoji || original_recipe.emoji,
+        emoji: refinedRecipe.emoji,
         meal_type: original_recipe.meal_type, // Preserve meal type
         prep_time: refinedRecipe.prep_time,
         cook_time: refinedRecipe.cook_time,

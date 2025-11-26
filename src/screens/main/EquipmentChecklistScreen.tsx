@@ -113,7 +113,6 @@ export default function EquipmentChecklistScreen() {
                     <View style={[styles.checkbox, item.checked && styles.checkboxChecked]}>
                       {item.checked && <Text style={styles.checkmark}>✓</Text>}
                     </View>
-                    <Text style={styles.itemEmoji}>{item.emoji}</Text>
                     <Text style={[styles.itemName, item.checked && styles.itemNameChecked]}>
                       {item.name}
                     </Text>
@@ -145,7 +144,6 @@ export default function EquipmentChecklistScreen() {
                     <View style={[styles.checkbox, item.checked && styles.checkboxChecked]}>
                       {item.checked && <Text style={styles.checkmark}>✓</Text>}
                     </View>
-                    <Text style={styles.itemEmoji}>{item.emoji}</Text>
                     <View style={styles.itemTextContainer}>
                       <Text style={[styles.itemName, item.checked && styles.itemNameChecked]}>
                         {item.name}
@@ -354,11 +352,6 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 14,
     fontFamily: 'Quicksand-Bold',
-  },
-  itemEmoji: {
-    fontSize: 24,
-    marginRight: 12,
-    fontFamily: 'Quicksand-Regular',
   },
   itemTextContainer: {
     flex: 1,

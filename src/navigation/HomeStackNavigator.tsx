@@ -3,6 +3,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from '../screens/main/HomeScreen';
 import RecipeGeneratedScreen from '../screens/main/RecipeGeneratedScreen';
 import RecipeReviewScreen from '../screens/main/RecipeReviewScreen';
+import RecipeSavedScreen from '../screens/main/RecipeSavedScreen';
 import EquipmentChecklistScreen from '../screens/main/EquipmentChecklistScreen';
 import IngredientsListScreen from '../screens/main/IngredientsListScreen';
 import CookingInstructionsScreen from '../screens/main/CookingInstructionsScreen';
@@ -16,6 +17,7 @@ export default function HomeStackNavigator() {
       <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="RecipeGenerated" component={RecipeGeneratedScreen} />
       <Stack.Screen name="RecipeReview" component={RecipeReviewScreen} />
+      <Stack.Screen name="RecipeSaved" component={RecipeSavedScreen} />
       <Stack.Screen name="EquipmentChecklist" component={EquipmentChecklistScreen} />
       <Stack.Screen name="IngredientsList" component={IngredientsListScreen} />
       <Stack.Screen name="CookingInstructions" component={CookingInstructionsScreen} />

@@ -8,6 +8,7 @@ import { ErrorCode, LomaError } from '../types';
 
 export interface Subscription {
   user_id: string;
+  plan: 'weekly' | 'monthly' | 'yearly';
   stripe_customer_id: string | null;
   stripe_subscription_id: string | null;
   stripe_price_id: string | null;

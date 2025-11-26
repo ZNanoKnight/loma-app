@@ -25,6 +25,7 @@ export default function RecipeDetailScreen() {
   const [activeTab, setActiveTab] = useState<'overview' | 'ingredients' | 'nutrition'>('overview');
   const [isFavorite, setIsFavorite] = useState(false);
   const [showRatingModal, setShowRatingModal] = useState(false);
+  const [showComingSoonModal, setShowComingSoonModal] = useState(false);
   const [rating, setRating] = useState(0);
 
   // Get recipe from currentRecipe (set by RecipeBookScreen before navigation)
@@ -120,7 +121,10 @@ export default function RecipeDetailScreen() {
                 >
                   <Text style={styles.actionIcon}>{isFavorite ? '❤️' : '🤍'}</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.actionButton}>
+                <TouchableOpacity
+                  style={styles.actionButton}
+                  onPress={() => setShowComingSoonModal(true)}
+                >
                   <Text style={styles.actionIcon}>📤</Text>
                 </TouchableOpacity>
               </View>
@@ -260,7 +264,10 @@ export default function RecipeDetailScreen() {
                       </View>
                     ))}
                     
-                    <TouchableOpacity style={styles.addToListButton}>
+                    <TouchableOpacity
+                      style={styles.addToListButton}
+                      onPress={() => setShowComingSoonModal(true)}
+                    >
                       <Text style={styles.addToListIcon}>🛒</Text>
                       <Text style={styles.addToListText}>Add to Shopping List</Text>
                     </TouchableOpacity>
@@ -333,7 +340,7 @@ export default function RecipeDetailScreen() {
         animationType="fade"
         onRequestClose={() => setShowRatingModal(false)}
       >
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.modalOverlay}
           activeOpacity={1}
           onPress={() => setShowRatingModal(false)}
@@ -352,6 +359,34 @@ export default function RecipeDetailScreen() {
                 </TouchableOpacity>
               ))}
             </View>
+          </View>
+        </TouchableOpacity>
+      </Modal>
+
+      {/* Coming Soon Modal */}
+      <Modal
+        visible={showComingSoonModal}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setShowComingSoonModal(false)}
+      >
+        <TouchableOpacity
+          style={styles.modalOverlay}
+          activeOpacity={1}
+          onPress={() => setShowComingSoonModal(false)}
+        >
+          <View style={styles.comingSoonModal}>
+            <Text style={styles.comingSoonEmoji}>🚧</Text>
+            <Text style={styles.comingSoonTitle}>Coming Soon!</Text>
+            <Text style={styles.comingSoonText}>
+              This feature is currently in development. Stay tuned for updates!
+            </Text>
+            <TouchableOpacity
+              style={styles.comingSoonButton}
+              onPress={() => setShowComingSoonModal(false)}
+            >
+              <Text style={styles.comingSoonButtonText}>Got it</Text>
+            </TouchableOpacity>
           </View>
         </TouchableOpacity>
       </Modal>
@@ -718,5 +753,41 @@ const styles = StyleSheet.create({
   ratingStar: {
     fontSize: 32,
     fontFamily: 'Quicksand-Regular',
+  },
+  comingSoonModal: {
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 24,
+    alignItems: 'center',
+    marginHorizontal: 40,
+  },
+  comingSoonEmoji: {
+    fontSize: 48,
+    marginBottom: 12,
+  },
+  comingSoonTitle: {
+    fontSize: 20,
+    color: '#1F2937',
+    marginBottom: 8,
+    fontFamily: 'Quicksand-Bold',
+  },
+  comingSoonText: {
+    fontSize: 14,
+    color: '#6B7280',
+    textAlign: 'center',
+    lineHeight: 20,
+    marginBottom: 20,
+    fontFamily: 'Quicksand-Regular',
+  },
+  comingSoonButton: {
+    backgroundColor: '#6B46C1',
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    borderRadius: 12,
+  },
+  comingSoonButtonText: {
+    color: 'white',
+    fontSize: 14,
+    fontFamily: 'Quicksand-SemiBold',
   },
 });

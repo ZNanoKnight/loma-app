@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
   Text,
@@ -7,21 +7,20 @@ import {
   SafeAreaView,
   StatusBar,
   ScrollView,
-  Switch,
   Image,
   Alert,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { useUser } from '../../context/UserContext';
 import { AuthService } from '../../services/auth/authService';
-import { LocalStorage } from '../../services/storage/asyncStorage';
+import { UserService } from '../../services/user/userService';
+import { SubscriptionService, Subscription } from '../../services/subscription/subscriptionService';
 
 type SettingItem = {
   label: string;
   screen?: string;
   value?: string | boolean;
-  type?: 'switch';
-  onChange?: (value: boolean) => void;
+  type?: 'coming_soon';
   isPrimary?: boolean;
 };
 
@@ -33,19 +32,114 @@ type SettingSection = {
   items?: SettingItem[];
 };
 
+// Helper function to format date as "Month Year"
+const formatMemberSince = (dateString: string | undefined): string => {
+  if (!dateString) return 'Recently';
+  try {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+  } catch {
+    return 'Recently';
+  }
+};
+
+// Helper function to format plan name for display
+const formatPlanName = (plan: string | undefined, status: string | undefined): string => {
+  if (!plan) return 'Free Plan';
+  if (status === 'trialing') {
+    return 'Free Trial';
+  }
+  const planNames: Record<string, string> = {
+    weekly: 'Weekly Plan',
+    monthly: 'Monthly Plan',
+    yearly: 'Annual Plan',
+  };
+  return planNames[plan] || 'Free Plan';
+};
+
+// Helper function to format next billing date
+const formatNextBilling = (subscription: Subscription | null): string => {
+  if (!subscription) return 'N/A';
+  if (subscription.status === 'cancelled') return 'Cancelled';
+
+  // If we have the actual period end date from Stripe, use it
+  if (subscription.current_period_end) {
+    try {
+      const date = new Date(subscription.current_period_end);
+      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    } catch {
+      // Fall through to calculation
+    }
+  }
+
+  // Fallback: Calculate based on plan type and updated_at
+  // This handles cases where the webhook didn't update current_period_end
+  if (subscription.updated_at && subscription.plan) {
+    try {
+      const lastUpdate = new Date(subscription.updated_at);
+      const now = new Date();
+
+      // Determine billing interval in days
+      const intervalDays = subscription.plan === 'weekly' ? 7
+        : subscription.plan === 'monthly' ? 30
+        : 365; // yearly
+
+      // Calculate next billing date from the last update
+      // Keep adding intervals until we're in the future
+      let nextBilling = new Date(lastUpdate);
+      while (nextBilling <= now) {
+        nextBilling.setDate(nextBilling.getDate() + intervalDays);
+      }
+
+      return nextBilling.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    } catch {
+      return 'N/A';
+    }
+  }
+
+  return 'N/A';
+};
+
 export default function SettingsMainScreen() {
   const navigation = useNavigation<any>();
   const { userData: globalUserData, signOut } = useUser();
 
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
-  const [metricUnits, setMetricUnits] = useState(globalUserData.metricUnits ?? false);
+  const [memberSince, setMemberSince] = useState<string>('Loading...');
+  const [subscription, setSubscription] = useState<Subscription | null>(null);
+
+  // Fetch user profile and subscription data
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchUserData = async () => {
+        try {
+          const session = await AuthService.getCurrentSession();
+          if (!session?.user?.id) return;
+
+          // Fetch user profile for member since date
+          const profile = await UserService.getUserProfile(session.user.id);
+          if (profile?.created_at) {
+            setMemberSince(formatMemberSince(profile.created_at));
+          }
+
+          // Fetch subscription data
+          const sub = await SubscriptionService.getSubscription(session.user.id);
+          setSubscription(sub);
+        } catch (error) {
+          console.error('[SettingsMainScreen] Error fetching user data:', error);
+        }
+      };
+
+      fetchUserData();
+    }, [])
+  );
 
   const userData = {
     name: globalUserData.firstName || 'User',
     email: globalUserData.email || 'not set',
-    memberSince: 'January 2024',
-    plan: 'Free Plan',
-    nextBilling: 'N/A',
+    memberSince: memberSince,
+    plan: formatPlanName(subscription?.plan, subscription?.status),
+    nextBilling: formatNextBilling(subscription),
   };
 
   const handleSignOut = async () => {
@@ -119,8 +213,8 @@ export default function SettingsMainScreen() {
       icon: '⚙️',
       title: 'App Settings',
       items: [
-        { label: 'Metric Units', type: 'switch', value: metricUnits, onChange: setMetricUnits },
-        { label: 'Language', screen: 'AppPreferences', value: 'English' },
+        { label: 'Metric Units', type: 'coming_soon' },
+        { label: 'Language', type: 'coming_soon' },
       ],
     },
     {
@@ -216,17 +310,14 @@ export default function SettingsMainScreen() {
                           );
                         }
 
-                        // Switch toggle
-                        if (item.type === 'switch' && typeof item.value === 'boolean' && item.onChange) {
+                        // Coming soon badge
+                        if (item.type === 'coming_soon') {
                           return (
                             <View key={index} style={[styles.settingRow, isLastItem && styles.settingRowLast]}>
                               <Text style={styles.settingLabel}>{item.label}</Text>
-                              <Switch
-                                value={item.value}
-                                onValueChange={item.onChange}
-                                trackColor={{ false: '#E5E7EB', true: '#6B46C1' }}
-                                thumbColor="white"
-                              />
+                              <View style={styles.comingSoonBadge}>
+                                <Text style={styles.comingSoonText}>Coming Soon</Text>
+                              </View>
                             </View>
                           );
                         }
@@ -458,6 +549,17 @@ const styles = StyleSheet.create({
   primaryButtonText: {
     color: 'white',
     fontSize: 14,
+    fontFamily: 'Quicksand-SemiBold',
+  },
+  comingSoonBadge: {
+    backgroundColor: '#F3E8FF',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 12,
+  },
+  comingSoonText: {
+    color: '#7C3AED',
+    fontSize: 12,
     fontFamily: 'Quicksand-SemiBold',
   },
   signOutButton: {

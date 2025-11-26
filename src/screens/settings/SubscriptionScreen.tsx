@@ -28,7 +28,7 @@ export default function SubscriptionScreen() {
   const fetchSubscription = async () => {
     try {
       setLoading(true);
-      const session = await AuthService.getSession();
+      const session = await AuthService.getCurrentSession();
       if (session?.user?.id) {
         const sub = await SubscriptionService.getSubscription(session.user.id);
         setSubscription(sub);
@@ -43,7 +43,7 @@ export default function SubscriptionScreen() {
 
   const handleManageSubscription = async () => {
     try {
-      const session = await AuthService.getSession();
+      const session = await AuthService.getCurrentSession();
       if (!session?.user?.id) {
         throw new Error('No active session');
       }
@@ -81,7 +81,7 @@ export default function SubscriptionScreen() {
   const confirmCancellation = async () => {
     try {
       setCancelling(true);
-      const session = await AuthService.getSession();
+      const session = await AuthService.getCurrentSession();
       if (!session?.user?.id) {
         throw new Error('No active session');
       }
@@ -106,22 +106,27 @@ export default function SubscriptionScreen() {
   const getPlanName = (sub: Subscription | null): string => {
     if (!sub) return 'No Plan';
 
-    // Determine plan based on price ID or tokens
-    if (sub.tokens_total === 5) return 'Weekly Plan';
-    if (sub.tokens_total === 20) return 'Monthly Plan';
-    if (sub.tokens_total === 240) return 'Yearly Plan';
+    // Use the plan field from subscription
+    const planNames: Record<string, string> = {
+      weekly: 'Weekly Plan',
+      monthly: 'Monthly Plan',
+      yearly: 'Annual Plan',
+    };
 
-    return 'Subscription';
+    return planNames[sub.plan] || 'Subscription';
   };
 
   const getPlanPrice = (sub: Subscription | null): string => {
     if (!sub) return '$0.00';
 
-    if (sub.tokens_total === 5) return '$3.99/week';
-    if (sub.tokens_total === 20) return '$7.99/month';
-    if (sub.tokens_total === 240) return '$48.99/year';
+    // Use the plan field from subscription
+    const planPrices: Record<string, string> = {
+      weekly: '$3.99/week',
+      monthly: '$7.99/month',
+      yearly: '$48.99/year',
+    };
 
-    return 'Custom Plan';
+    return planPrices[sub.plan] || 'Custom Plan';
   };
 
   const formatDate = (dateString: string | null): string => {
@@ -132,6 +137,44 @@ export default function SubscriptionScreen() {
       day: 'numeric',
       year: 'numeric'
     });
+  };
+
+  // Calculate next billing date with fallback (same logic as SettingsMainScreen)
+  const getNextBillingDate = (sub: Subscription | null): string => {
+    if (!sub) return 'N/A';
+    if (sub.status === 'cancelled') return formatDate(sub.current_period_end);
+
+    // If we have the actual period end date from Stripe, use it
+    if (sub.current_period_end) {
+      return formatDate(sub.current_period_end);
+    }
+
+    // Fallback: Calculate based on plan type and updated_at
+    if (sub.updated_at && sub.plan) {
+      try {
+        const lastUpdate = new Date(sub.updated_at);
+        const now = new Date();
+
+        const intervalDays = sub.plan === 'weekly' ? 7
+          : sub.plan === 'monthly' ? 30
+          : 365;
+
+        let nextBilling = new Date(lastUpdate);
+        while (nextBilling <= now) {
+          nextBilling.setDate(nextBilling.getDate() + intervalDays);
+        }
+
+        return nextBilling.toLocaleDateString('en-US', {
+          month: 'short',
+          day: 'numeric',
+          year: 'numeric'
+        });
+      } catch {
+        return 'N/A';
+      }
+    }
+
+    return 'N/A';
   };
 
   const getStatusColor = (status: string): string => {
@@ -218,7 +261,7 @@ export default function SubscriptionScreen() {
                   {subscription?.status === 'cancelled' ? 'Access Until' : 'Next Billing Date'}
                 </Text>
                 <Text style={styles.settingValue}>
-                  {formatDate(subscription?.current_period_end || null)}
+                  {getNextBillingDate(subscription)}
                 </Text>
               </View>
 
@@ -237,14 +280,6 @@ export default function SubscriptionScreen() {
                   </Text>
                 </View>
               )}
-
-              <TouchableOpacity
-                style={styles.settingRow}
-                onPress={handleManageSubscription}
-              >
-                <Text style={styles.settingLabel}>Manage via Stripe</Text>
-                <Text style={styles.chevron}>›</Text>
-              </TouchableOpacity>
             </View>
 
             {/* Actions */}

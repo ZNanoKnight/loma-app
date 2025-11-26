@@ -78,10 +78,8 @@ export default function RecipeReviewScreen() {
         totalRecipes: userData.totalRecipes + 1,
       });
 
-      // Navigate to Recipe Book in the Recipes tab
-      navigation.navigate('RecipesTab', {
-        screen: 'RecipeBook',
-      });
+      // Navigate to Recipe Saved congratulations screen
+      navigation.navigate('RecipeSaved', { wasRefined: false });
     } catch (error) {
       console.error('[RecipeReviewScreen] Error saving recipe:', error);
       Alert.alert('Error', 'Failed to save recipe. Please try again.');
@@ -156,21 +154,8 @@ export default function RecipeReviewScreen() {
         totalRecipes: userData.totalRecipes + 1,
       });
 
-      // Show success message
-      Alert.alert(
-        'Recipe Refined!',
-        'Your recipe has been updated and automatically saved to your Recipe Book.',
-        [
-          {
-            text: 'View Recipe Book',
-            onPress: () => navigation.navigate('RecipesTab', { screen: 'RecipeBook' }),
-          },
-          {
-            text: 'Review Changes',
-            style: 'cancel',
-          },
-        ]
-      );
+      // Navigate to Recipe Saved congratulations screen
+      navigation.navigate('RecipeSaved', { wasRefined: true });
     } catch (error: any) {
       console.error('[RecipeReviewScreen] Error refining recipe:', error);
       Alert.alert(
