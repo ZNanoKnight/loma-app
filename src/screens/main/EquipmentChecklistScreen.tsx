@@ -32,8 +32,6 @@ export default function EquipmentChecklistScreen() {
     }
   }, [currentRecipe]);
 
-  const [showTips, setShowTips] = useState(true);
-
   const essentialItems = equipment.filter(item => item.essential);
   const optionalItems = equipment.filter(item => !item.essential);
   const checkedCount = equipment.filter(item => item.checked).length;
@@ -94,24 +92,6 @@ export default function EquipmentChecklistScreen() {
                   <Text style={styles.recipeName}>{currentRecipe.title}</Text>
                   <Text style={styles.recipeTime}>⏱️ {currentRecipe.totalTime} minutes total</Text>
                 </View>
-              </View>
-            )}
-
-            {/* Tips Section */}
-            {showTips && (
-              <View style={styles.tipsCard}>
-                <View style={styles.tipsHeader}>
-                  <Text style={styles.tipsIcon}>💡</Text>
-                  <Text style={styles.tipsTitle}>Prep Tips</Text>
-                  <TouchableOpacity onPress={() => setShowTips(false)}>
-                    <Text style={styles.dismissText}>✕</Text>
-                  </TouchableOpacity>
-                </View>
-                <Text style={styles.tipsText}>
-                  • Gather all equipment before starting{'\n'}
-                  • Ensure your grill pan is completely dry{'\n'}
-                  • Have paper towels ready for patting chicken dry
-                </Text>
               </View>
             )}
 
@@ -319,40 +299,6 @@ const styles = StyleSheet.create({
   recipeTime: {
     fontSize: 14,
     color: '#6B7280',
-    fontFamily: 'Quicksand-Regular',
-  },
-  tipsCard: {
-    backgroundColor: '#10B981',
-    marginHorizontal: 20,
-    borderRadius: 16,
-    padding: 16,
-    marginBottom: 20,
-  },
-  tipsHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  tipsIcon: {
-    fontSize: 20,
-    marginRight: 8,
-    fontFamily: 'Quicksand-Regular',
-  },
-  tipsTitle: {
-    flex: 1,
-    fontSize: 16,
-    color: 'white',
-    fontFamily: 'Quicksand-SemiBold',
-  },
-  dismissText: {
-    fontSize: 16,
-    color: 'rgba(255, 255, 255, 0.8)',
-    fontFamily: 'Quicksand-Regular',
-  },
-  tipsText: {
-    fontSize: 14,
-    color: 'white',
-    lineHeight: 20,
     fontFamily: 'Quicksand-Regular',
   },
   section: {

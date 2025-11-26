@@ -53,9 +53,9 @@ export interface ClientRecipe {
   sugar: number;
   sodium: number;
   cholesterol: number;
-  ingredients: Ingredient[];
-  instructions: CookingStep[];
-  equipment: EquipmentItem[];
+  ingredients: ClientIngredient[];
+  instructions: ClientCookingStep[];
+  equipment: ClientEquipmentItem[];
   tags: string[];
   cookedCount: number;
   lastCooked?: string;
@@ -66,22 +66,62 @@ export interface ClientRecipe {
   mealType: 'breakfast' | 'lunch' | 'dinner' | 'snack';
 }
 
-export interface Ingredient {
+// Client-side ingredient format (matches RecipeContext)
+export interface ClientIngredient {
+  id: string;
+  category: string;
+  amount: string;
+  unit: string;
+  item: string;  // This is 'name' in DB, 'item' in client
+  notes?: string;
+  calories: number;
+  inPantry?: boolean;
+}
+
+// Client-side cooking step format (matches RecipeContext)
+export interface ClientCookingStep {
+  id: string;
+  title: string;
+  instruction: string;
+  time?: number;
+  tip?: string;
+  warning?: string;
+}
+
+// Client-side equipment format (matches RecipeContext)
+export interface ClientEquipmentItem {
+  id: string;
+  name: string;
+  emoji: string;
+  essential: boolean;
+  alternative?: string;
+}
+
+// Database ingredient format (from Supabase)
+export interface DbIngredient {
   name: string;
   amount: number;
   unit: string;
   notes?: string;
+  category?: string;
+  calories?: number;
 }
 
-export interface CookingStep {
+// Database cooking step format (from Supabase)
+export interface DbCookingStep {
   step_number: number;
   instruction: string;
   time_minutes?: number;
+  title?: string;
+  tip?: string;
+  warning?: string;
 }
 
-export interface EquipmentItem {
+// Database equipment format (from Supabase)
+export interface DbEquipmentItem {
   name: string;
   optional?: boolean;
+  emoji?: string;
 }
 
 /**
@@ -166,57 +206,127 @@ export function clientRecipeToDbRecipe(clientRecipe: ClientRecipe): Partial<DbRe
 }
 
 /**
- * Parse ingredients from JSONB to typed array
+ * Parse ingredients from JSONB and transform to client format
+ * DB format: { name, amount (number), unit, notes?, category?, calories? }
+ * Client format: { id, category, amount (string), unit, item, notes?, calories, inPantry? }
  */
-function parseIngredients(ingredients: any): Ingredient[] {
+function parseIngredients(ingredients: any): ClientIngredient[] {
   if (!ingredients) return [];
-  if (Array.isArray(ingredients)) return ingredients;
 
-  try {
-    if (typeof ingredients === 'string') {
-      return JSON.parse(ingredients);
+  let parsed: DbIngredient[] = [];
+
+  if (Array.isArray(ingredients)) {
+    parsed = ingredients;
+  } else if (typeof ingredients === 'string') {
+    try {
+      parsed = JSON.parse(ingredients);
+    } catch (error) {
+      console.error('Error parsing ingredients:', error);
+      return [];
     }
-    return [];
-  } catch (error) {
-    console.error('Error parsing ingredients:', error);
-    return [];
   }
+
+  // Transform DB format to client format
+  return parsed.map((ing, index) => ({
+    id: String(index + 1),
+    category: ing.category || 'Other',
+    amount: String(ing.amount || ''),
+    unit: ing.unit || '',
+    item: ing.name || '',  // DB uses 'name', client uses 'item'
+    notes: ing.notes,
+    calories: ing.calories || 0,
+    inPantry: false,
+  }));
 }
 
 /**
- * Parse instructions from JSONB to typed array
+ * Parse instructions from JSONB and transform to client format
+ * DB format: { step_number, instruction, time_minutes?, title?, tip?, warning? }
+ * Client format: { id, title, instruction, time?, tip?, warning? }
  */
-function parseInstructions(instructions: any): CookingStep[] {
+function parseInstructions(instructions: any): ClientCookingStep[] {
   if (!instructions) return [];
-  if (Array.isArray(instructions)) return instructions;
 
-  try {
-    if (typeof instructions === 'string') {
-      return JSON.parse(instructions);
+  let parsed: DbCookingStep[] = [];
+
+  if (Array.isArray(instructions)) {
+    parsed = instructions;
+  } else if (typeof instructions === 'string') {
+    try {
+      parsed = JSON.parse(instructions);
+    } catch (error) {
+      console.error('Error parsing instructions:', error);
+      return [];
     }
-    return [];
-  } catch (error) {
-    console.error('Error parsing instructions:', error);
-    return [];
   }
+
+  // Transform DB format to client format
+  return parsed.map((step, index) => ({
+    id: String(step.step_number || index + 1),
+    title: step.title || `Step ${step.step_number || index + 1}`,
+    instruction: step.instruction || '',
+    time: step.time_minutes,
+    tip: step.tip,
+    warning: step.warning,
+  }));
 }
 
 /**
- * Parse equipment from JSONB to typed array
+ * Parse equipment from JSONB and transform to client format
+ * DB format: { name, optional?, emoji? }
+ * Client format: { id, name, emoji, essential, alternative? }
  */
-function parseEquipment(equipment: any): EquipmentItem[] {
+function parseEquipment(equipment: any): ClientEquipmentItem[] {
   if (!equipment) return [];
-  if (Array.isArray(equipment)) return equipment;
 
-  try {
-    if (typeof equipment === 'string') {
-      return JSON.parse(equipment);
+  let parsed: DbEquipmentItem[] = [];
+
+  if (Array.isArray(equipment)) {
+    parsed = equipment;
+  } else if (typeof equipment === 'string') {
+    try {
+      parsed = JSON.parse(equipment);
+    } catch (error) {
+      console.error('Error parsing equipment:', error);
+      return [];
     }
-    return [];
-  } catch (error) {
-    console.error('Error parsing equipment:', error);
-    return [];
   }
+
+  // Default emojis for common equipment
+  const defaultEmojis: Record<string, string> = {
+    'pan': '🍳',
+    'skillet': '🍳',
+    'pot': '🍲',
+    'saucepan': '🍲',
+    'bowl': '🥣',
+    'knife': '🔪',
+    'cutting board': '🔪',
+    'spatula': '🥄',
+    'spoon': '🥄',
+    'whisk': '🥄',
+    'oven': '🔥',
+    'microwave': '📻',
+    'blender': '🧊',
+    'mixer': '🎛️',
+    'default': '🍽️',
+  };
+
+  const getEmoji = (name: string, providedEmoji?: string): string => {
+    if (providedEmoji) return providedEmoji;
+    const lowerName = name.toLowerCase();
+    for (const [key, emoji] of Object.entries(defaultEmojis)) {
+      if (lowerName.includes(key)) return emoji;
+    }
+    return defaultEmojis.default;
+  };
+
+  // Transform DB format to client format
+  return parsed.map((item, index) => ({
+    id: String(index + 1),
+    name: item.name || '',
+    emoji: getEmoji(item.name || '', item.emoji),
+    essential: !item.optional,  // DB uses 'optional', client uses 'essential' (inverted)
+  }));
 }
 
 /**

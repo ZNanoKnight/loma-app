@@ -26,78 +26,35 @@ export default function CookingInstructionsScreen() {
   const [timerSeconds, setTimerSeconds] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 
-  // Safely get steps from current recipe, fallback to mock data if not available
+  // Get steps from current recipe - no fallback to mock data
   const steps: CookingStep[] = currentRecipe?.instructions && currentRecipe.instructions.length > 0
     ? currentRecipe.instructions.filter(step => step !== null && step !== undefined)
-    : [
-    {
-      id: '1',
-      title: 'Prep Ingredients',
-      instruction: 'Season chicken breasts on both sides with oregano, minced garlic, salt, and pepper. Let rest at room temperature while you prepare other ingredients.',
-      time: 5,
-      tip: 'Pat chicken dry with paper towels for better searing'
-    },
-    {
-      id: '2',
-      title: 'Cook Quinoa',
-      instruction: 'Bring 2 cups of water to a boil in a medium saucepan. Add 1 cup quinoa, reduce heat to low, cover, and simmer for 15 minutes.',
-      time: 15,
-      tip: 'Add a pinch of salt to the water for more flavor'
-    },
-    {
-      id: '3',
-      title: 'Prepare Vegetables',
-      instruction: 'While quinoa cooks, dice cucumber, halve cherry tomatoes, and thinly slice red onion. Place in a large bowl.',
-      time: 5
-    },
-    {
-      id: '4',
-      title: 'Heat the Pan',
-      instruction: 'Heat 1 tablespoon olive oil in a grill pan or skillet over medium-high heat. The pan is ready when a drop of water sizzles.',
-      time: 2,
-      warning: 'Don\'t let the oil smoke - reduce heat if needed'
-    },
-    {
-      id: '5',
-      title: 'Cook Chicken',
-      instruction: 'Place seasoned chicken in the hot pan. Cook for 6-7 minutes without moving. Flip and cook another 6-7 minutes.',
-      time: 14,
-      warning: 'Internal temp should reach 165°F (74°C)'
-    },
-    {
-      id: '6',
-      title: 'Rest the Chicken',
-      instruction: 'Transfer cooked chicken to a cutting board and let rest for 5 minutes. This allows juices to redistribute.',
-      time: 5,
-      tip: 'Cover loosely with foil to keep warm'
-    },
-    {
-      id: '7',
-      title: 'Dress Vegetables',
-      instruction: 'Add remaining olive oil and lemon juice to the bowl of vegetables. Toss to combine. Season with salt and pepper.',
-      time: 2
-    },
-    {
-      id: '8',
-      title: 'Slice Chicken',
-      instruction: 'Slice rested chicken breasts diagonally into 1/2 inch thick slices.',
-      time: 2,
-      tip: 'Cut against the grain for more tender pieces'
-    },
-    {
-      id: '9',
-      title: 'Fluff Quinoa',
-      instruction: 'Remove quinoa from heat and let stand 5 minutes. Fluff with a fork.',
-      time: 5
-    },
-    {
-      id: '10',
-      title: 'Assemble Bowls',
-      instruction: 'Divide quinoa between bowls. Top with mixed greens, dressed vegetables, sliced chicken, and crumbled feta. Drizzle any remaining dressing.',
-      time: 3,
-      tip: 'Warm the bowls for a restaurant-style presentation'
-    }
-  ];
+    : [];
+
+  // Show error state if no recipe or no instructions
+  if (!currentRecipe || steps.length === 0) {
+    return (
+      <View style={styles.container}>
+        <SafeAreaView style={styles.safeArea}>
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 20 }}>
+            <Text style={{ fontSize: 48, marginBottom: 16 }}>🍳</Text>
+            <Text style={{ color: '#1F2937', fontSize: 18, textAlign: 'center', fontFamily: 'Quicksand-SemiBold' }}>
+              No recipe loaded
+            </Text>
+            <Text style={{ color: '#6B7280', fontSize: 14, textAlign: 'center', marginTop: 8, fontFamily: 'Quicksand-Regular' }}>
+              Please select a recipe from your Recipe Book first.
+            </Text>
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={{ marginTop: 20, backgroundColor: '#6B46C1', paddingHorizontal: 24, paddingVertical: 12, borderRadius: 12 }}
+            >
+              <Text style={{ color: 'white', fontFamily: 'Quicksand-SemiBold' }}>Go Back</Text>
+            </TouchableOpacity>
+          </View>
+        </SafeAreaView>
+      </View>
+    );
+  }
 
   const totalSteps = steps.length;
   const progress = ((currentStep + 1) / totalSteps) * 100;

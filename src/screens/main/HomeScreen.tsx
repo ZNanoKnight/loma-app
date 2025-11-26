@@ -27,7 +27,7 @@ import { logger } from '../../utils/logger';
 export default function HomeScreen() {
   const navigation = useNavigation<any>();
   const { userData } = useUser();
-  const { setCurrentRecipe, getRecipeById } = useRecipe();
+  const { setCurrentRecipe } = useRecipe();
 
   // Use real user data
   const userName = userData.firstName || 'Friend';

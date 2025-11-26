@@ -8,32 +8,30 @@ import {
   StatusBar,
   ScrollView,
   Modal,
-  TextInput
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useUser } from '../../context/UserContext';
 import { useRecipe } from '../../context/RecipeContext';
+import { AuthService } from '../../services/auth/authService';
+import { RecipeService } from '../../services/recipes/recipeService';
 
 export default function RecipeDetailScreen() {
   const navigation = useNavigation<any>();
   const route = useRoute<any>();
   const { userData, updateUserData } = useUser();
-  const { currentRecipe, setCurrentRecipe, getRecipeById, updateRecipe } = useRecipe();
+  const { currentRecipe, setCurrentRecipe } = useRecipe();
 
   const [activeTab, setActiveTab] = useState<'overview' | 'ingredients' | 'nutrition'>('overview');
   const [isFavorite, setIsFavorite] = useState(false);
   const [showRatingModal, setShowRatingModal] = useState(false);
   const [rating, setRating] = useState(0);
-  const [servings, setServings] = useState('2');
 
-  // Get recipe from navigation params or current recipe
-  const recipeId = route.params?.recipeId;
-  const recipe = recipeId ? getRecipeById(recipeId) : currentRecipe;
+  // Get recipe from currentRecipe (set by RecipeBookScreen before navigation)
+  const recipe = currentRecipe;
 
   useEffect(() => {
     if (recipe) {
-      setCurrentRecipe(recipe);
       setIsFavorite(recipe.isFavorite);
       setRating(recipe.rating || 0);
     }
@@ -64,18 +62,38 @@ export default function RecipeDetailScreen() {
     navigation.navigate('EquipmentChecklist');
   };
 
-  const handleRateRecipe = (newRating: number) => {
+  const handleRateRecipe = async (newRating: number) => {
     if (!recipe) return;
     setRating(newRating);
-    updateRecipe(recipe.id, { rating: newRating });
     setTimeout(() => setShowRatingModal(false), 500);
+
+    // Update rating in Supabase
+    try {
+      const session = await AuthService.getCurrentSession();
+      if (session) {
+        await RecipeService.updateRecipeRating(session.user.id, recipe.id, newRating);
+      }
+    } catch (error) {
+      console.error('[RecipeDetailScreen] Error updating rating:', error);
+    }
   };
 
-  const handleToggleFavorite = () => {
+  const handleToggleFavorite = async () => {
     if (!recipe) return;
     const newFavoriteStatus = !isFavorite;
     setIsFavorite(newFavoriteStatus);
-    updateRecipe(recipe.id, { isFavorite: newFavoriteStatus });
+
+    // Update favorite status in Supabase
+    try {
+      const session = await AuthService.getCurrentSession();
+      if (session) {
+        await RecipeService.toggleFavorite(session.user.id, recipe.id, newFavoriteStatus);
+      }
+    } catch (error) {
+      console.error('[RecipeDetailScreen] Error toggling favorite:', error);
+      // Revert on error
+      setIsFavorite(!newFavoriteStatus);
+    }
   };
 
   return (
@@ -294,32 +312,6 @@ export default function RecipeDetailScreen() {
                   </View>
                 )}
               </View>
-
-              {/* Servings Section */}
-              <View style={styles.servingsSection}>
-                <Text style={styles.sectionTitle}>Servings</Text>
-                <TextInput
-                  style={styles.servingsInput}
-                  value={servings}
-                  onChangeText={(text) => {
-                    // Only allow positive integers
-                    const numericValue = text.replace(/[^0-9]/g, '');
-                    setServings(numericValue);
-                  }}
-                  placeholder="Enter number of servings"
-                  placeholderTextColor="#9CA3AF"
-                  keyboardType="number-pad"
-                  maxLength={2}
-                />
-              </View>
-
-              {/* Generate Amazon Fresh Cart Button */}
-              <TouchableOpacity
-                style={styles.amazonFreshButton}
-                activeOpacity={0.8}
-              >
-                <Text style={styles.amazonFreshText}>Generate Amazon Fresh cart</Text>
-              </TouchableOpacity>
 
               {/* Start Cooking Button */}
               <TouchableOpacity
@@ -689,32 +681,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#1F2937',
     fontFamily: 'Quicksand-Medium',
-  },
-  servingsSection: {
-    marginBottom: 20,
-  },
-  servingsInput: {
-    fontFamily: 'Quicksand-Regular',
-    backgroundColor: '#F9FAFB',
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    fontSize: 14,
-    color: '#1F2937',
-  },
-  amazonFreshButton: {
-    backgroundColor: '#FF8C00',
-    paddingVertical: 16,
-    borderRadius: 16,
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  amazonFreshText: {
-    color: 'white',
-    fontSize: 16,
-    fontFamily: 'Quicksand-SemiBold',
   },
   startCookingButton: {
     backgroundColor: '#6B46C1',
