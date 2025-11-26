@@ -606,27 +606,6 @@ export default function RecipePreviewScreen() {
               </View>
             </View>
 
-            {/* Benefits List */}
-            <View style={styles.benefitsContainer}>
-              <Text style={styles.benefitsTitle}>What you'll get:</Text>
-              <View style={styles.benefitItem}>
-                <Text style={styles.benefitIcon}>✓</Text>
-                <Text style={styles.benefitText}>Daily personalized recipes</Text>
-              </View>
-              <View style={styles.benefitItem}>
-                <Text style={styles.benefitIcon}>✓</Text>
-                <Text style={styles.benefitText}>Automatic grocery lists</Text>
-              </View>
-              <View style={styles.benefitItem}>
-                <Text style={styles.benefitIcon}>✓</Text>
-                <Text style={styles.benefitText}>Step-by-step instructions</Text>
-              </View>
-              <View style={styles.benefitItem}>
-                <Text style={styles.benefitIcon}>✓</Text>
-                <Text style={styles.benefitText}>Macro tracking</Text>
-              </View>
-            </View>
-
             {/* Continue Button */}
             <TouchableOpacity
               style={styles.continueButton}
@@ -817,30 +796,6 @@ const styles = StyleSheet.create({
   },
   dotActive: {
     backgroundColor: '#1B4332',
-  },
-  benefitsContainer: {
-    marginBottom: 25,
-  },
-  benefitsTitle: {
-    fontFamily: 'Quicksand-Bold',
-    fontSize: 18,
-    color: '#1F2937',
-    marginBottom: 12,
-  },
-  benefitItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  benefitIcon: {
-    fontSize: 16,
-    color: '#10B981',
-    marginRight: 10,
-  },
-  benefitText: {
-    fontFamily: 'Quicksand-Regular',
-    fontSize: 15,
-    color: '#4B5563',
   },
   continueButton: {
     backgroundColor: '#1B4332',
