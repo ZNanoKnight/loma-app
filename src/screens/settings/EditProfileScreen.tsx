@@ -174,15 +174,6 @@ export default function EditProfileScreen() {
                 />
               </View>
 
-              <View style={styles.fieldGroup}>
-                <Text style={styles.fieldLabel}>Phone Number</Text>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Enter your phone number"
-                  placeholderTextColor="#9CA3AF"
-                  keyboardType="phone-pad"
-                />
-              </View>
             </View>
           </ScrollView>
         </SafeAreaView>

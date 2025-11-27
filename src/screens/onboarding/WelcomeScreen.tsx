@@ -13,7 +13,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Asset } from 'expo-asset';
 
 // Pre-load logo image
-const logoImage = require('../../../assets/logos/loma_transparent-logo.png');
+const logoImage = require('../../../assets/adaptive-icon.png');
 // Resolve asset immediately
 Asset.fromModule(logoImage).downloadAsync();
 

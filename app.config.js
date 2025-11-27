@@ -13,21 +13,23 @@ module.exports = {
     splash: {
       image: './assets/splash-icon.png',
       resizeMode: 'contain',
-      backgroundColor: '#ffffff',
+      backgroundColor: '#1B4332',
     },
     scheme: 'lomaapp',
     ios: {
       supportsTablet: true,
       bundleIdentifier: 'com.znanoknight.lomaapp',
-      associatedDomains: ['applinks:yourdomain.com', 'applinks:www.yourdomain.com'],
+      associatedDomains: ['applinks:lomameals.com', 'applinks:www.lomameals.com'],
       infoPlist: {
         ITSAppUsesNonExemptEncryption: false,
+        NSCameraUsageDescription: 'LOMA needs access to your camera to take a profile photo.',
+        NSPhotoLibraryUsageDescription: 'LOMA needs access to your photo library to choose a profile photo.',
       },
     },
     android: {
       adaptiveIcon: {
         foregroundImage: './assets/adaptive-icon.png',
-        backgroundColor: '#ffffff',
+        backgroundColor: '#1B4332',
       },
       intentFilters: [
         {
@@ -46,12 +48,12 @@ module.exports = {
           data: [
             {
               scheme: 'https',
-              host: 'yourdomain.com',
+              host: 'lomameals.com',
               pathPrefix: '/auth',
             },
             {
               scheme: 'https',
-              host: 'www.yourdomain.com',
+              host: 'www.lomameals.com',
               pathPrefix: '/auth',
             },
           ],
