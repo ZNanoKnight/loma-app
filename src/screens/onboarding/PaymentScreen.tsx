@@ -12,8 +12,10 @@ import {
   Alert,
   KeyboardAvoidingView,
   Platform,
+  Linking,
+  Modal,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useNavigationState } from '@react-navigation/native';
 import { useUser } from '../../context/UserContext';
 import { AuthService } from '../../services/auth/authService';
 import { UserService } from '../../services/user/userService';
@@ -30,8 +32,12 @@ export default function PaywallScreen() {
   const navigation = useNavigation<any>();
   const { userData, updateUserData } = useUser();
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
-  // Default to monthly plan (most popular) - cards are now informational only
-  const selectedPlan: PlanType = 'monthly';
+
+  // Check if we can go back in the navigation stack
+  const canGoBack = useNavigationState(state => state.routes.length > 1);
+
+  // Plan selection - default to monthly (most popular)
+  const [selectedPlan, setSelectedPlan] = useState<PlanType>(userData.selectedPlan || 'monthly');
   const [email, setEmail] = useState(userData.email || '');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -39,15 +45,50 @@ export default function PaywallScreen() {
   const [loading, setLoading] = useState(false);
   const [paymentSheetReady, setPaymentSheetReady] = useState(false);
 
-  const isValidEmail = (email: string) => {
+  // Detect if user is returning after email verification (already authenticated)
+  const [isReturningUser, setIsReturningUser] = useState(false);
+  const [checkingSession, setCheckingSession] = useState(true);
+
+  // Trial info modal state
+  const [showTrialModal, setShowTrialModal] = useState(false);
+
+  // Check if user already has a session (returning after OTP verification)
+  useEffect(() => {
+    const checkExistingSession = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session?.user) {
+          // User is already authenticated - they're returning after email verification
+          logger.log('[PaymentScreen] Returning user detected:', session.user.id);
+          setIsReturningUser(true);
+          // Pre-fill email from session
+          if (session.user.email) {
+            setEmail(session.user.email);
+          }
+          // Auto-agree to terms since they already agreed before verification
+          setAgreeToTerms(true);
+        }
+      } catch (error) {
+        logger.error('[PaymentScreen] Error checking session:', error);
+      } finally {
+        setCheckingSession(false);
+      }
+    };
+    checkExistingSession();
+  }, []);
+
+  const isValidEmail = (emailStr: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
+    return emailRegex.test(emailStr);
   };
 
-  const isFormValid = isValidEmail(email) &&
-                     password.length >= 8 &&
-                     password === confirmPassword &&
-                     agreeToTerms;
+  // Form validation depends on whether user is returning (already authenticated) or new
+  const isFormValid = isReturningUser
+    ? agreeToTerms // Returning users just need to agree to terms (already have account)
+    : isValidEmail(email) &&
+      password.length >= 8 &&
+      password === confirmPassword &&
+      agreeToTerms;
 
   const plans = [
     {
@@ -124,95 +165,119 @@ export default function PaywallScreen() {
     }
   };
 
-  const handleComplete = async () => {
+  // Called when user taps "Start Free Trial" - shows the trial info modal first
+  const handleStartTrialPress = () => {
     if (!isFormValid) return;
+    setShowTrialModal(true);
+  };
 
+  // Called after user acknowledges the trial terms in the modal
+  const handleComplete = async () => {
+    setShowTrialModal(false);
     setLoading(true);
     try {
-      // Debug: Log environment and user data
-      logger.log('[PaymentScreen] Starting signup process...');
-      logger.log('[PaymentScreen] Email:', email);
-      logger.log('[PaymentScreen] User data available:', {
-        hasFirstName: !!userData.firstName,
-        hasLastName: !!userData.lastName,
-        hasAge: !!userData.age,
-        hasGender: !!userData.gender,
-      });
+      let userId: string;
 
-      // Step 1: Create Supabase auth account
-      // Note: We don't pre-check if email exists - we let the signup fail naturally
-      // and catch the "already registered" error. This avoids sending unnecessary emails.
-      logger.log('[PaymentScreen] Creating Supabase auth account...');
-      const authSession = await AuthService.signUp({
-        email: email.trim().toLowerCase(),
-        password,
-        userData: {
-          firstName: userData.firstName || '',
-          lastName: userData.lastName || '',
-          age: userData.age?.toString() || '',
-          weight: userData.weight?.toString() || '',
-          heightFeet: userData.heightFeet?.toString() || '',
-          heightInches: userData.heightInches?.toString() || '',
-          gender: userData.gender || '',
-          activityLevel: userData.activityLevel || '',
-          goals: userData.goals || [],
-          dietaryPreferences: userData.dietaryPreferences || [],
-          allergens: userData.allergens || [],
-          equipment: userData.equipment || '',
-          cookingFrequency: userData.cookingFrequency || '',
-        },
-      });
+      // If returning user (already authenticated after email verification), skip signup
+      if (isReturningUser) {
+        logger.log('[PaymentScreen] Returning user - skipping signup, proceeding to payment...');
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session?.user) {
+          throw new Error('Session expired. Please log in again.');
+        }
+        userId = session.user.id;
+      } else {
+        // New user flow - create account first
+        // Debug: Log environment and user data
+        logger.log('[PaymentScreen] Starting signup process...');
+        logger.log('[PaymentScreen] Email:', email);
+        logger.log('[PaymentScreen] User data available:', {
+          hasFirstName: !!userData.firstName,
+          hasLastName: !!userData.lastName,
+          hasAge: !!userData.age,
+          hasGender: !!userData.gender,
+        });
 
-      logger.log('[PaymentScreen] Auth session created:', {
-        userId: authSession.user.id,
-        email: authSession.user.email,
-        hasToken: !!authSession.tokens.accessToken,
-      });
+        // Step 1: Create Supabase auth account
+        // Note: We don't pre-check if email exists - we let the signup fail naturally
+        // and catch the "already registered" error. This avoids sending unnecessary emails.
+        logger.log('[PaymentScreen] Creating Supabase auth account...');
+        const authSession = await AuthService.signUp({
+          email: email.trim().toLowerCase(),
+          password,
+          userData: {
+            firstName: userData.firstName || '',
+            lastName: userData.lastName || '',
+            age: userData.age?.toString() || '',
+            weight: userData.weight?.toString() || '',
+            heightFeet: userData.heightFeet?.toString() || '',
+            heightInches: userData.heightInches?.toString() || '',
+            gender: userData.gender || '',
+            activityLevel: userData.activityLevel || '',
+            goals: userData.goals || [],
+            dietaryPreferences: userData.dietaryPreferences || [],
+            allergens: userData.allergens || [],
+            equipment: userData.equipment || '',
+            cookingFrequency: userData.cookingFrequency || '',
+          },
+        });
 
-      // Save selected plan to UserContext BEFORE email confirmation
-      // This ensures we remember the plan when user returns after verifying email
-      updateUserData({
-        selectedPlan,
-        email: email.trim().toLowerCase(),
-      });
+        logger.log('[PaymentScreen] Auth session created:', {
+          userId: authSession.user.id,
+          email: authSession.user.email,
+          hasToken: !!authSession.tokens.accessToken,
+        });
 
-      // Check if email confirmation is required (no session/token returned)
-      const requiresEmailConfirmation = !authSession.tokens.accessToken;
+        userId = authSession.user.id;
 
-      // Small delay to ensure auth.users record is committed in database
-      // This prevents race condition where profile function checks before user exists
-      await new Promise(resolve => setTimeout(resolve, 500));
+        // Save selected plan to UserContext BEFORE email confirmation
+        // This ensures we remember the plan when user returns after verifying email
+        updateUserData({
+          selectedPlan,
+          email: email.trim().toLowerCase(),
+        });
 
-      // Step 2: Create user profile in database with onboarding data
-      logger.log('[PaymentScreen] Creating user profile...');
-      await UserService.createUserProfile(authSession.user.id, {
-        user_id: authSession.user.id,
-        first_name: userData.firstName || '',
-        last_name: userData.lastName || '',
-        age: userData.age,
-        weight: userData.weight,
-        height_feet: userData.heightFeet,
-        height_inches: userData.heightInches,
-        gender: userData.gender,
-        activity_level: userData.activityLevel,
-        goals: userData.goals,
-        dietary_preferences: userData.dietaryPreferences,
-        allergens: userData.allergens,
-        equipment: userData.equipment,
-        cooking_frequency: userData.cookingFrequency,
-        default_serving_size: userData.defaultServingSize || 1,
-        metric_units: false,
-        has_completed_onboarding: false, // Will be set to true after payment/confirmation
-      });
-      logger.log('[PaymentScreen] User profile created successfully');
+        // Check if email confirmation is required (no session/token returned)
+        const requiresEmailConfirmation = !authSession.tokens.accessToken;
 
-      // If email confirmation is required, navigate to confirmation screen
-      if (requiresEmailConfirmation) {
-        logger.log('[PaymentScreen] Email confirmation required - navigating to confirmation screen');
+        // Small delay to ensure auth.users record is committed in database
+        // This prevents race condition where profile function checks before user exists
+        await new Promise(resolve => setTimeout(resolve, 500));
 
-        // Navigate to email confirmation screen instead of showing alert
-        navigation.navigate('EmailConfirmation', { email: email.trim().toLowerCase() });
-        return;
+        // Step 2: Create user profile in database with onboarding data
+        logger.log('[PaymentScreen] Creating user profile...');
+        const termsAcceptedAt = new Date().toISOString();
+        await UserService.createUserProfile(authSession.user.id, {
+          user_id: authSession.user.id,
+          first_name: userData.firstName || '',
+          last_name: userData.lastName || '',
+          age: userData.age,
+          weight: userData.weight,
+          height_feet: userData.heightFeet,
+          height_inches: userData.heightInches,
+          gender: userData.gender,
+          activity_level: userData.activityLevel,
+          goals: userData.goals,
+          dietary_preferences: userData.dietaryPreferences,
+          allergens: userData.allergens,
+          equipment: userData.equipment,
+          cooking_frequency: userData.cookingFrequency,
+          default_serving_size: userData.defaultServingSize || 1,
+          metric_units: false,
+          has_completed_onboarding: false, // Will be set to true after payment/confirmation
+          terms_accepted_at: termsAcceptedAt,
+          privacy_accepted_at: termsAcceptedAt,
+        });
+        logger.log('[PaymentScreen] User profile created successfully');
+
+        // If email confirmation is required, navigate to confirmation screen
+        if (requiresEmailConfirmation) {
+          logger.log('[PaymentScreen] Email confirmation required - navigating to confirmation screen');
+
+          // Navigate to email confirmation screen instead of showing alert
+          navigation.navigate('EmailConfirmation', { email: email.trim().toLowerCase() });
+          return;
+        }
       }
 
       // Step 3: Call Edge Function to create payment intent
@@ -248,9 +313,17 @@ export default function PaywallScreen() {
       }
 
       // Step 4: Initialize payment sheet
+      // Determine if this is a SetupIntent (for trials) or PaymentIntent (immediate charge)
+      // SetupIntent secrets start with 'seti_', PaymentIntent secrets start with 'pi_'
+      const isSetupIntent = paymentData.clientSecret.startsWith('seti_');
+      logger.log('[PaymentScreen] Client secret type:', isSetupIntent ? 'SetupIntent' : 'PaymentIntent');
+
       const { error: initError } = await initPaymentSheet({
         merchantDisplayName: 'LOMA',
-        paymentIntentClientSecret: paymentData.clientSecret,
+        ...(isSetupIntent
+          ? { setupIntentClientSecret: paymentData.clientSecret }
+          : { paymentIntentClientSecret: paymentData.clientSecret }
+        ),
         defaultBillingDetails: {
           email: email.trim().toLowerCase(),
         },
@@ -278,7 +351,7 @@ export default function PaywallScreen() {
 
       // Step 6: Payment successful! Update UserContext
       updateUserData({
-        email: authSession.user.email || email,
+        email: email,
         selectedPlan,
         hasCompletedOnboarding: true,
         isAuthenticated: true,
@@ -290,10 +363,10 @@ export default function PaywallScreen() {
       await new Promise(resolve => setTimeout(resolve, 3000));
 
       try {
-        const tokenBalance = await SubscriptionService.getTokenBalance(authSession.user.id);
+        const tokenBalance = await SubscriptionService.getTokenBalance(userId);
         logger.log('[PaymentScreen] Token balance after payment:', tokenBalance);
-      } catch (error) {
-        logger.error('[PaymentScreen] Error fetching token balance:', error);
+      } catch (tokenError) {
+        logger.error('[PaymentScreen] Error fetching token balance:', tokenError);
         // Non-fatal - user can refresh on home screen
       }
 
@@ -410,13 +483,21 @@ export default function PaywallScreen() {
             <View style={styles.progressBar}>
               <View style={[styles.progressFill, { width: '100%' }]} />
             </View>
-            <Text style={styles.progressText}>Step 10 of 10</Text>
+            <Text style={styles.progressText}>Step 9 of 9</Text>
           </View>
 
           {/* Back Button */}
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.backButton}
-            onPress={() => navigation.goBack()}
+            onPress={() => {
+              if (canGoBack) {
+                navigation.goBack();
+              } else {
+                // No previous screen (e.g., redirected here after email verification)
+                // Navigate to Welcome screen
+                navigation.navigate('Welcome');
+              }
+            }}
           >
             <Text style={styles.backButtonText}>← Back</Text>
           </TouchableOpacity>
@@ -476,25 +557,45 @@ export default function PaywallScreen() {
               </View>
             </View>
 
-            {/* Subscription Tiers */}
+            {/* Subscription Tiers - Tappable for plan selection */}
             <View style={styles.plansContainer}>
-              <Text style={styles.plansSectionTitle}>Subscription tiers</Text>
+              <Text style={styles.plansSectionTitle}>Choose your plan</Text>
               {plans.map((plan) => (
-                <View
+                <TouchableOpacity
                   key={plan.id}
-                  style={styles.planCard}
+                  style={[
+                    styles.planCard,
+                    selectedPlan === plan.id && styles.planCardSelected
+                  ]}
+                  onPress={() => setSelectedPlan(plan.id as PlanType)}
+                  activeOpacity={0.7}
                 >
                   {plan.popular && (
                     <View style={styles.popularBadge}>
                       <Text style={styles.popularText}>MOST POPULAR</Text>
                     </View>
                   )}
+                  {/* Selection indicator */}
+                  <View style={[
+                    styles.planRadio,
+                    selectedPlan === plan.id && styles.planRadioSelected
+                  ]}>
+                    {selectedPlan === plan.id && (
+                      <View style={styles.planRadioInner} />
+                    )}
+                  </View>
                   <View style={styles.planContent}>
-                    <Text style={styles.planName}>
+                    <Text style={[
+                      styles.planName,
+                      selectedPlan === plan.id && styles.planNameSelected
+                    ]}>
                       {plan.name}
                     </Text>
                     <View style={styles.priceContainer}>
-                      <Text style={styles.planPrice}>
+                      <Text style={[
+                        styles.planPrice,
+                        selectedPlan === plan.id && styles.planPriceSelected
+                      ]}>
                         {plan.price}
                       </Text>
                       <Text style={styles.planPeriod}>
@@ -514,59 +615,79 @@ export default function PaywallScreen() {
                       )}
                     </Text>
                   </View>
-                </View>
+                </TouchableOpacity>
               ))}
             </View>
 
-            {/* Account Creation */}
-            <View style={styles.accountSection}>
-              <Text style={styles.sectionTitle}>Create your account</Text>
+            {/* Account Creation - Hidden for returning users who already have account */}
+            {!isReturningUser && (
+              <View style={styles.accountSection}>
+                <Text style={styles.sectionTitle}>Create your account</Text>
 
-              {/* <View style={styles.inputContainer}>
-                <Text style={styles.label}>Email</Text>
-                <TextInput
-                  style={styles.input}
-                  value={email}
-                  onChangeText={setEmail}
-                  placeholder="your@email.com"
-                  placeholderTextColor="#9CA3AF"
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                />
-              </View> */}
+                <View style={styles.inputContainer}>
+                  <Text style={styles.label}>Email</Text>
+                  <TextInput
+                    style={styles.input}
+                    value={email}
+                    onChangeText={setEmail}
+                    placeholder="your@email.com"
+                    placeholderTextColor="#9CA3AF"
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                  />
+                </View>
 
-              <View style={styles.inputContainer}>
-                <Text style={styles.label}>Password</Text>
-                <TextInput
-                  style={styles.input}
-                  value={password}
-                  onChangeText={setPassword}
-                  placeholder="Minimum 8 characters"
-                  placeholderTextColor="#9CA3AF"
-                  secureTextEntry
-                  autoCapitalize="none"
-                  textContentType="newPassword"
-                  passwordRules="minlength: 8;"
-                />
+                <View style={styles.inputContainer}>
+                  <Text style={styles.label}>Password</Text>
+                  <TextInput
+                    style={styles.input}
+                    value={password}
+                    onChangeText={setPassword}
+                    placeholder="Minimum 8 characters"
+                    placeholderTextColor="#9CA3AF"
+                    secureTextEntry
+                    autoCapitalize="none"
+                    textContentType="newPassword"
+                    passwordRules="minlength: 8;"
+                  />
+                </View>
+
+                <View style={styles.inputContainer}>
+                  <Text style={styles.label}>Confirm Password</Text>
+                  <TextInput
+                    style={styles.input}
+                    value={confirmPassword}
+                    onChangeText={setConfirmPassword}
+                    placeholder="Re-enter password"
+                    placeholderTextColor="#9CA3AF"
+                    secureTextEntry
+                    autoCapitalize="none"
+                    textContentType="newPassword"
+                  />
+                </View>
               </View>
+            )}
 
-              <View style={styles.inputContainer}>
-                <Text style={styles.label}>Confirm Password</Text>
-                <TextInput
-                  style={styles.input}
-                  value={confirmPassword}
-                  onChangeText={setConfirmPassword}
-                  placeholder="Re-enter password"
-                  placeholderTextColor="#9CA3AF"
-                  secureTextEntry
-                  autoCapitalize="none"
-                  textContentType="newPassword"
-                />
+            {/* For returning users, show a message that they're completing payment */}
+            {isReturningUser && (
+              <View style={styles.accountSection}>
+                <Text style={styles.sectionTitle}>Complete your subscription</Text>
+                <View style={styles.returningUserBox}>
+                  <Text style={styles.returningUserText}>
+                    Welcome back! You're signed in as{' '}
+                    <Text style={styles.returningUserEmail}>{email}</Text>
+                  </Text>
+                  <Text style={styles.returningUserSubtext}>
+                    Select a plan above and tap the button below to start your free trial.
+                  </Text>
+                </View>
               </View>
+            )}
 
-              {/* Terms Agreement */}
-              <TouchableOpacity 
+            {/* Terms Agreement - only show for new users, returning users already agreed */}
+            {!isReturningUser && (
+              <TouchableOpacity
                 style={styles.termsContainer}
                 onPress={() => setAgreeToTerms(!agreeToTerms)}
                 activeOpacity={0.8}
@@ -579,12 +700,22 @@ export default function PaywallScreen() {
                 </View>
                 <Text style={styles.termsText}>
                   I agree to the{' '}
-                  <Text style={styles.termsLink}>Terms of Service</Text>
+                  <Text
+                    style={styles.termsLink}
+                    onPress={() => Linking.openURL('https://www.lomameals.com/terms')}
+                  >
+                    Terms of Service
+                  </Text>
                   {' '}and{' '}
-                  <Text style={styles.termsLink}>Privacy Policy</Text>
+                  <Text
+                    style={styles.termsLink}
+                    onPress={() => Linking.openURL('https://www.lomameals.com/privacy')}
+                  >
+                    Privacy Policy
+                  </Text>
                 </Text>
               </TouchableOpacity>
-            </View>
+            )}
 
             {/* Features Reminder */}
             <View style={styles.featuresContainer}>
@@ -608,7 +739,7 @@ export default function PaywallScreen() {
                 styles.completeButton,
                 (!isFormValid || loading) && styles.completeButtonDisabled
               ]}
-              onPress={handleComplete}
+              onPress={handleStartTrialPress}
               disabled={!isFormValid || loading}
               activeOpacity={0.8}
             >
@@ -632,6 +763,84 @@ export default function PaywallScreen() {
           </ScrollView>
         </KeyboardAvoidingView>
       </SafeAreaView>
+
+      {/* Trial Information Modal */}
+      <Modal
+        visible={showTrialModal}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setShowTrialModal(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            {/* Header with icon */}
+            <View style={styles.modalHeader}>
+              <View style={styles.modalIconContainer}>
+                <Text style={styles.modalHeaderIcon}>🎉</Text>
+              </View>
+              <Text style={styles.modalTitle}>How Your Free Trial Works</Text>
+              <Text style={styles.modalSubtitle}>No surprises, no hidden fees</Text>
+            </View>
+
+            {/* Divider */}
+            <View style={styles.modalDivider} />
+
+            <View style={styles.modalItemsContainer}>
+              <View style={styles.modalItem}>
+                <View style={styles.modalItemIconContainer}>
+                  <Text style={styles.modalItemIcon}>📅</Text>
+                </View>
+                <Text style={styles.modalItemText}>
+                  You get <Text style={styles.modalItemBold}>7 days</Text> to explore LOMA
+                </Text>
+              </View>
+
+              <View style={styles.modalItem}>
+                <View style={styles.modalItemIconContainer}>
+                  <Text style={styles.modalItemIcon}>🍪</Text>
+                </View>
+                <Text style={styles.modalItemText}>
+                  You'll receive <Text style={styles.modalItemBold}>2 free Munchies</Text> to generate recipes
+                </Text>
+              </View>
+
+              <View style={styles.modalItem}>
+                <View style={styles.modalItemIconContainer}>
+                  <Text style={styles.modalItemIcon}>💳</Text>
+                </View>
+                <Text style={styles.modalItemText}>
+                  We collect payment info but <Text style={styles.modalItemBold}>won't charge you</Text> during the trial
+                </Text>
+              </View>
+
+              <View style={styles.modalItem}>
+                <View style={styles.modalItemIconContainer}>
+                  <Text style={styles.modalItemIcon}>✅</Text>
+                </View>
+                <Text style={styles.modalItemText}>
+                  If you decide LOMA isn't for you, simply <Text style={styles.modalItemBold}>cancel in Settings</Text> before the trial ends. You'll never be charged.
+                </Text>
+              </View>
+            </View>
+
+            <TouchableOpacity
+              style={styles.modalButton}
+              onPress={handleComplete}
+              activeOpacity={0.8}
+            >
+              <Text style={styles.modalButtonText}>I Understand, Continue</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.modalCancelButton}
+              onPress={() => setShowTrialModal(false)}
+              activeOpacity={0.8}
+            >
+              <Text style={styles.modalCancelButtonText}>Go Back</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -772,6 +981,60 @@ const styles = StyleSheet.create({
     fontFamily: 'Quicksand-Bold',
     color: '#1B4332',
   },
+  planCardSelected: {
+    borderColor: '#1B4332',
+    borderWidth: 2,
+    backgroundColor: '#F0FDF4',
+  },
+  planRadio: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: '#D1D5DB',
+    marginRight: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  planRadioSelected: {
+    borderColor: '#1B4332',
+  },
+  planRadioInner: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    backgroundColor: '#1B4332',
+  },
+  planNameSelected: {
+    color: '#1B4332',
+  },
+  planPriceSelected: {
+    color: '#1B4332',
+  },
+  returningUserBox: {
+    backgroundColor: '#E8F5E9',
+    borderRadius: 12,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: '#1B4332',
+  },
+  returningUserText: {
+    fontFamily: 'Quicksand-Regular',
+    fontSize: 15,
+    color: '#1F2937',
+    lineHeight: 22,
+  },
+  returningUserEmail: {
+    fontFamily: 'Quicksand-Bold',
+    color: '#1B4332',
+  },
+  returningUserSubtext: {
+    fontFamily: 'Quicksand-Regular',
+    fontSize: 14,
+    color: '#6B7280',
+    marginTop: 8,
+    lineHeight: 20,
+  },
   accountSection: {
     marginBottom: 25,
   },
@@ -803,16 +1066,18 @@ const styles = StyleSheet.create({
   },
   termsContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 20,
+    alignItems: 'flex-start',
+    marginTop: 8,
+    marginBottom: 24,
   },
   checkbox: {
-    width: 20,
-    height: 20,
+    width: 22,
+    height: 22,
     borderWidth: 2,
     borderColor: '#D1D5DB',
     borderRadius: 4,
-    marginRight: 10,
+    marginRight: 12,
+    marginTop: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -968,5 +1233,128 @@ const styles = StyleSheet.create({
     color: '#92400E',
     lineHeight: 20,
     flex: 1,
+  },
+  // Modal styles
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  modalContent: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 24,
+    padding: 0,
+    width: '100%',
+    maxWidth: 380,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.3,
+    shadowRadius: 16,
+    elevation: 10,
+    overflow: 'hidden',
+  },
+  modalHeader: {
+    backgroundColor: '#F0FDF4',
+    paddingTop: 24,
+    paddingBottom: 20,
+    paddingHorizontal: 24,
+    alignItems: 'center',
+  },
+  modalIconContainer: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: '#FFFFFF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 12,
+    shadowColor: '#1B4332',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  modalHeaderIcon: {
+    fontSize: 28,
+  },
+  modalTitle: {
+    fontFamily: 'PTSerif-Bold',
+    fontSize: 22,
+    color: '#1B4332',
+    textAlign: 'center',
+    marginBottom: 4,
+  },
+  modalSubtitle: {
+    fontFamily: 'Quicksand-Regular',
+    fontSize: 14,
+    color: '#6B7280',
+    textAlign: 'center',
+  },
+  modalDivider: {
+    height: 1,
+    backgroundColor: '#E5E7EB',
+  },
+  modalItemsContainer: {
+    padding: 24,
+    paddingBottom: 16,
+  },
+  modalItem: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginBottom: 16,
+  },
+  modalItemIconContainer: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: '#F3F4F6',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  modalItemIcon: {
+    fontSize: 18,
+  },
+  modalItemText: {
+    fontFamily: 'Quicksand-Regular',
+    fontSize: 15,
+    color: '#4B5563',
+    lineHeight: 22,
+    flex: 1,
+    paddingTop: 6,
+  },
+  modalItemBold: {
+    fontFamily: 'Quicksand-Bold',
+    color: '#1B4332',
+  },
+  modalButton: {
+    backgroundColor: '#1B4332',
+    paddingVertical: 16,
+    borderRadius: 12,
+    marginHorizontal: 24,
+    marginBottom: 12,
+    shadowColor: '#1B4332',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+  modalButtonText: {
+    fontFamily: 'Quicksand-Bold',
+    color: '#FFFFFF',
+    fontSize: 16,
+    textAlign: 'center',
+  },
+  modalCancelButton: {
+    paddingVertical: 12,
+    marginBottom: 16,
+  },
+  modalCancelButtonText: {
+    fontFamily: 'Quicksand-Regular',
+    color: '#6B7280',
+    fontSize: 14,
+    textAlign: 'center',
   },
 });

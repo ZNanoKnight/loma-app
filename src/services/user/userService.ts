@@ -45,6 +45,10 @@ export interface UserProfile {
   has_completed_onboarding?: boolean;
   created_at?: string;
   updated_at?: string;
+
+  // Legal acceptance tracking
+  terms_accepted_at?: string;
+  privacy_accepted_at?: string;
 }
 
 export const UserService = {

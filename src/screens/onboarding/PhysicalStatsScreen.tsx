@@ -32,14 +32,33 @@ export default function PhysicalStatsScreen() {
     heightInches.length > 0 &&
     selectedGender.length > 0;
 
+  const [ageError, setAgeError] = useState('');
+
+  const handleAgeChange = (text: string) => {
+    const numeric = text.replace(/[^0-9]/g, '');
+    setAge(numeric);
+
+    // Clear error when user is typing
+    if (ageError) {
+      setAgeError('');
+    }
+  };
+
   const handleContinue = () => {
+    // Validate age is 13 or older
+    const ageNum = parseInt(age, 10);
+    if (ageNum < 13) {
+      setAgeError('You must be 13 years or older to use Loma');
+      return;
+    }
+
     if (isFormValid) {
-      updateUserData({   // ADD THIS BLOCK
-        age, 
-        weight, 
-        heightFeet, 
+      updateUserData({
+        age,
+        weight,
+        heightFeet,
         heightInches,
-        gender: selectedGender 
+        gender: selectedGender
       });
       navigation.navigate('ActivityLevel');
     }
@@ -158,14 +177,17 @@ export default function PhysicalStatsScreen() {
                 <View style={styles.inputContainer}>
                   <Text style={styles.label}>Age</Text>
                   <TextInput
-                    style={styles.input}
+                    style={[styles.input, ageError ? styles.inputError : null]}
                     value={age}
-                    onChangeText={setAge}
+                    onChangeText={handleAgeChange}
                     placeholder="Enter your age"
                     placeholderTextColor="#9CA3AF"
                     keyboardType="number-pad"
                     maxLength={3}
                   />
+                  {ageError ? (
+                    <Text style={styles.errorText}>{ageError}</Text>
+                  ) : null}
                 </View>
 
                 {/* Height */}
@@ -403,5 +425,15 @@ const styles = StyleSheet.create({
   },
   continueButtonTextDisabled: {
     color: '#9CA3AF',
+  },
+  inputError: {
+    borderColor: '#EF4444',
+    borderWidth: 2,
+  },
+  errorText: {
+    fontFamily: 'Quicksand-Regular',
+    color: '#EF4444',
+    fontSize: 13,
+    marginTop: 6,
   },
 });

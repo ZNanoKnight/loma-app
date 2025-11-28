@@ -20,18 +20,12 @@ export default function NameEmailScreen() {
   
   const [firstName, setFirstName] = useState(userData.firstName || '');
   const [lastName, setLastName] = useState(userData.lastName || '');
-  const [email, setEmail] = useState(userData.email || '');
 
-  const isValidEmail = (email: string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
-
-  const isFormValid = firstName.length > 0 && lastName.length > 0 && isValidEmail(email);
+  const isFormValid = firstName.length > 0 && lastName.length > 0;
 
   const handleContinue = () => {
     if (isFormValid) {
-      updateUserData({ firstName, lastName, email });
+      updateUserData({ firstName, lastName });
       navigation.navigate('PhysicalStats');
     }
   };
@@ -54,7 +48,7 @@ export default function NameEmailScreen() {
               <View style={styles.progressBar}>
                 <View style={[styles.progressFill, { width: '20%' }]} />
               </View>
-              <Text style={styles.progressText}>Step 2 of 10</Text>
+              <Text style={styles.progressText}>Step 2 of 9</Text>
             </View>
 
             {/* Back Button */}
@@ -100,19 +94,6 @@ export default function NameEmailScreen() {
                   />
                 </View>
 
-                <View style={styles.inputContainer}>
-                  <Text style={styles.label}>Email</Text>
-                  <TextInput
-                    style={styles.input}
-                    value={email}
-                    onChangeText={setEmail}
-                    placeholder="your@email.com"
-                    placeholderTextColor="#9CA3AF"
-                    keyboardType="email-address"
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                  />
-                </View>
               </View>
 
               {/* Continue Button */}

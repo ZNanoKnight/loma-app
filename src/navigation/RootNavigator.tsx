@@ -150,9 +150,29 @@ export default function RootNavigator() {
           });
         }
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Session check error:', error);
-      // If session check fails, user will see login screen
+
+      // Check for invalid refresh token error - sign user out gracefully
+      const errorMessage = error?.message || error?.toString() || '';
+      if (
+        errorMessage.includes('Refresh Token') ||
+        errorMessage.includes('refresh_token') ||
+        errorMessage.includes('Invalid Refresh Token') ||
+        errorMessage.includes('AuthApiError')
+      ) {
+        logger.log('[RootNavigator] Invalid refresh token detected, signing out...');
+        try {
+          await AuthService.signOut();
+        } catch (signOutError) {
+          logger.error('[RootNavigator] Error during sign out:', signOutError);
+        }
+        // User will be redirected to login screen
+        updateUserData({
+          isAuthenticated: false,
+          hasCompletedOnboarding: false,
+        });
+      }
     } finally {
       setSessionLoading(false);
     }
@@ -213,18 +233,18 @@ export default function RootNavigator() {
   }
 
   // Determine which navigator to show based on auth and onboarding status
-  const shouldShowPaymentCollection = userData.isAuthenticated && !userData.hasCompletedOnboarding && pendingPaymentNavigation;
+  const shouldShowPayment = userData.isAuthenticated && !userData.hasCompletedOnboarding && pendingPaymentNavigation;
   const shouldShowMainApp = userData.isAuthenticated && userData.hasCompletedOnboarding;
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       {shouldShowMainApp ? (
         <Stack.Screen name="MainApp" component={MainTabNavigator} />
-      ) : shouldShowPaymentCollection ? (
+      ) : shouldShowPayment ? (
         <Stack.Screen
           name="Onboarding"
           component={OnboardingNavigator}
-          initialParams={{ screen: 'PaymentCollection' }}
+          initialParams={{ screen: 'Payment' }}
         />
       ) : (
         <Stack.Screen name="Onboarding" component={OnboardingNavigator} />

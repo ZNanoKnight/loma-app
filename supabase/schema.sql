@@ -416,9 +416,9 @@ CREATE TRIGGER update_progress_tracking_updated_at BEFORE UPDATE ON progress_tra
 CREATE OR REPLACE FUNCTION initialize_user_data()
 RETURNS TRIGGER AS $$
 BEGIN
-  -- Create default subscription record
+  -- Create default subscription record (0 tokens - user must complete payment to get tokens)
   INSERT INTO subscriptions (user_id, plan, status, tokens_balance)
-  VALUES (NEW.id, 'weekly', 'active', 8); -- Give 8 free tokens to start
+  VALUES (NEW.id, 'weekly', 'active', 0);
 
   -- Create default progress tracking record
   INSERT INTO progress_tracking (user_id)

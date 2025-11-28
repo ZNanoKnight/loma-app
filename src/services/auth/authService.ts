@@ -291,8 +291,25 @@ export const AuthService = {
         userId: session?.user?.id,
       });
 
-      if (error || !session) {
-        console.log('[AuthService] No session found or error occurred');
+      if (error) {
+        // Check for invalid refresh token error - requires sign out
+        const errorMessage = error.message || '';
+        if (
+          errorMessage.includes('Refresh Token') ||
+          errorMessage.includes('refresh_token') ||
+          errorMessage.includes('Invalid Refresh Token')
+        ) {
+          console.log('[AuthService] Invalid refresh token detected, clearing session...');
+          // Clear stored session data
+          await SecureStorage.clearAll();
+          await LocalStorage.clearAll();
+        }
+        console.log('[AuthService] Session error occurred:', errorMessage);
+        return null;
+      }
+
+      if (!session) {
+        console.log('[AuthService] No session found');
         return null;
       }
 
@@ -310,8 +327,26 @@ export const AuthService = {
           expiresAt: session.expires_at || 0,
         },
       };
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to get current session:', error);
+
+      // Check for invalid refresh token error in catch block too
+      const errorMessage = error?.message || error?.toString() || '';
+      if (
+        errorMessage.includes('Refresh Token') ||
+        errorMessage.includes('refresh_token') ||
+        errorMessage.includes('Invalid Refresh Token') ||
+        errorMessage.includes('AuthApiError')
+      ) {
+        console.log('[AuthService] Invalid refresh token in catch, clearing session...');
+        try {
+          await SecureStorage.clearAll();
+          await LocalStorage.clearAll();
+        } catch (clearError) {
+          console.error('[AuthService] Error clearing storage:', clearError);
+        }
+      }
+
       return null;
     }
   },

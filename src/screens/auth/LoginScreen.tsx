@@ -79,7 +79,13 @@ export default function LoginScreen({ route }: any) {
         isAuthenticated: true,
       });
 
-      // Navigation will automatically switch to MainTab due to isAuthenticated
+      // If user hasn't completed onboarding (payment), navigate to Payment screen
+      if (!profile.has_completed_onboarding) {
+        navigation.navigate('Payment');
+        return;
+      }
+
+      // Navigation will automatically switch to MainTab due to isAuthenticated + hasCompletedOnboarding
     } catch (error) {
       console.error('Login error:', error);
 

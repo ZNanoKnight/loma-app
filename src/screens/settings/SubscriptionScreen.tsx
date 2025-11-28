@@ -165,6 +165,14 @@ export default function SubscriptionScreen() {
     }
   };
 
+  // Check if user has an actual Stripe subscription (vs just a placeholder record)
+  const hasStripeSubscription = subscription?.stripe_customer_id != null;
+
+  const handleStartSubscription = () => {
+    // Navigate to AddSubscription screen in settings
+    navigation.navigate('AddSubscription');
+  };
+
   if (loading) {
     return (
       <View style={[styles.container, styles.centerContent]}>
@@ -243,12 +251,29 @@ export default function SubscriptionScreen() {
 
             {/* Actions */}
             <View style={styles.actionsContainer}>
-              <TouchableOpacity
-                style={styles.primaryButton}
-                onPress={handleManageSubscription}
-              >
-                <Text style={styles.primaryButtonText}>Manage Subscription</Text>
-              </TouchableOpacity>
+              {hasStripeSubscription ? (
+                <TouchableOpacity
+                  style={styles.primaryButton}
+                  onPress={handleManageSubscription}
+                >
+                  <Text style={styles.primaryButtonText}>Manage Subscription</Text>
+                </TouchableOpacity>
+              ) : (
+                <>
+                  <View style={styles.noSubscriptionBox}>
+                    <Text style={styles.noSubscriptionTitle}>No Active Subscription</Text>
+                    <Text style={styles.noSubscriptionText}>
+                      Start a subscription to get Munchies and generate personalized recipes!
+                    </Text>
+                  </View>
+                  <TouchableOpacity
+                    style={styles.startSubscriptionButton}
+                    onPress={handleStartSubscription}
+                  >
+                    <Text style={styles.primaryButtonText}>Start Subscription</Text>
+                  </TouchableOpacity>
+                </>
+              )}
             </View>
           </ScrollView>
         </SafeAreaView>
@@ -413,5 +438,32 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     fontFamily: 'Quicksand-Bold',
+  },
+  noSubscriptionBox: {
+    backgroundColor: '#FEF3C7',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: '#F59E0B',
+  },
+  noSubscriptionTitle: {
+    fontSize: 16,
+    color: '#92400E',
+    fontFamily: 'Quicksand-Bold',
+    marginBottom: 4,
+  },
+  noSubscriptionText: {
+    fontSize: 14,
+    color: '#92400E',
+    fontFamily: 'Quicksand-Regular',
+    lineHeight: 20,
+  },
+  startSubscriptionButton: {
+    backgroundColor: '#10B981',
+    paddingVertical: 14,
+    borderRadius: 12,
+    alignItems: 'center',
+    marginBottom: 12,
   },
 });

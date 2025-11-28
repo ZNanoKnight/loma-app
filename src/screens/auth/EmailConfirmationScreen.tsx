@@ -96,10 +96,10 @@ export default function EmailConfirmationScreen() {
             {
               text: 'Continue',
               onPress: () => {
-                // Navigate to payment collection screen
+                // Navigate to payment screen (user will be detected as returning user)
                 navigation.reset({
                   index: 0,
-                  routes: [{ name: 'Onboarding', params: { screen: 'PaymentCollection' } }],
+                  routes: [{ name: 'Onboarding', params: { screen: 'Payment' } }],
                 });
               },
             },
